@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('главная страница сайта');
+});
+
+Route::get('/post/all', function (){
+    return 'all';
+})->name('posts');
+
+Route::get('/user/profile', function (){
+    return 'profile';
+})->name('profile');
+
+Route::get('/post', [PostController::class, 'show']);
+//Route::get('/user', [UserController::class, 'show']);
+//Route::get('/user/all', [UserController::class, 'all']);
+//Route::get('/post/{id}', [PostController::class, 'show']);
+//Route::get('/user/{name}', [UserController::class, 'showName']);
+//Route::get('/user/{name}/{surname}', [UserController::class, 'showNameSurname']);
+Route::get('user/city/{user}', [UserController::class, 'showUserCity']);
+Route::get('user/view', [UserController::class, 'showView']);
+Route::get('user/view2', [UserController::class, 'showView2']);
+Route::get('user/view3', [UserController::class, 'showView3']);
