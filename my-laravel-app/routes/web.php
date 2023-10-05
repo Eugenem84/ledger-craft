@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,3 +38,5 @@ Route::get('user/city/{user}', [UserController::class, 'showUserCity']);
 Route::get('user/view', [UserController::class, 'showView']);
 Route::get('user/view2', [UserController::class, 'showView2']);
 Route::get('user/view3', [UserController::class, 'showView3']);
+Route::get('user/db', [UserController::class, 'showDB']);
+Route::get('service/show', [ServiceController::class, 'show']);

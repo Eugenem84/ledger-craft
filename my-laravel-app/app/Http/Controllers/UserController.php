@@ -1,9 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class UserController extends Controller
 {
+    public function showDB()
+    {
+          $users = User::all();
+//          dump($users);
+          foreach ($users as $user) {
+              dump($user->id);
+              dump($user->age);
+          }
+    }
     public function show()
     {
         return 'show';

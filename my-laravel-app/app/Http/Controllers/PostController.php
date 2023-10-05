@@ -1,14 +1,16 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
+use App\Models\Post;
 
 class PostController extends Controller
 {
     public function show()
     {
-        return view('post.show', [
-            'title' => 'page title',
-            'text' => 'page content',
-        ]);
+        $post = new Post;
+        $post->title = 'title1';
+        $post->text = 'text1';
+        $post->save();
     }
 }
