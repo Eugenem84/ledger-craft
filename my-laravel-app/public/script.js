@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function (){
     const addedService = []
     const displaySelectedWorks = document.getElementById('displaySelectedWorks')
 
+    console.log(services)
+
     serviceDivs.forEach(function (serviceDiv){
         serviceDiv.addEventListener('click', function (){
             const serviceId = parseInt(this.dataset.id)
@@ -29,11 +31,23 @@ document.addEventListener('DOMContentLoaded', function (){
     }
     function updateAddedServiceList() {
         displaySelectedWorks.innerHTML = ''
+        let total = 0
         addedService.forEach(function (serviceId){
-            const serviceDiv = document.createElement('div');
-            serviceDiv.textContent = serviceId
-            displaySelectedWorks.appendChild(serviceDiv)
+            const serviceCh = services.find(service => service.id ===serviceId )
+            if (serviceCh) {
+                const serviceDiv = document.createElement('div');
+                //serviceDiv.textContent = serviceCh.service;\
+                serviceDiv.textContent = `${serviceCh.service} - ${serviceCh.price}`
+                displaySelectedWorks.appendChild(serviceDiv)
+                total += parseInt(serviceCh.price)
+            }
         })
+        const totalPrice = document.getElementById('totalDiv');
+        totalPrice.textContent = total
+    }
+
+    function calculateTotalPrice(){
+        let total = 0
     }
 
     addButton.addEventListener('click', function (){
