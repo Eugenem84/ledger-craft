@@ -40,3 +40,6 @@ Route::get('user/view2', [UserController::class, 'showView2']);
 Route::get('user/view3', [UserController::class, 'showView3']);
 Route::get('user/db', [UserController::class, 'showDB']);
 Route::get('service/show', [ServiceController::class, 'show']);
+Route::get('/', [\App\Http\Controllers\HomeController::class, 'show']);
+Route::get('/orders/create', 'OrdersController@create');
+Route::get('/statistics', [\App\Http\Controllers\StatisticsController::class, 'index']);

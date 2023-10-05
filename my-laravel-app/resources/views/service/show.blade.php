@@ -1,11 +1,11 @@
 <x-layout>
     <x-slot name="title">Services</x-slot>
-    <label for="service">Выберите сервис: </label>
-    <select name="service" id="service">
+    <h1 for="service">Выберите сервис: </h1>
+    <div id="services">
         @foreach($services as $service)
-            <option value="{{ $service->id }}">{{$service->service}} - {{$service->price}}</option>
+            <div class="service" data-id="{{ $service->id }}">{{$service->service}} - {{$service->price}}</div>
         @endforeach
-    </select>
+    </div>
     <button id="addToServiceList" data-id="addToServiceList">добавить</button>
     <button id="deleteFromServiceList"> удалить </button>
     <button id="editService"> редактировать</button>
@@ -15,6 +15,8 @@
     <div class="order">
 
     </div>
+
+    <div id="displaySelectedWorks"></div>
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>
 

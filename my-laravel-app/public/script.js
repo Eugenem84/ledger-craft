@@ -1,42 +1,38 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const addButton = document.querySelector('button[data-id="addToServiceList"]');
-    const serviceSelect = document.getElementById('service');
-    const orderDiv = document.querySelector('.order');
-    const selectedServices = [];
+document.addEventListener('DOMContentLoaded', function (){
+    const serviceDivs = document.querySelectorAll('.service')
+    const selectedServices = []
+    const displaySelectedWorks = document.getElementById('displaySelectedWorks')
 
-    addButton.addEventListener('click', function() {
-        const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
-        const serviceId = parseInt(selectedOption.value, 10);
+    serviceDivs.forEach(function (serviceDiv){
+        serviceDiv.addEventListener('click', function (){
+            const serviceId = parseInt(this.dataset.id)
+            const index = selectedServices.indexOf(serviceId)
 
-        if (!selectedServices.includes(serviceId)) {
-            selectedServices.push(serviceId);
-
-            const serviceItem = document.createElement('div');
-            serviceItem.innerText = selectedOption.innerText;
-            orderDiv.appendChild(serviceItem);
-
-            let isClicked = false
-
-            serviceItem.addEventListener('click', function (){
-                if (!isClicked) {
-                    this.style.background = 'red'
-                } else {
-                    this.style.background = ''
-                }
-            })
-
-            serviceItem.addEventListener('mouseover', function () {
-                this.style.background = 'blue';
-                this.style.color = 'white';
-            })
-
-            serviceItem.addEventListener('mouseout', function (){
+            if (!selectedServices.includes(serviceId)) {
+                selectedServices.push(serviceId)
+                this.style.background = 'red'
+            } else {
+                selectedServices.splice(selectedServices.indexOf(serviceId), 1)
                 this.style.background = ''
-                this.style.color = ''
-            })
+            }
+            console.log(selectedServices)
+        })
+    })
 
-            console.log(selectedServices); // Печать в консоль
-        }
-    });
-});
+    const addButton = document.getElementById('addToServiceList')
+
+    addButton.addEventListener('click', function (){
+        selectedServices.forEach(function (serviceId){
+            const serviceDiv = document.createElement('div')
+            serviceDiv.textContent = serviceId;
+
+            const serviceElement = document.querySelector(`[data-id="${serviceId}"]`)
+            serviceElement.style.background = ''
+            displaySelectedWorks.appendChild(serviceDiv);
+        })
+        selectedServices.length = 0;
+    })
+})
+
+
 
