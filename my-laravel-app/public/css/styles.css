@@ -2,3 +2,8 @@
     border: 1px solid black;
     margin: 5px;
 }
+
+.selected {
+    background-color: #4b5563;
+    color: white;
+}
