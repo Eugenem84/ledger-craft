@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">Services</x-slot>
+    <x-slot name="title">Заказ наряд</x-slot>
     <h1>Выберите вид работ: </h1>
     <div id="services">
         @foreach($services as $service)
@@ -11,11 +11,12 @@
         const services = {!! json_encode($services) !!}; // Преобразование данных в JavaScript объект
     </script>
 
-
-    <button id="addToServiceList" data-id="addToServiceList">добавить</button>
-    <button id="deleteFromServiceList"> удалить </button>
-    <button id="editService"> редактировать</button>
-    <button id="saveOrder">сохранить</button>
+    <button id="editService">редактировать работу</button>
+    <button id="deleteFromServiceList">удалить из каталога</button>
+    <button id="addNewService">добавить новую работу</button>
+    <br>
+    <br>
+    <button id="addToServiceList" data-id="addToServiceList">добавить в заказ наряд</button>
     <h3>Заказ наряд:</h3>
     <br>
     <div class="order">
@@ -26,6 +27,7 @@
     <br>
     <p>Общая сумма: </p>
     <div id="totalDiv"></div>
+    <button id="saveOrderButton">Сохранить заказ наряд</button>
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>
 

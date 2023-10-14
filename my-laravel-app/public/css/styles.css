@@ -7,3 +7,15 @@
     background-color: #4b5563;
     color: white;
 }
+
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-right: 10px;
+    color: darkolivegreen;
+}

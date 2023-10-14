@@ -114,3 +114,6 @@ document.addEventListener('DOMContentLoaded', function (){
         totalPrice.textContent = total
     }
 })
+
+//тут пишу для редактирования каталога
+

@@ -11,15 +11,14 @@
                 РЕМОНТ
             </div>
         </header>
-        {{$slot}}
         <nav>
             <ul>
-                <li><a href="/">главная</a> </li>
-                <li><a href="/orders/create">заказ наряд</a> </li>
-                <li><a href="/orders/edit">редактор заказов</a> </li>
-                <li><a href="/orders/history">история заказов</a> </li>
-                <li><a href="/statistics">статистика</a> </li>
+                <li><a href="/service/show">заказ наряд</a> </li>
+                <li><a href="/service/edit">редактор каталога</a> </li>
+                <li><a href="/service/history">история заказов</a> </li>
+                <li><a href="/service/statistic">статистика</a> </li>
             </ul>
         </nav>
+        {{$slot}}
     </body>
 </html>

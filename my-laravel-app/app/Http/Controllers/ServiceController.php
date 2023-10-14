@@ -12,4 +12,17 @@ class ServiceController extends Controller
         $services = Service::all();
         return view('service.show', ['services' => $services]);
     }
+
+    public function editServices() {
+        $services = Service::all();
+        return view('service.edit', ['services' => $services]);
+    }
+
+    public function showHistoryOrders(){
+        return view('service.history');
+    }
+
+    public function showStatistics(){
+        return view('service.statistic');
+    }
 }

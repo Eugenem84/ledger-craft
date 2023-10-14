@@ -43,3 +43,6 @@ Route::get('service/show', [ServiceController::class, 'show']);
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'show']);
 Route::get('/orders/create', 'OrdersController@create');
 Route::get('/statistics', [\App\Http\Controllers\StatisticsController::class, 'index']);
+Route::get('service/edit',[ServiceController::class,'editServices']);
+Route::get('service/history', [ServiceController::class, 'showHistoryOrders']);
+Route::get('service/statistic',[ServiceController::class, 'showStatistics']);
