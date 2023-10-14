@@ -11,9 +11,6 @@
         const services = {!! json_encode($services) !!}; // Преобразование данных в JavaScript объект
     </script>
 
-    <button id="editService">редактировать работу</button>
-    <button id="deleteFromServiceList">удалить из каталога</button>
-    <button id="addNewService">добавить новую работу</button>
     <br>
     <br>
     <button id="addToServiceList" data-id="addToServiceList">добавить в заказ наряд</button>

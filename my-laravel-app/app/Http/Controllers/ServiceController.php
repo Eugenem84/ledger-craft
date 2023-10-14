@@ -25,4 +25,5 @@ class ServiceController extends Controller
     public function showStatistics(){
         return view('service.statistic');
     }
+
 }
