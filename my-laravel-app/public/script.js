@@ -1,11 +1,16 @@
 document.addEventListener('DOMContentLoaded', function (){
+    // получаем все элементы с классом 'service'
     const serviceDivs = document.querySelectorAll('.service')
+    // массив для хранения выбранных сервисов
     const selectedServices = []
+    // массив для хранения добавленных сервисов
     let addedService = []
+    // элемент, в котором будут выводиться выбранные сервисы
     const displaySelectedWorks = document.getElementById('displaySelectedWorks')
-
+    // выводим в консоль переменную service
     console.log(services)
 
+    // Добавляем обработчик клика для каждого сервиса
     serviceDivs.forEach(function (serviceDiv){
         serviceDiv.addEventListener('click', function (){
             const serviceId = parseInt(this.dataset.id)
@@ -22,13 +27,16 @@ document.addEventListener('DOMContentLoaded', function (){
         })
     })
 
+    // Получаем кнопку с id 'addToService'
     const addButton = document.getElementById('addToServiceList')
 
+    // Функция для снятия выделения с сервисов
     function removeHighlight() {
         serviceDivs.forEach(function (serviceDiv){
             serviceDiv.style.background = ''
         })
     }
+    // Функция для обновления списка добавленный сервисов
     function updateAddedServiceList() {
         displaySelectedWorks.innerHTML = ''
         let total = 0
@@ -43,10 +51,21 @@ document.addEventListener('DOMContentLoaded', function (){
                 const deleteButton = document.createElement('button')
                 deleteButton.textContent = 'удалить'
                 deleteButton.addEventListener('click', function (){
-                    const idToRemove = this.parentElement.dataset.id
-                    addedService = addedService.filter(id => id !==idToRemove)
-                    this.parentElement.remove()
-                    updateTotalPrice()
+                    const idToRemove = parseInt(this.parentElement.dataset.id)
+                    console.log("idToRemove: ",idToRemove)
+                    console.log(addedService)
+                    const indexToRemove = addedService.indexOf(idToRemove)
+                    console.log("indexToRemove: ",indexToRemove)
+                    if (indexToRemove !== -1) {
+                        console.log('ok remove')
+                        addedService.splice(indexToRemove,1)
+                        this.parentElement.remove()
+                        updateTotalPrice()
+                    } else {
+                        console.log("!не найден в addedService!")
+                    }
+                    console.log("remove click")
+                    console.log("addedService: ",addedService)
                 })
                 serviceDiv.appendChild(deleteButton)
 
@@ -68,10 +87,7 @@ document.addEventListener('DOMContentLoaded', function (){
         })
     }
 
-    function calculateTotalPrice(){
-        let total = 0
-    }
-
+    // Добавляем обработчик клика для кнопки 'addToService'
     addButton.addEventListener('click', function (){
         selectedServices.forEach(function (serviceId){
             //проверяем наличие такого id
@@ -84,7 +100,17 @@ document.addEventListener('DOMContentLoaded', function (){
         updateAddedServiceList()
         console.log('addedService:',addedService)
     })
+
+    // Функция для обновления общей суммы
+    function updateTotalPrice(){
+        let total = 0;
+        addedService.forEach(function (serviceId){
+            const serviceCh = services.find(service => service.id === serviceId)
+            if (serviceCh){
+                total += parseInt(serviceCh.price)
+            }
+        })
+        const totalPrice = document.getElementById('totalDiv')
+        totalPrice.textContent = total
+    }
 })
-
-
-
