@@ -136,6 +136,38 @@ function edit(){
 
     document.addEventListener('DOMContentLoaded', function (){
         console.log('listener is started')
+        //обработчик кнопки "добавить новую услугу"
+        const showAddFormButton = document.getElementById('showAddForm')
+        const serviceForm = document.getElementById('serviceForm')
+        showAddFormButton.addEventListener('click', function (){
+            serviceForm.style.display = 'block';
+        })
+        document.getElementById('addServiceForm').addEventListener('submit', function (e){
+            e.preventDefault();
+            //получаем значения формы
+            const serviceName = this.querySelector('input[name="name"]').value
+            const servicePrice = this.querySelector('input[name="price"]').value
+            let formData = new FormData()
+            formData.append('serviceName', serviceName)
+            formData.append('servicePrice', servicePrice)
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/add_service', true)
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status === 200) {
+                    console.log('Услуга успешно добавлена')
+                } else {
+                    console.error(xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send(formData)
+
+        })
+
+
         //получаем все элементы с классом service
         const serviceDivs = document.querySelectorAll('.serviceForEdit')
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
@@ -24,6 +25,15 @@ class ServiceController extends Controller
 
     public function showStatistics(){
         return view('service.statistic');
+    }
+
+    public function addNewService(Request $request){
+        echo 'добавляем новую услугу';
+        $service = new Service;
+        $service->name = $request->input('service');
+        $service->price = $request->input('price');
+        $service->save();
+        echo 'услуга добавлена';
     }
 
 }

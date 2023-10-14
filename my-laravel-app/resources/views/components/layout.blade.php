@@ -4,6 +4,7 @@
     <head>
         <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
         <title>{{$title}}</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
     <body>
         <header>

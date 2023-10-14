@@ -46,3 +46,4 @@ Route::get('/statistics', [\App\Http\Controllers\StatisticsController::class, 'i
 Route::get('service/edit',[ServiceController::class,'editServices']);
 Route::get('service/history', [ServiceController::class, 'showHistoryOrders']);
 Route::get('service/statistic',[ServiceController::class, 'showStatistics']);
+Route::post('/add_service', [ServiceController::class, 'addNewService']);
