@@ -28,12 +28,10 @@ class ServiceController extends Controller
     }
 
     public function addNewService(Request $request){
-        echo 'добавляем новую услугу';
         $service = new Service;
-        $service->name = $request->input('service');
+        $service->service = $request->input('service');
         $service->price = $request->input('price');
         $service->save();
-        echo 'услуга добавлена';
     }
 
 }

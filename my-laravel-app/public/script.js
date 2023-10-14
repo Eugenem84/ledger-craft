@@ -148,8 +148,8 @@ function edit(){
             const serviceName = this.querySelector('input[name="name"]').value
             const servicePrice = this.querySelector('input[name="price"]').value
             let formData = new FormData()
-            formData.append('serviceName', serviceName)
-            formData.append('servicePrice', servicePrice)
+            formData.append('service', serviceName)
+            formData.append('price', servicePrice)
             let xhr = new XMLHttpRequest()
             xhr.open('POST', '/add_service', true)
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
@@ -163,7 +163,7 @@ function edit(){
             xhr.onerror = function (){
                 console.log('Ошибка сети')
             }
-            xhr.send(formData)
+            xhr.send(formData) //возвращает ошибку 500
 
         })
 
