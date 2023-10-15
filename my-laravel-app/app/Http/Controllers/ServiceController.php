@@ -34,4 +34,12 @@ class ServiceController extends Controller
         $service->save();
     }
 
+    public function deleteService(){
+
+    }
+
+    public function editService(){
+
+    }
+
 }

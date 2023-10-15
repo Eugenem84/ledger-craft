@@ -136,6 +136,7 @@ function edit(){
 
     document.addEventListener('DOMContentLoaded', function (){
         console.log('listener is started')
+
         //обработчик кнопки "добавить новую услугу"
         const showAddFormButton = document.getElementById('showAddForm')
         const serviceForm = document.getElementById('serviceForm')
@@ -175,6 +176,7 @@ function edit(){
         serviceDivs.forEach(function (serviceDiv){
             serviceDiv.addEventListener('click', function (){
                 const serviceId = parseInt(this.dataset.id)
+                console.log('Выбран сервис с id: ', serviceId)
                 serviceDivs.forEach(function (serviceDiv) {
                     serviceDiv.style.background = ''
                 })
