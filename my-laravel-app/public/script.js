@@ -210,13 +210,58 @@ function edit(){
         const editButton = document.getElementById('editService')
         editButton.addEventListener('click', function (){
             const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
+            console.log(selectedService)
 
             if (selectedService){
                 const serviceId = selectedService.dataset.id
+                const serviceInfo = selectedService.textContent.split(' - ')
+                const serviceName = serviceInfo[0] //name
+                const servicePrice = serviceInfo[1] //price
+                console.log('название сервиса: ', serviceName)
+
+                //Заполняем форму для редактирования
+                //document.getElementById('editServiceId').value = serviceId
+                document.getElementById('editServiceName').value = serviceName
+                document.getElementById('editServicePrice').value = servicePrice
+
+                //Открываем форму для редактирования
+                const editForm = document.getElementById('editServiceForm')
+                editForm.style.display = 'block'
+
                 console.log('редактируем: ', serviceId)
             } else {
                 console.log('выберите сервис для редактирования')
             }
+        })
+
+        //Добавляем обработчик для формы редактирования
+        document.getElementById('editServiceForm').addEventListener('submit', function (e){
+            e.preventDefault()
+
+            const serviceId = this.querySelector('input[name="serviceId"]').value
+            const serviceName = this.querySelector('input[name="serviceName"]').value
+            const servicePrice = this.querySelector('input[name="servicePrice"]').value
+
+            let formData = new FormData()
+            formData.append('serviceId', serviceId)
+            formData.append('serviceName', serviceName)
+            formData.append('servicePrice', servicePrice)
+
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/edit_service', true)
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+
+            xhr.onload = function (){
+                if (xhr.status === 200) {
+                    console.log('услуга изменена')
+                } else {
+                    console.error(xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send(formData)
         })
 
         //обрабатываем клик для выбранного сервиса

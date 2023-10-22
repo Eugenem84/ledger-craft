@@ -9,6 +9,11 @@
             <input type="text" name="price" placeholder="цена">
             <button type="submit">Добавить</button>
         </form>
+        <form id="editServiceForm" style="display: none">
+            <input type="text" id="editServiceName" name="name">
+            <input type="text" id="editServicePrice" name="price">
+            <button type="submit">Сохранить</button>
+        </form>
     </div>
     <br>
     <div id="servicesDiv">
