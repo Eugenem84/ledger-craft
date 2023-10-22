@@ -168,7 +168,24 @@ function edit(){
 
         })
 
+        function deleteService(serviceId) {
+            const xhr = new XMLHttpRequest()
+            xhr.open('POST', '/delete_service', true)
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="cdrf-token"]').getAttribute('content'))
 
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('Сервис успешно удален')
+                } else {
+                    console.log(xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send('serviceId=' + encodeURIComponent(serviceId))
+        }
 
         //получаем все элементы с классом service
         const serviceDivs = document.querySelectorAll('.serviceForEdit')
@@ -181,6 +198,7 @@ function edit(){
             if (selectedService) {
                 const serviceId = selectedService.dataset.id
                 console.log('удаляем сервис: ', serviceId)
+                deleteService(serviceId)
             } else {
                 console.log('выберите сервис для удаления')
             }

@@ -34,8 +34,16 @@ class ServiceController extends Controller
         $service->save();
     }
 
-    public function deleteService(){
+    public function deleteService(Request $request){
+        $serviceId = $request->input('serviceId');
 
+        $service = Service::find($serviceId);
+        if ($service){
+            $service->delete();
+            return response()->json(['message' => 'Сурвис успешно удален'], 200);
+        } else {
+            return response()->json(['message' => 'Сервис не найден'], 404);
+        }
     }
 
     public function editService(){
