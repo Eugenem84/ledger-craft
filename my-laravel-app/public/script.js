@@ -168,28 +168,46 @@ function edit(){
 
         })
 
+
+
         //получаем все элементы с классом service
         const serviceDivs = document.querySelectorAll('.serviceForEdit')
 
-        function deleteService(serviceId){
-            //функция для удаление сервиса
-            console.log('удаляем сервис: ', serviceId)
-        }
+        // обработчик для удаления выбранного сервиса
+        const deleteButton = document.getElementById('deleteService')
+        deleteButton.addEventListener('click', function (){
+            const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
+
+            if (selectedService) {
+                const serviceId = selectedService.dataset.id
+                console.log('удаляем сервис: ', serviceId)
+            } else {
+                console.log('выберите сервис для удаления')
+            }
+        })
+
+        // обработчик для кнопки "изменить"
+        const editButton = document.getElementById('editService')
+        editButton.addEventListener('click', function (){
+            const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
+
+            if (selectedService){
+                const serviceId = selectedService.dataset.id
+                console.log('редактируем: ', serviceId)
+            } else {
+                console.log('выберите сервис для редактирования')
+            }
+        })
 
         //обрабатываем клик для выбранного сервиса
         serviceDivs.forEach(function (serviceDiv){
             serviceDiv.addEventListener('click', function (){
-                const deleteButton = document.getElementById('deleteService')
                 const serviceId = parseInt(this.dataset.id)
                 console.log('Выбран сервис с id: ', serviceId)
                 serviceDivs.forEach(function (serviceDiv) {
                     serviceDiv.style.background = ''
                 })
                 this.style.background = 'red'
-
-                deleteButton.addEventListener('click', function (){
-                    console.log('удаляем сервис: ', serviceId)
-                })
             })
         })
     })
