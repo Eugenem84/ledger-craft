@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use PHPUnit\Exception;
 
 class ServiceController extends Controller
 {
@@ -46,7 +48,27 @@ class ServiceController extends Controller
         }
     }
 
-    public function editService(){
+    public function editService(Request $request){
+        echo 'echo is work';
+        try {
+
+            $serviceId = $request->input('id');
+            $serviceName = $request->input('service');
+            $servicePrice = $request->input('price');
+            $service = Service::find($serviceId);
+            if ($service) {
+                $service->name = $serviceName;
+                $service->price = $servicePrice;
+                $service->save();
+
+                return response()->json(['message' => 'Сервис успешно изменен'], 200);
+            } else {
+                return response()->json(['message' => 'Сервис не найден'], 404);
+            }
+
+        } catch (Exception $e){
+            return response()->json(['message' => 'Ошибка: ' . $e->getMessage()], 500);
+        }
 
     }
 

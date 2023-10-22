@@ -225,7 +225,7 @@ function edit(){
                 document.getElementById('editServicePrice').value = servicePrice
 
                 //Открываем форму для редактирования
-                const editForm = document.getElementById('editServiceForm')
+                const editForm = document.getElementById('editServiceDiv')
                 editForm.style.display = 'block'
 
                 console.log('редактируем: ', serviceId)
@@ -238,14 +238,15 @@ function edit(){
         document.getElementById('editServiceForm').addEventListener('submit', function (e){
             e.preventDefault()
 
-            const serviceId = this.querySelector('input[name="serviceId"]').value
-            const serviceName = this.querySelector('input[name="serviceName"]').value
-            const servicePrice = this.querySelector('input[name="servicePrice"]').value
+            const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
+            const serviceId = selectedService.dataset.id
+            const serviceName = this.querySelector('input[name="name"]').value
+            const servicePrice = this.querySelector('input[name="price"]').value
 
             let formData = new FormData()
-            formData.append('serviceId', serviceId)
-            formData.append('serviceName', serviceName)
-            formData.append('servicePrice', servicePrice)
+            formData.append('id', serviceId)
+            formData.append('service', serviceName)
+            formData.append('price', servicePrice)
 
             let xhr = new XMLHttpRequest()
             xhr.open('POST', '/edit_service', true)
@@ -254,6 +255,8 @@ function edit(){
             xhr.onload = function (){
                 if (xhr.status === 200) {
                     console.log('услуга изменена')
+                    //let jsonResponse = JSON.parse(xhr.responseText)
+                    //console.log(jsonResponse)
                 } else {
                     console.error(xhr.statusText)
                 }
