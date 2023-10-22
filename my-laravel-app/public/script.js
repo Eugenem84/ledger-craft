@@ -157,6 +157,7 @@ function edit(){
             xhr.onload = function (){
                 if (xhr.status === 200) {
                     console.log('Услуга успешно добавлена')
+                    location.reload()
                 } else {
                     console.error(xhr.statusText)
                 }
@@ -172,11 +173,12 @@ function edit(){
             const xhr = new XMLHttpRequest()
             xhr.open('POST', '/delete_service', true)
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="cdrf-token"]').getAttribute('content'))
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
 
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     console.log('Сервис успешно удален')
+                    location.reload()
                 } else {
                     console.log(xhr.statusText)
                 }
