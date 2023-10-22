@@ -168,19 +168,28 @@ function edit(){
 
         })
 
-
         //получаем все элементы с классом service
         const serviceDivs = document.querySelectorAll('.serviceForEdit')
+
+        function deleteService(serviceId){
+            //функция для удаление сервиса
+            console.log('удаляем сервис: ', serviceId)
+        }
 
         //обрабатываем клик для выбранного сервиса
         serviceDivs.forEach(function (serviceDiv){
             serviceDiv.addEventListener('click', function (){
+                const deleteButton = document.getElementById('deleteService')
                 const serviceId = parseInt(this.dataset.id)
                 console.log('Выбран сервис с id: ', serviceId)
                 serviceDivs.forEach(function (serviceDiv) {
                     serviceDiv.style.background = ''
                 })
                 this.style.background = 'red'
+
+                deleteButton.addEventListener('click', function (){
+                    console.log('удаляем сервис: ', serviceId)
+                })
             })
         })
     })
