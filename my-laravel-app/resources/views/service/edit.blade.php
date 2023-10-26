@@ -18,6 +18,15 @@
         </form>
     </div>
     <br>
+
+    <select name="category" id="category">
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+        @endforeach
+    </select>
+    <lable for="category">выберите категорию</lable>
+    <br>
+    <br>
     <div id="servicesDiv">
         @foreach($services as $service)
             <div class="serviceForEdit" data-id="{{$service->id}}">{{$service->service}} - {{$service->price}}</div>
