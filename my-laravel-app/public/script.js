@@ -137,12 +137,23 @@ function edit(){
     document.addEventListener('DOMContentLoaded', function (){
         console.log('listener is started')
 
+        //обработчсик кнопки "добавить новую категорию"
+        const showAddCategoryFormButton = document.getElementById('showAddCategoryForm')
+        const newCategoryForm = document.getElementById('addCategoryDiv')
+        showAddCategoryFormButton.addEventListener('click', function (){
+            newCategoryForm.style.display = 'block'
+        })
+
         //обработчик кнопки "добавить новую услугу"
         const showAddFormButton = document.getElementById('showAddForm')
         const serviceForm = document.getElementById('serviceForm')
         showAddFormButton.addEventListener('click', function (){
             serviceForm.style.display = 'block';
         })
+
+
+
+        //обработчик формы "добавить услугу"
         document.getElementById('addServiceForm').addEventListener('submit', function (e){
             e.preventDefault();
             //получаем значения формы
