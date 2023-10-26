@@ -27,4 +27,4 @@ Route::get('service/statistic',[ServiceController::class, 'showStatistics']);
 Route::post('/add_service', [ServiceController::class, 'addNewService']);
 Route::post('/delete_service', [ServiceController::class, 'deleteService']);
 Route::post('/edit_service', [ServiceController::class, 'editService']);
-//Route::get('service/show', [CategoryController::class,'show']);
+Route::post('/add_category', [ServiceController::class, 'addNewCategory']);

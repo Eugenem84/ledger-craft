@@ -151,7 +151,28 @@ function edit(){
             serviceForm.style.display = 'block';
         })
 
-
+        //обработчик формы "добавить новую категорию"
+        document.getElementById('addCategoryDiv').addEventListener('submit', function (e){
+            e.preventDefault()
+            const categoryName = this.querySelector('input[name="categoryName"]').value
+            let formData = new FormData()
+            formData.append('category_name', categoryName)
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/add_category', true)
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status === 200) {
+                    console.log('категория успешно добавлена')
+                    location.reload()
+                } else {
+                    console.error(xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send(formData)
+        })
 
         //обработчик формы "добавить услугу"
         document.getElementById('addServiceForm').addEventListener('submit', function (e){
@@ -176,7 +197,7 @@ function edit(){
             xhr.onerror = function (){
                 console.log('Ошибка сети')
             }
-            xhr.send(formData) //возвращает ошибку 500
+            xhr.send(formData)
 
         })
 

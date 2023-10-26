@@ -33,6 +33,12 @@ class ServiceController extends Controller
         return view('service.statistic');
     }
 
+    public function addNewCategory(Request $request){
+        $categories = new Category();
+        $categories->category_name = $request->input('category_name');
+        $categories->save();
+    }
+
     public function addNewService(Request $request){
         $service = new Service;
         $service->service = $request->input('service');
