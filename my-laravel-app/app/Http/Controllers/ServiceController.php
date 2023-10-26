@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Service;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,8 +13,10 @@ class ServiceController extends Controller
 {
     public function show()
     {
+        $categories = Category::all();
         $services = Service::all();
-        return view('service.show', ['services' => $services]);
+        return view('service.show', compact('categories', 'services'));
+
     }
 
     public function editServices() {

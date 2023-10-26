@@ -1,5 +1,12 @@
 <x-layout>
     <x-slot name="title">Заказ наряд</x-slot>
+    <lable for="category">Выберите категорию</lable>
+    <br>
+    <select name="category" id="category">
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+        @endforeach
+    </select>
     <h1>Выберите вид работ: </h1>
     <div id="services">
         @foreach($services as $service)

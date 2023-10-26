@@ -7,14 +7,14 @@
         <form id="addServiceForm">
             <input type="text" name="name" placeholder="Название услуги">
             <input type="text" name="price" placeholder="цена">
-            <button type="submit">Добавить</button>
+            <button type="submit" name="addButton">Добавить</button>
         </form>
     </div>
     <div id="editServiceDiv" style="display: none">
         <form id="editServiceForm" style="display: block">
             <input type="text" id="editServiceName" name="name">
             <input type="text" id="editServicePrice" name="price">
-            <button type="submit">Сохранить</button>
+            <button type="submit" name="saveButton">Сохранить</button>
         </form>
     </div>
     <br>

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return view('главная страница сайта');
@@ -26,3 +27,4 @@ Route::get('service/statistic',[ServiceController::class, 'showStatistics']);
 Route::post('/add_service', [ServiceController::class, 'addNewService']);
 Route::post('/delete_service', [ServiceController::class, 'deleteService']);
 Route::post('/edit_service', [ServiceController::class, 'editService']);
+//Route::get('service/show', [CategoryController::class,'show']);
