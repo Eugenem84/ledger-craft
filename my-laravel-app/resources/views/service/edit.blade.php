@@ -1,10 +1,14 @@
 <x-layout>
     <x-slot name="title">Редактор Каталога</x-slot>
 
-    <button id="editService">Изменить</button>
+    <button id="editService">Изменить услугу</button>
     <button id="showAddForm">Добавить новую услугу</button>
-    <button id="deleteService">Удалить</button>
+    <button id="deleteService">Удалить услугу</button>
+    <br>
+    <br>
+    <button id="editCategoryButton">Изменить категорию</button>
     <button id="showAddCategoryForm">Добавить новую категорию</button>
+    <button id="deleteCategory">Удалить категорию</button>
     <br>
 
     <div id="serviceForm" style="display: none">
@@ -20,6 +24,14 @@
             <input type="text" id="editServiceName" name="name">
             <input type="text" id="editServicePrice" name="price">
             <button type="submit" name="saveButton">Сохранить</button>
+        </form>
+    </div>
+
+    <div id="editCategoryDiv" style="display: none">
+        <form id="editCategoryForm" style="display: block">
+            <br>
+            <input type="text" id="editCategoryNameInput" name="name">
+            <button type="submit" name="saveNewNameCategoryButton">Сохранить</button>
         </form>
     </div>
 
@@ -40,6 +52,7 @@
     </select>
     <lable for="category">выберите категорию</lable>
     <br>
+
     <br>
     <div id="servicesDiv">
         @foreach($services as $service)

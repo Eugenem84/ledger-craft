@@ -12,6 +12,55 @@ if (document.getElementById('editService')){
 function order(){
     document.addEventListener('DOMContentLoaded', function (){
 
+        //обработчик клика для сервисов
+        function addClickHandlers(){
+            const serviceDivs = document.querySelector('.selectable')
+            serviceDivs.forEach(function (serviceDiv){
+                serviceDiv.addEventListener('click', function (){
+                    const serviceId = parseInt(this.dataset.id);
+                    const index = selectedServices.indexOf(serviceId)
+                    if (!selectedServices.includes(serviceId)){
+                        selectedServices.push(serviceId)
+                        this.style.background = 'red'
+                    } else {
+                        selectedServices.splice(selectedServices.indexOf(serviceId), 1)
+                        this.style.background = ''
+                    }
+                    console.log('selected Service', selectedServices)
+
+                })
+            })
+        }
+
+        //обработчик события выбора категории
+        document.getElementById('category').addEventListener('change', function (){
+            let categoryId = this.value
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', `/get_service/${categoryId}`, true)
+            xhr.onload = function (){
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    let services = JSON.parse(xhr.responseText)
+                    console.log('Категория Id: ', categoryId, ' сервисы: ', services)
+                    let servicesDiv = document.getElementById('services')
+                    servicesDiv.innerHTML = ''
+                    services.forEach(function (service){
+                        let serviceDiv = document.createElement('div')
+                        serviceDiv.textContent = `${service.service} - ${service.price}`
+                        serviceDiv.classList.add('selectable')
+                        serviceDiv.dataset.id = service.id
+                        servicesDiv.appendChild(serviceDiv)
+                    })
+                    addClickHandlers()
+                } else {
+                    console.error('Ошибка: ' + xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.error('Ошибка сети')
+            }
+            xhr.send()
+        })
+
         // получаем все элементы с классом 'service'
         const serviceDivs = document.querySelectorAll('.service')
         // массив для хранения выбранных сервисов
@@ -22,23 +71,6 @@ function order(){
         const displaySelectedWorks = document.getElementById('displaySelectedWorks')
         // выводим в консоль переменную service
         console.log(services)
-
-        // Добавляем обработчик клика для каждого сервиса
-        serviceDivs.forEach(function (serviceDiv){
-            serviceDiv.addEventListener('click', function (){
-                const serviceId = parseInt(this.dataset.id)
-                const index = selectedServices.indexOf(serviceId)
-
-                if (!selectedServices.includes(serviceId)) {
-                    selectedServices.push(serviceId)
-                    this.style.background = 'red'
-                } else {
-                    selectedServices.splice(selectedServices.indexOf(serviceId), 1)
-                    this.style.background = ''
-                }
-                console.log('selectedService',selectedServices)
-            })
-        })
 
         // Получаем кнопку с id 'addToService'
         const addButton = document.getElementById('addToServiceList')
@@ -201,6 +233,28 @@ function edit(){
 
         })
 
+        // Удаление категории
+        function deleteCategory(categoryId) {
+            console.log('начинается удаление')
+            const xhr = new XMLHttpRequest()
+            xhr.open('POST', '/delete_category')
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('Категория успешно удалена')
+                    location.reload()
+                } else {
+                    console.log('Ошибка сети')
+                }
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send('categoryId=' + encodeURIComponent(categoryId))
+        }
+
+        //удаление сервиса
         function deleteService(serviceId) {
             const xhr = new XMLHttpRequest()
             xhr.open('POST', '/delete_service', true)
@@ -224,6 +278,14 @@ function edit(){
         //получаем все элементы с классом service
         const serviceDivs = document.querySelectorAll('.serviceForEdit')
 
+        //обработчик для удаления выбранной категории
+        document.getElementById('deleteCategory').addEventListener('click', function (){
+            console.log('нажата кнопка удалить категорию')
+            const selectedCategoryId = document.getElementById('category').value
+            console.log('удаляю категорию: ', selectedCategoryId)
+            deleteCategory(selectedCategoryId)
+        })
+
         // обработчик для удаления выбранного сервиса
         const deleteButton = document.getElementById('deleteService')
         deleteButton.addEventListener('click', function (){
@@ -238,7 +300,7 @@ function edit(){
             }
         })
 
-        // обработчик для кнопки "изменить"
+        // обработчик для кнопки "изменить услугу"
         const editButton = document.getElementById('editService')
         editButton.addEventListener('click', function (){
             const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
@@ -266,29 +328,62 @@ function edit(){
             }
         })
 
-        //Добавляем обработчик для формы редактирования
+        // обработчик для кнопки "изменить категорию"
+        const editCategoryButton = document.getElementById('editCategoryButton')
+        editCategoryButton.addEventListener('click', function (){
+            let selectedCategoryId = document.getElementById('category').value
+            let selectedCategoryName = document.getElementById('category').options[document.getElementById('category').selectedIndex].text
+            document.getElementById('editCategoryNameInput').value = selectedCategoryName
+            console.log('меняем категорию: ',selectedCategoryName, selectedCategoryId)
+            document.getElementById('editCategoryDiv').style.display = 'block'
+        })
+
+        // обработчик для формы редактирования категории
+        document.getElementById('editCategoryForm').addEventListener('submit', function (e){
+            e.preventDefault()
+            let selectedCategoryId = document.getElementById('category').value
+            let newCategoryName = document.getElementById('editCategoryNameInput').value
+            let formData = new FormData()
+            formData.append('id', selectedCategoryId)
+            formData.append('category_name', newCategoryName)
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/edit_category', true)
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status === 200) {
+                    console.log('Категория успешно изменена')
+                    location.reload()
+                } else {
+                    console.log(xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send(formData)
+        })
+
+        // обработчик для формы редактирования усдуги
         document.getElementById('editServiceForm').addEventListener('submit', function (e){
             e.preventDefault()
 
             const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
             const serviceId = selectedService.dataset.id
-            const serviceName = this.querySelector('input[name="name"]').value
-            const servicePrice = this.querySelector('input[name="price"]').value
-
+            console.log('меняем сервис с id: ', serviceId)
+            let newServiceName = this.querySelector('input[name="name"]').value
+            console.log('новое имя сервиса: ', newServiceName)
+            const newServicePrice = this.querySelector('input[name="price"]').value
             let formData = new FormData()
             formData.append('id', serviceId)
-            formData.append('service', serviceName)
-            formData.append('price', servicePrice)
-
+            formData.append('service', newServiceName)
+            formData.append('price', newServicePrice)
             let xhr = new XMLHttpRequest()
             xhr.open('POST', '/edit_service', true)
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
-
             xhr.onload = function (){
                 if (xhr.status === 200) {
                     console.log('услуга изменена')
-                    //let jsonResponse = JSON.parse(xhr.responseText)
-                    //console.log(jsonResponse)
+                    location.reload()
                 } else {
                     console.error(xhr.statusText)
                 }

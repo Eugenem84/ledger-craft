@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Service;
 use App\Http\Controllers\Controller;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use PHPUnit\Exception;
@@ -19,6 +20,11 @@ class ServiceController extends Controller
 
     }
 
+    public function getServicesByCategory($categoryId){
+        $services = Service::where('category_id', $categoryId)->get();
+        return response()->json($services);
+    }
+
     public function editServices() {
         $categories = Category::all();
         $services = Service::all();
@@ -31,6 +37,30 @@ class ServiceController extends Controller
 
     public function showStatistics(){
         return view('service.statistic');
+    }
+
+    public function deleteCategory(Request $request){
+        $categoryId = $request->input('categoryId');
+        $category = Category::find($categoryId);
+        if ($category) {
+            $category->delete();
+            return response()->json(['message' => 'Категория удалена'], 200);
+        } else {
+            return response()->json(['message' => 'Категория не найдена'], 404);
+        }
+    }
+
+    public function editCategory(Request $request){
+        $categoryId = $request->input('id');
+        $newCategoryName = $request->input('category_name');
+        $category = Category::find($categoryId);
+        if ($category){
+            $category->category_name = $newCategoryName;
+            $category->save();
+            return response()->json(['message' => 'Категория успешно изменена'], 200);
+        } else {
+            return response()->json(['message' => 'Категория не найдена'], 404);
+        }
     }
 
     public function addNewCategory(Request $request){

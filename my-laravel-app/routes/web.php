@@ -28,3 +28,6 @@ Route::post('/add_service', [ServiceController::class, 'addNewService']);
 Route::post('/delete_service', [ServiceController::class, 'deleteService']);
 Route::post('/edit_service', [ServiceController::class, 'editService']);
 Route::post('/add_category', [ServiceController::class, 'addNewCategory']);
+Route::post('/delete_category', [ServiceController::class, 'deleteCategory']);
+Route::post('/edit_category', [ServiceController::class, 'editCategory']);
+Route::get('/get_service/{categoryId}', [ServiceController::class, 'getServicesByCategory']);
