@@ -14,7 +14,7 @@ function order(){
 
         //обработчик клика для сервисов
         function addClickHandlers(){
-            const serviceDivs = document.querySelector('.selectable')
+            const serviceDivs = document.querySelectorAll('.selectable')
             serviceDivs.forEach(function (serviceDiv){
                 serviceDiv.addEventListener('click', function (){
                     const serviceId = parseInt(this.dataset.id);
