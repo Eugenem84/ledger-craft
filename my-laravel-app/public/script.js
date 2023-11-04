@@ -11,6 +11,36 @@ if (document.getElementById('editService')){
 
 function order(){
     document.addEventListener('DOMContentLoaded', function (){
+        let defaultCategoryId = document.getElementById('category').value
+        console.log('выбранная категория: ', defaultCategoryId)
+        loadServicesByCategory(defaultCategoryId)
+
+        function loadServicesByCategory(categoryId){
+            let xhr = new XMLHttpRequest()
+            xhr.open('GET', `/get_service/${categoryId}`, true)
+            xhr.onload = function (){
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    let services = JSON.parse(xhr.responseText)
+                    console.log('Категория Id: ', categoryId, ' сервисы: ', services)
+                    let servicesDiv = document.getElementById('services')
+                    servicesDiv.innerHTML = ''
+                    services.forEach(function (service){
+                        let serviceDiv = document.createElement('div')
+                        serviceDiv.textContent = `${service.service} - ${service.price}`
+                        serviceDiv.classList.add('selectable')
+                        serviceDiv.dataset.id = service.id
+                        servicesDiv.appendChild(serviceDiv)
+                    })
+                    addClickHandlers()
+                } else {
+                    console.error('Ошибка: ' + xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.error('Ошибка сети')
+            }
+            xhr.send()
+        }
 
         //обработчик клика для сервисов
         function addClickHandlers(){
@@ -35,30 +65,7 @@ function order(){
         //обработчик события выбора категории
         document.getElementById('category').addEventListener('change', function (){
             let categoryId = this.value
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', `/get_service/${categoryId}`, true)
-            xhr.onload = function (){
-                if (xhr.status >= 200 && xhr.status < 400) {
-                    let services = JSON.parse(xhr.responseText)
-                    console.log('Категория Id: ', categoryId, ' сервисы: ', services)
-                    let servicesDiv = document.getElementById('services')
-                    servicesDiv.innerHTML = ''
-                    services.forEach(function (service){
-                        let serviceDiv = document.createElement('div')
-                        serviceDiv.textContent = `${service.service} - ${service.price}`
-                        serviceDiv.classList.add('selectable')
-                        serviceDiv.dataset.id = service.id
-                        servicesDiv.appendChild(serviceDiv)
-                    })
-                    addClickHandlers()
-                } else {
-                    console.error('Ошибка: ' + xhr.statusText)
-                }
-            }
-            xhr.onerror = function (){
-                console.error('Ошибка сети')
-            }
-            xhr.send()
+            loadServicesByCategory(categoryId)
         })
 
         // получаем все элементы с классом 'service'
@@ -168,6 +175,45 @@ function edit(){
 
     document.addEventListener('DOMContentLoaded', function (){
         console.log('listener is started')
+        let defaultCategory = document.getElementById('category').value
+        console.log('Выбрана категория с id: ', defaultCategory)
+        loadServicesByCategory(defaultCategory)
+
+        document.getElementById('category').addEventListener('change', function (){
+            let categoryId = this.value
+            loadServicesByCategory(categoryId)
+        })
+
+        //подгружаем услуги по категориям
+        function loadServicesByCategory(categoryId){
+            let xhr = new XMLHttpRequest()
+            xhr.open('GET', `/get_service/${categoryId}`, true)
+            xhr.onload = function (){
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    // парсим полученный ответ
+                    let services = JSON.parse(xhr.responseText)
+                    console.log('Категория Id: ', categoryId, ' сервисы: ', services)
+                    let servicesDiv = document.getElementById('servicesDiv')
+                    servicesDiv.innerHTML = ''
+                    services.forEach(function (service){
+                        let serviceDiv = document.createElement('div')
+                        serviceDiv.textContent = `${service.service} - ${service.price}`
+                        serviceDiv.classList.add('selectable')
+                        serviceDiv.dataset.id = service.id
+                        servicesDiv.appendChild(serviceDiv)
+                        addClickForServices()
+                    })
+                    //addClickHandlers()
+                } else {
+                    console.error('Ошибка: ' + xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.error('Ошибка сети')
+            }
+            xhr.send()
+
+        }
 
         //обработчсик кнопки "добавить новую категорию"
         const showAddCategoryFormButton = document.getElementById('showAddCategoryForm')
@@ -395,16 +441,21 @@ function edit(){
         })
 
         //обрабатываем клик для выбранного сервиса
-        serviceDivs.forEach(function (serviceDiv){
-            serviceDiv.addEventListener('click', function (){
-                const serviceId = parseInt(this.dataset.id)
-                console.log('Выбран сервис с id: ', serviceId)
-                serviceDivs.forEach(function (serviceDiv) {
-                    serviceDiv.style.background = ''
+        function addClickForServices() {
+            const serviceDivs = document.querySelectorAll('.serviceForEdit')
+            serviceDivs.forEach(function (serviceDiv) {
+                serviceDiv.addEventListener('click', function () {
+                    const serviceId = parseInt(this.dataset.id)
+                    console.log('Выбран сервис с id: ', serviceId)
+                    serviceDivs.forEach(function (serviceDiv) {
+                        serviceDiv.style.background = ''
+                    })
+                    this.style.background = 'red'
+
                 })
-                this.style.background = 'red'
             })
-        })
+            console.log('кликабельность активирована')
+        }
     })
 }
 

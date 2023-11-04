@@ -59,5 +59,6 @@
             <div class="serviceForEdit" data-id="{{$service->id}}">{{$service->service}} - {{$service->price}}</div>
         @endforeach
     </div>
+
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>

@@ -17,7 +17,6 @@ class ServiceController extends Controller
         $categories = Category::all();
         $services = Service::all();
         return view('service.show', compact('categories', 'services'));
-
     }
 
     public function getServicesByCategory($categoryId){
