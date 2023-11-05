@@ -15,6 +15,11 @@
         <form id="addServiceForm">
             <input type="text" name="name" placeholder="Название услуги">
             <input type="text" name="price" placeholder="цена">
+            <select name="categorySelectorForAdd" id="categorySelectorForAdd">
+                @foreach($categories as $category)
+                    <option value="{{$category->id}}">{{$category->category_name}}</option>
+                @endforeach
+            </select>
             <button type="submit" name="addButton">Добавить</button>
         </form>
     </div>

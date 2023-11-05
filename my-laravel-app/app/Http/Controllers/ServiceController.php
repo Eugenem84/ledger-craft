@@ -72,6 +72,7 @@ class ServiceController extends Controller
         $service = new Service;
         $service->service = $request->input('service');
         $service->price = $request->input('price');
+        $service->category_id = $request->input('category_id');
         $service->save();
     }
 

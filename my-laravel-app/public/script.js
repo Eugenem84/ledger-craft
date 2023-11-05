@@ -273,9 +273,11 @@ function edit(){
             //получаем значения формы
             const serviceName = this.querySelector('input[name="name"]').value
             const servicePrice = this.querySelector('input[name="price"]').value
+            const selectedCategoryId = document.getElementById('categorySelectorForAdd').value
             let formData = new FormData()
             formData.append('service', serviceName)
             formData.append('price', servicePrice)
+            formData.append('category_id', selectedCategoryId)
             let xhr = new XMLHttpRequest()
             xhr.open('POST', '/add_service', true)
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
@@ -363,7 +365,7 @@ function edit(){
         // обработчик для кнопки "изменить услугу"
         const editButton = document.getElementById('editService')
         editButton.addEventListener('click', function (){
-            const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
+            const selectedService = document.querySelector(`[data-id="${selectedServiceId}"]`)
             console.log(selectedService)
 
             if (selectedService){
@@ -398,7 +400,7 @@ function edit(){
             document.getElementById('editCategoryDiv').style.display = 'block'
         })
 
-        // обработчик для формы редактирования категории
+        // обработчик формы редактирования категории
         document.getElementById('editCategoryForm').addEventListener('submit', function (e){
             e.preventDefault()
             let selectedCategoryId = document.getElementById('category').value
@@ -423,18 +425,17 @@ function edit(){
             xhr.send(formData)
         })
 
-        // обработчик для формы редактирования усдуги
+        // обработчик формы редактирования усдуги
         document.getElementById('editServiceForm').addEventListener('submit', function (e){
             e.preventDefault()
 
             const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
-            const serviceId = selectedService.dataset.id
-            console.log('меняем сервис с id: ', serviceId)
+            console.log('меняем сервис с id: ', selectedServiceId)
             let newServiceName = this.querySelector('input[name="name"]').value
             console.log('новое имя сервиса: ', newServiceName)
             const newServicePrice = this.querySelector('input[name="price"]').value
             let formData = new FormData()
-            formData.append('id', serviceId)
+            formData.append('id', selectedServiceId)
             formData.append('service', newServiceName)
             formData.append('price', newServicePrice)
             let xhr = new XMLHttpRequest()
