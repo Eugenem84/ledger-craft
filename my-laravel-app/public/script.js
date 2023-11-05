@@ -173,6 +173,9 @@ function edit(){
 
 //тут пишу для редактирования каталога
 
+    let selectedServiceId
+    let selectedCategoryId
+
     document.addEventListener('DOMContentLoaded', function (){
         console.log('listener is started')
         let defaultCategory = document.getElementById('category').value
@@ -195,15 +198,28 @@ function edit(){
                     console.log('Категория Id: ', categoryId, ' сервисы: ', services)
                     let servicesDiv = document.getElementById('servicesDiv')
                     servicesDiv.innerHTML = ''
-                    services.forEach(function (service){
+                    services.forEach(function (service) {
                         let serviceDiv = document.createElement('div')
                         serviceDiv.textContent = `${service.service} - ${service.price}`
                         serviceDiv.classList.add('selectable')
                         serviceDiv.dataset.id = service.id
                         servicesDiv.appendChild(serviceDiv)
-                        addClickForServices()
                     })
-                    //addClickHandlers()
+                        //добавляем обработчик клика
+                    servicesDiv.querySelectorAll('.selectable').forEach(function (div){
+                         div.addEventListener('click', function (){
+                             const serviceId = parseInt(this.dataset.id)
+                             console.log('Выбран сервис с id: ', serviceId)
+                             selectedServiceId = serviceId
+                             //убираю подсветку у всех сервисов
+                             servicesDiv.querySelectorAll('.selectable').forEach(function (div){
+                                 div.classList.remove('selected')
+                             })
+                             //подсвечиваю выбранный
+                             this.classList.add('selected')
+                            })
+                        })
+
                 } else {
                     console.error('Ошибка: ' + xhr.statusText)
                 }
@@ -212,7 +228,6 @@ function edit(){
                 console.error('Ошибка сети')
             }
             xhr.send()
-
         }
 
         //обработчсик кнопки "добавить новую категорию"
@@ -308,6 +323,7 @@ function edit(){
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
 
             xhr.onload = function () {
+
                 if (xhr.status === 200) {
                     console.log('Сервис успешно удален')
                     location.reload()
@@ -332,15 +348,13 @@ function edit(){
             deleteCategory(selectedCategoryId)
         })
 
-        // обработчик для удаления выбранного сервиса
+        // обработчик кнопки для удаления выбранного сервиса
         const deleteButton = document.getElementById('deleteService')
         deleteButton.addEventListener('click', function (){
-            const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
-
-            if (selectedService) {
-                const serviceId = selectedService.dataset.id
-                console.log('удаляем сервис: ', serviceId)
-                deleteService(serviceId)
+        console.log('selectedServiceId: ' ,selectedServiceId)
+            if (selectedServiceId) {
+                console.log('удаляем сервис: ', selectedServiceId)
+                deleteService(selectedServiceId)
             } else {
                 console.log('выберите сервис для удаления')
             }
@@ -439,23 +453,6 @@ function edit(){
             }
             xhr.send(formData)
         })
-
-        //обрабатываем клик для выбранного сервиса
-        function addClickForServices() {
-            const serviceDivs = document.querySelectorAll('.serviceForEdit')
-            serviceDivs.forEach(function (serviceDiv) {
-                serviceDiv.addEventListener('click', function () {
-                    const serviceId = parseInt(this.dataset.id)
-                    console.log('Выбран сервис с id: ', serviceId)
-                    serviceDivs.forEach(function (serviceDiv) {
-                        serviceDiv.style.background = ''
-                    })
-                    this.style.background = 'red'
-
-                })
-            })
-            console.log('кликабельность активирована')
-        }
     })
 }
 
