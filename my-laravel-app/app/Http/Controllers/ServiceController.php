@@ -35,7 +35,8 @@ class ServiceController extends Controller
     public function editServices() {
         $categories = Category::all();
         $services = Service::all();
-        return view('service.edit', compact('categories', 'services'));
+        $specializations = Specialization::all();
+        return view('service.edit', compact('categories', 'services', 'specializations'));
     }
 
     public function showHistoryOrders(){

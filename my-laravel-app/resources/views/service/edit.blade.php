@@ -50,6 +50,13 @@
 
     <br>
 
+    <select name="specialization" id="specialization">
+        @foreach($specializations as $specialization)
+            <option value="{{ $specialization->id }}">{{ $specialization->specializationName }}</option>
+        @endforeach
+    </select>
+
+    <br>
     <select name="category" id="category">
         @foreach($categories as $category)
             <option value="{{ $category->id }}">{{ $category->category_name }}</option>

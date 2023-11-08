@@ -30,12 +30,20 @@ function order(){
                     let categorySelect = document.getElementById('category')
                     categorySelect.innerHTML = ''
                     console.log('очистка')
+                    console.log('categories: ',categories)
                     categories.forEach(function (category){
+                        console.log(category)
                         let option = document.createElement('option')
                         option.value = category.id
-                        option.textContent = category.categoryName
+                        option.textContent = category.category_name
                         categorySelect.appendChild(option)
                     })
+
+                    //обновление услуг при смене специализации
+                    let selectedServiceId = document.getElementById('category').value
+                    console.log('выбрана категория: ', selectedServiceId)
+                    loadServicesByCategory(selectedServiceId)
+
                 } else {
                     console.error('Ошибка: ' + xhr.statusText)
                 }
@@ -44,6 +52,7 @@ function order(){
                 console.error('Ошибка сети')
             }
             xhr.send()
+
         }
         function loadServicesByCategory(categoryId){
             let xhr = new XMLHttpRequest()
