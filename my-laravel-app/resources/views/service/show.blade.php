@@ -2,12 +2,21 @@
     <x-slot name="title">Заказ наряд</x-slot>
     <lable for="category">Выберите категорию</lable>
     <br>
+    <h2>Выберите специализацию:</h2>
+    <select name="specialization" id="specialization">
+        @foreach($specializations as $specialization)
+            <option value="{{ $specialization->id }}">{{ $specialization->specializationName  }}</option>
+        @endforeach
+    </select>
+
+    <br><br>
+
     <select name="category" id="category">
         @foreach($categories as $category)
             <option value="{{ $category->id }}">{{ $category->category_name }}</option>
         @endforeach
     </select>
-    <h1>Выберите вид работ: </h1>
+    <h2>Выберите вид работ: </h2>
     <div id="services">
         @foreach($services as $service)
             <div class="service" data-id="{{ $service->id }}">{{$service->service}} - {{$service->price}}</div>

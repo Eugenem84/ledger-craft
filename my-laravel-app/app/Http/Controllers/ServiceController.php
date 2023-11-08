@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Service;
 use App\Http\Controllers\Controller;
+use App\Models\Specialization;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -14,9 +15,11 @@ class ServiceController extends Controller
 {
     public function show()
     {
+        $specializations = Specialization::all();
         $categories = Category::all();
         $services = Service::all();
-        return view('service.show', compact('categories', 'services'));
+
+        return view('service.show', compact('categories', 'services', 'specializations'));
     }
 
     public function getServicesByCategory($categoryId){

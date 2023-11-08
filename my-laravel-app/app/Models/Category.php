@@ -13,4 +13,8 @@ class Category extends Model
     {
         return $this->hasMany(Service::class, 'category_id');
     }
+
+    public  function specialization(){
+        return $this->belongsTo(Specialization::class, 'specialization_id');
+    }
 }
