@@ -22,6 +22,11 @@ class ServiceController extends Controller
         return view('service.show', compact('categories', 'services', 'specializations'));
     }
 
+    public function getCategoriesBySpecialization($specializationId){
+        $categories = Category::where('specialization_id', $specializationId)->get();
+        return response()->json($categories);
+    }
+
     public function getServicesByCategory($categoryId){
         $services = Service::where('category_id', $categoryId)->get();
         return response()->json($services);

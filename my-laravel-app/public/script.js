@@ -13,8 +13,38 @@ function order(){
     document.addEventListener('DOMContentLoaded', function (){
         let defaultCategoryId = document.getElementById('category').value
         console.log('выбранная категория: ', defaultCategoryId)
+
+        let defaultSpecializationId = document.getElementById('specialization').value
+        loadCategoryBySpecialization(defaultSpecializationId)
+        //для правильной загрузки, изначально грузит вообще все, надо будет испралять в контролере
         loadServicesByCategory(defaultCategoryId)
 
+        //грузим категории по специализации
+        function  loadCategoryBySpecialization(specializationId){
+            console.log('Выбрана специализация: ', specializationId)
+            let xhr = new XMLHttpRequest()
+            xhr.open('GET', `/get_categories/${specializationId}`, true)
+            xhr.onload = function (){
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    let categories = JSON.parse(xhr.responseText)
+                    let categorySelect = document.getElementById('category')
+                    categorySelect.innerHTML = ''
+                    console.log('очистка')
+                    categories.forEach(function (category){
+                        let option = document.createElement('option')
+                        option.value = category.id
+                        option.textContent = category.categoryName
+                        categorySelect.appendChild(option)
+                    })
+                } else {
+                    console.error('Ошибка: ' + xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.error('Ошибка сети')
+            }
+            xhr.send()
+        }
         function loadServicesByCategory(categoryId){
             let xhr = new XMLHttpRequest()
             xhr.open('GET', `/get_service/${categoryId}`, true)
@@ -61,6 +91,12 @@ function order(){
                 })
             })
         }
+
+        //обработчик события выбора специализации
+        document.getElementById('specialization').addEventListener('change', function (){
+            let specializationId = this.value
+            loadCategoryBySpecialization(specializationId)
+        })
 
         //обработчик события выбора категории
         document.getElementById('category').addEventListener('change', function (){
