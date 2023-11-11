@@ -56,6 +56,17 @@ class ServiceController extends Controller
         return view('service.statistic');
     }
 
+    public function deleteSpecialization(Request $request){
+        $specializationId = $request->input('specializationId');
+        $specialization = Specialization::find($specializationId);
+        if ($specialization){
+            $specialization->delete();
+            return Response()->json(['message' => 'Специализация удалена']);
+        } else {
+            return response()->json(['message' => 'Специализация не найдена']);
+        }
+    }
+
     public function deleteCategory(Request $request){
         $categoryId = $request->input('categoryId');
         $category = Category::find($categoryId);
