@@ -60,6 +60,10 @@ class ServiceController extends Controller
         $specializationId = $request->input('specializationId');
         $specialization = Specialization::find($specializationId);
         if ($specialization){
+            $specialization->categories()->each(function ($category){
+                $category->services()->delete();
+                $category->delete();
+            });
             $specialization->delete();
             return Response()->json(['message' => 'Специализация удалена']);
         } else {
@@ -71,10 +75,24 @@ class ServiceController extends Controller
         $categoryId = $request->input('categoryId');
         $category = Category::find($categoryId);
         if ($category) {
+            $category->services()->delete();
             $category->delete();
             return response()->json(['message' => 'Категория удалена'], 200);
         } else {
             return response()->json(['message' => 'Категория не найдена'], 404);
+        }
+    }
+
+    public function editSpecialization(Request $request){
+        $specializationId = $request->input('id');
+        $newSpecializationName = $request->input('specializationName');
+        $specialization = Specialization::find($specializationId);
+        if ($specialization){
+            $specialization->specializationName = $newSpecializationName;
+            $specialization->save();
+            return response()->json(['message' => 'Специализация успешно изменена'], 200);
+        } else {
+            return response()->json(['message' => 'Специализация не найдена'], 404);
         }
     }
 
@@ -135,13 +153,12 @@ class ServiceController extends Controller
     public function editService(Request $request){
         echo 'echo is work';
         try {
-
             $serviceId = $request->input('id');
             $serviceName = $request->input('service');
             $servicePrice = $request->input('price');
             $service = Service::find($serviceId);
             if ($service) {
-                $service->name = $serviceName;
+                $service->service = $serviceName;
                 $service->price = $servicePrice;
                 $service->save();
 

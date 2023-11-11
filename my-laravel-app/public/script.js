@@ -518,6 +518,15 @@ function edit(){
             }
         })
 
+        // обработчик кнопки "изменить специализацию"
+        let editSpecializationButton = document.getElementById('editSpecializationButton')
+        editSpecializationButton.addEventListener('click', function (){
+            let selectedSpecializationName = document.getElementById('specialization').options[document.getElementById('specialization').selectedIndex].text
+            console.log('меняем специализацию: ',selectedSpecializationName)
+            document.getElementById('editSpecializationNameInput').value = selectedSpecializationName
+            document.getElementById('editSpecializationDiv').style.display = 'block'
+        })
+
         // обработчик для кнопки "изменить услугу"
         const editButton = document.getElementById('editService')
         editButton.addEventListener('click', function (){
@@ -554,6 +563,32 @@ function edit(){
             document.getElementById('editCategoryNameInput').value = selectedCategoryName
             console.log('меняем категорию: ',selectedCategoryName, selectedCategoryId)
             document.getElementById('editCategoryDiv').style.display = 'block'
+        })
+
+        // обработчик формы редактирования специализации
+        document.getElementById('editSpecializationForm').addEventListener('submit', function (e){
+            e.preventDefault()
+            let selectedSpecializationId = document.getElementById('specialization').value
+            let newSpecializationName = document.getElementById('editSpecializationNameInput').value
+            let formData = new FormData()
+            formData.append('id', selectedSpecializationId)
+            formData.append('specializationName', newSpecializationName)
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/edit_specialization', true)
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status === 200) {
+                    console.log('Специализация успешно изменена')
+                    //location.reload()
+                } else {
+                    console.log(xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.error('Ошибка сети')
+            }
+            xhr.send(formData)
+            location.reload()
         })
 
         // обработчик формы редактирования категории

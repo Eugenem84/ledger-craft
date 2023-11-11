@@ -32,6 +32,7 @@ Route::post('/delete_specialization', [ServiceController::class, 'deleteSpeciali
 Route::post('/add_category', [ServiceController::class, 'addNewCategory']);
 Route::post('/delete_category', [ServiceController::class, 'deleteCategory']);
 Route::post('/edit_category', [ServiceController::class, 'editCategory']);
+Route::post('/edit_specialization', [ServiceController::class, 'editSpecialization']);
 Route::get('/get_service/{categoryId}', [ServiceController::class, 'getServicesByCategory']);
 Route::get('/get_categories/{specializationId}', [ServiceController::class, 'getCategoriesBySpecialization']);
 

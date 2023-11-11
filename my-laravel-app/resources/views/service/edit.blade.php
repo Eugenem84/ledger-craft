@@ -24,6 +24,14 @@
         </form>
     </div>
 
+    <div id="editSpecializationDiv" style="display: none">
+        <form id="editSpecializationForm">
+            <br>
+            <input type="text" id="editSpecializationNameInput" name="name">
+            <button type="submit" name="saveNewNameCategoryButton">Сохранить</button>
+        </form>
+    </div>
+
     <br><br>
     <select name="category" id="category">
         @foreach($categories as $category)
@@ -37,7 +45,7 @@
     <button id="editCategoryButton">Изменить категорию</button>
     <button id="showAddCategoryForm">Добавить новую категорию</button>
     <button id="deleteCategory">Удалить категорию</button>
-    <br><br>
+    <br>
 
 
     <div id="addCategoryDiv" style="display: none">
@@ -46,8 +54,18 @@
             <input type="text" name="categoryName" placeholder="название категории">
             <button type="submit" name="saveCategoryButton">Сохранить</button>
         </form>
+        <br>
     </div>
-    <br>
+
+
+
+    <div id="editCategoryDiv" style="display: none">
+        <form id="editCategoryForm" style="display: block">
+            <br>
+            <input type="text" id="editCategoryNameInput" name="name">
+            <button type="submit" name="saveNewNameCategoryButton">Сохранить</button>
+        </form>
+    </div>
 
     <br>
     <div id="servicesDiv">
@@ -77,16 +95,6 @@
             <button type="submit" name="saveButton">Сохранить</button>
         </form>
     </div>
-
-    <div id="editCategoryDiv" style="display: none">
-        <form id="editCategoryForm" style="display: block">
-            <br>
-            <input type="text" id="editCategoryNameInput" name="name">
-            <button type="submit" name="saveNewNameCategoryButton">Сохранить</button>
-        </form>
-    </div>
-
-
 
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>
