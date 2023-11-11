@@ -96,7 +96,9 @@ class ServiceController extends Controller
     public function addNewCategory(Request $request){
         $categories = new Category();
         $categories->category_name = $request->input('category_name');
+        $categories->specialization_id = $request->input('specialization_id');
         $categories->save();
+        return response()->json(['message' => 'Категория успешно добавлена']);
     }
 
     public function addNewService(Request $request){

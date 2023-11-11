@@ -40,6 +40,15 @@
     <br><br>
 
 
+    <div id="addCategoryDiv" style="display: none">
+        <form id="addCategoryForm>">
+            <br>
+            <input type="text" name="categoryName" placeholder="название категории">
+            <button type="submit" name="saveCategoryButton">Сохранить</button>
+        </form>
+    </div>
+    <br>
+
     <br>
     <div id="servicesDiv">
         @foreach($services as $service)
@@ -78,19 +87,6 @@
     </div>
 
 
-    <div id="addCategoryDiv" style="display: none">
-        <form id="addCategoryForm>">
-            <br>
-            <input type="text" name="categoryName" placeholder="название категории">
-            <button type="submit" name="saveCategoryButton">Сохранить</button>
-            <select name="specializationSelectorForAdd" id="specializationSelectorForAdd">
-                @foreach($specializations as $specialization)
-                    <option value="{{ $specialization->id  }}">{{ $specialization->specializationName }}</option>
-                @endforeach
-            </select>
-        </form>
-    </div>
-    <br>
 
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>

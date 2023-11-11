@@ -348,7 +348,7 @@ function edit(){
             serviceForm.style.display = 'block';
         })
 
-        //обработчик формы добавление новой специализации
+        //обработчик формы "добавление новой специализации"
         document.getElementById('addSpecializationDiv').addEventListener('submit', function (e){
             e.preventDefault()
             let specializationName = this.querySelector('input[name="specializationName"]').value
@@ -370,12 +370,16 @@ function edit(){
             }
             xhr.send(formData)
         })
+
         //обработчик формы "добавить новую категорию"
         document.getElementById('addCategoryDiv').addEventListener('submit', function (e){
             e.preventDefault()
             const categoryName = this.querySelector('input[name="categoryName"]').value
             let formData = new FormData()
             formData.append('category_name', categoryName)
+            let currentSpecialization = document.getElementById('specialization').value
+            console.log('выбрана специализация: ', currentSpecialization)
+            formData.append('specialization_id', currentSpecialization)
             let xhr = new XMLHttpRequest()
             xhr.open('POST', '/add_category', true)
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
