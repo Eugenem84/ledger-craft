@@ -234,7 +234,6 @@ function edit(){
         document.getElementById('specialization').addEventListener('change', function (){
             let specializationID = this.value
             loadCategoryBySpecialization(specializationID)
-            loadServicesByCategory(selectedCategoryId)
         })
 
         //обработчик селектора изменение категории
@@ -262,6 +261,7 @@ function edit(){
                         option.textContent = 'нет категорий в данной сспециализации'
                         categorySelect.appendChild(option)
                         clearServicesList()
+                        selectedCategoryId = ''
                     } else {
                         categories.forEach(function (category) {
                             console.log(category)
@@ -577,7 +577,7 @@ function edit(){
             xhr.send(formData)
         })
 
-        // обработчик формы редактирования усдуги
+        // обработчик формы редактирования услуги
         document.getElementById('editServiceForm').addEventListener('submit', function (e){
             e.preventDefault()
 
