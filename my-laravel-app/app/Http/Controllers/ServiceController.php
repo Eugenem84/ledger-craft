@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Http\Controllers\Controller;
 use App\Models\Specialization;
 use http\Env\Response;
+use http\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use PHPUnit\Exception;
@@ -24,12 +25,20 @@ class ServiceController extends Controller
 
     public function getCategoriesBySpecialization($specializationId){
         $categories = Category::where('specialization_id', $specializationId)->get();
-        return response()->json($categories);
+        if ($categories) {
+            return response()->json($categories);
+        } else {
+            return response()->json(['message' => 'У данной специализации нет категорий']);
+        }
     }
 
     public function getServicesByCategory($categoryId){
         $services = Service::where('category_id', $categoryId)->get();
-        return response()->json($services);
+        if ($services) {
+            return response()->json($services);
+        } else {
+            return response()->json('нет сервисов в данной категории');
+        }
     }
 
     public function editServices() {
@@ -68,6 +77,19 @@ class ServiceController extends Controller
             return response()->json(['message' => 'Категория успешно изменена'], 200);
         } else {
             return response()->json(['message' => 'Категория не найдена'], 404);
+        }
+    }
+
+    public function addNewSpecialization(Request $request)
+    {
+        try {
+            $specializations = new Specialization();
+            $specializations->specializationName = $request->input('specializationName');
+            $specializations->popularCounter = 1;
+            $specializations->save();
+            return response()->json(['message' => 'Специализация успешно добавлена'], 200);
+        } catch (\Exception $e){
+            return \response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
 

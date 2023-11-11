@@ -220,20 +220,65 @@ function edit(){
 
     let selectedServiceId
     let selectedCategoryId
+    let selectedSpecialization
 
     document.addEventListener('DOMContentLoaded', function (){
         console.log('listener is started')
         let defaultCategory = document.getElementById('category').value
+        let defaultSpecialization = document.getElementById('specialization').value
         console.log('Выбрана категория с id: ', defaultCategory)
+        loadCategoryBySpecialization(defaultSpecialization)
         loadServicesByCategory(defaultCategory)
 
+        //обработчик селектора изменение специализации
+        document.getElementById('specialization').addEventListener('change', function (){
+            let specializationID = this.value
+            loadCategoryBySpecialization(specializationID)
+        })
+
+        //обработчик селектора изменение категории
         document.getElementById('category').addEventListener('change', function (){
             let categoryId = this.value
             loadServicesByCategory(categoryId)
         })
 
+        //подгружаем категории по специализации
+        function loadCategoryBySpecialization(specializationId){
+            console.log('выбрана специализация: ', specializationId)
+            let xhr = new XMLHttpRequest()
+            xhr.open('GET', `/get_categories/${specializationId}`, true)
+            xhr.onload = function (){
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    let categories = JSON.parse(xhr.responseText)
+                    console.log(categories)
+                    let categorySelect = document.getElementById('category')
+                    categorySelect.innerHTML = ''
+                    console.log('очистка')
+                    console.log('categories: ', categories)
+                    categories.forEach(function (category) {
+                        console.log(category)
+                        let option = document.createElement('option')
+                        option.value = category.id
+                        option.textContent = category.category_name
+                        categorySelect.appendChild(option)
+                    })
+                }
+                let categoryId = document.getElementById('category').value
+                console.log('Категория: ', categoryId)
+                loadServicesByCategory(categoryId)
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send()
+        }
+
         //подгружаем услуги по категориям
         function loadServicesByCategory(categoryId){
+            let servicesDiv = document.getElementById('servicesDiv')
+
+            selectedCategoryId = categoryId
+            console.log('выбрана категория: ', selectedCategoryId)
             let xhr = new XMLHttpRequest()
             xhr.open('GET', `/get_service/${categoryId}`, true)
             xhr.onload = function (){
@@ -241,7 +286,6 @@ function edit(){
                     // парсим полученный ответ
                     let services = JSON.parse(xhr.responseText)
                     console.log('Категория Id: ', categoryId, ' сервисы: ', services)
-                    let servicesDiv = document.getElementById('servicesDiv')
                     servicesDiv.innerHTML = ''
                     services.forEach(function (service) {
                         let serviceDiv = document.createElement('div')
@@ -266,7 +310,8 @@ function edit(){
                         })
 
                 } else {
-                    console.error('Ошибка: ' + xhr.statusText)
+                    servicesDiv.innerHTML = ''
+                    console.log('Не найдено в базе: ' + xhr.statusText)
                 }
             }
             xhr.onerror = function (){
@@ -275,6 +320,12 @@ function edit(){
             xhr.send()
         }
 
+        //обработчик кнопки "Добавить новую специализацию"
+        let showAddSpecializationFormButton = document.getElementById('addNewSpecializationButton')
+        let newSpecializationForm = document.getElementById('addSpecializationDiv')
+        showAddSpecializationFormButton.addEventListener('click', function (){
+            newSpecializationForm.style.display = 'block'
+        })
         //обработчсик кнопки "добавить новую категорию"
         const showAddCategoryFormButton = document.getElementById('showAddCategoryForm')
         const newCategoryForm = document.getElementById('addCategoryDiv')
@@ -289,6 +340,28 @@ function edit(){
             serviceForm.style.display = 'block';
         })
 
+        //обработчик формы добавление новой специализации
+        document.getElementById('addSpecializationDiv').addEventListener('submit', function (e){
+            e.preventDefault()
+            let specializationName = this.querySelector('input[name="specializationName"]').value
+            let formData = new FormData()
+            formData.append('specializationName', specializationName)
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/add_specialization', true)
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status === 200){
+                    console.log('Специализация успешно добавлена')
+                    location.reload()
+                } else {
+                    console.error(xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send(formData)
+        })
         //обработчик формы "добавить новую категорию"
         document.getElementById('addCategoryDiv').addEventListener('submit', function (e){
             e.preventDefault()
@@ -312,13 +385,12 @@ function edit(){
             xhr.send(formData)
         })
 
-        //обработчик формы "добавить услугу"
+        //обработчик формы "добавить новую услугу"
         document.getElementById('addServiceForm').addEventListener('submit', function (e){
             e.preventDefault();
             //получаем значения формы
             const serviceName = this.querySelector('input[name="name"]').value
             const servicePrice = this.querySelector('input[name="price"]').value
-            const selectedCategoryId = document.getElementById('categorySelectorForAdd').value
             let formData = new FormData()
             formData.append('service', serviceName)
             formData.append('price', servicePrice)
@@ -340,6 +412,27 @@ function edit(){
             xhr.send(formData)
 
         })
+
+        // Удаление специализации
+        function deleteSpecialization(specializationId){
+            console.log('Удаляем специализацию с Id: ', specializationId)
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/delete_specialization')
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status === 200) {
+                    console.log('Специализация успешно удалена')
+                    location.reload()
+                } else {
+                    console.log('Ощибка сети')
+                }
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send('specializationId=' + encodeURIComponent(specializationId))
+        }
 
         // Удаление категории
         function deleteCategory(categoryId) {
@@ -386,6 +479,12 @@ function edit(){
 
         //получаем все элементы с классом service
         const serviceDivs = document.querySelectorAll('.serviceForEdit')
+
+        //обработчик кнопки удаления специализации
+        document.getElementById('deleteSpecializationButton').addEventListener('click', function (){
+            let selectedSpecializationId = document.getElementById('specialization').value
+            deleteSpecialization(selectedSpecializationId)
+        })
 
         //обработчик для удаления выбранной категории
         document.getElementById('deleteCategory').addEventListener('click', function (){
