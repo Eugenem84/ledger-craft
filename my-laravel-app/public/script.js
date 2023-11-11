@@ -234,6 +234,7 @@ function edit(){
         document.getElementById('specialization').addEventListener('change', function (){
             let specializationID = this.value
             loadCategoryBySpecialization(specializationID)
+            loadServicesByCategory(selectedCategoryId)
         })
 
         //обработчик селектора изменение категории
@@ -255,17 +256,24 @@ function edit(){
                     categorySelect.innerHTML = ''
                     console.log('очистка')
                     console.log('categories: ', categories)
-                    categories.forEach(function (category) {
-                        console.log(category)
+                    if (categories.length === 0) {
                         let option = document.createElement('option')
-                        option.value = category.id
-                        option.textContent = category.category_name
+                        option.value = ''
+                        option.textContent = 'нет категорий в данной сспециализации'
                         categorySelect.appendChild(option)
-                    })
+                        clearServicesList()
+                    } else {
+                        categories.forEach(function (category) {
+                            console.log(category)
+                            let option = document.createElement('option')
+                            option.value = category.id
+                            option.textContent = category.category_name
+                            categorySelect.appendChild(option)
+                        })
+                        let currentCategoryId = document.getElementById('category').value
+                        loadServicesByCategory(currentCategoryId)
+                    }
                 }
-                let categoryId = document.getElementById('category').value
-                console.log('Категория: ', categoryId)
-                loadServicesByCategory(categoryId)
             }
             xhr.onerror = function (){
                 console.log('Ошибка сети')
@@ -276,7 +284,6 @@ function edit(){
         //подгружаем услуги по категориям
         function loadServicesByCategory(categoryId){
             let servicesDiv = document.getElementById('servicesDiv')
-
             selectedCategoryId = categoryId
             console.log('выбрана категория: ', selectedCategoryId)
             let xhr = new XMLHttpRequest()
@@ -312,6 +319,7 @@ function edit(){
                 } else {
                     servicesDiv.innerHTML = ''
                     console.log('Не найдено в базе: ' + xhr.statusText)
+
                 }
             }
             xhr.onerror = function (){
@@ -598,6 +606,13 @@ function edit(){
             }
             xhr.send(formData)
         })
+
+        // очистка сервис листа
+        function clearServicesList(){
+            let servicesDiv = document.getElementById('servicesDiv')
+            servicesDiv.innerHTML = ''
+        }
+
     })
 }
 
