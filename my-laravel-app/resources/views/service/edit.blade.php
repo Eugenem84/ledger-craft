@@ -43,7 +43,7 @@
 
     <button id="editClientButton">Изменить клиента</button>
     <button id="showAddClientForm">Добавить клиента</button>
-    <button id="deleteClient">Удалить клиента</button>
+    <button id="deleteClientButton">Удалить клиента</button>
 
     <div id="addClientDiv" style="display: none">
         <form id="addClientForm">

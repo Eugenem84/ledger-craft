@@ -363,11 +363,6 @@ function edit(){
             xhr.send()
         }
 
-        function updateClientList(){
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET')
-        }
-
         //обработчик кнопки "Добавить новую специализацию"
         let showAddSpecializationFormButton = document.getElementById('addNewSpecializationButton')
         let newSpecializationForm = document.getElementById('addSpecializationDiv')
@@ -522,6 +517,23 @@ function edit(){
             xhr.send('specializationId=' + encodeURIComponent(specializationId))
         }
 
+        function deleteClient(clientId){
+            let currentSpecialization = document.getElementById('specialization').value
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/delete_client')
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status === 200) {
+                    console.log('Клиент удален')
+                    loadClientsBySpecialization(currentSpecialization)
+                } else {
+                    console.log('Ошибка сети')
+                }
+            }
+            xhr.send('clientId=' + encodeURIComponent(clientId))
+        }
+
         // Удаление категории
         function deleteCategory(categoryId) {
             console.log('начинается удаление')
@@ -565,13 +577,16 @@ function edit(){
             xhr.send('serviceId=' + encodeURIComponent(serviceId))
         }
 
-        //получаем все элементы с классом service
-        const serviceDivs = document.querySelectorAll('.serviceForEdit')
-
         //обработчик кнопки удаления специализации
         document.getElementById('deleteSpecializationButton').addEventListener('click', function (){
             let selectedSpecializationId = document.getElementById('specialization').value
             deleteSpecialization(selectedSpecializationId)
+        })
+
+        //обработчик кнопки удаления клиента
+        document.getElementById('deleteClientButton').addEventListener('click', function (){
+            let selectedClient = document.getElementById('client').value
+            deleteClient(selectedClient)
         })
 
         //обработчик для удаления выбранной категории

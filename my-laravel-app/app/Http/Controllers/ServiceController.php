@@ -82,6 +82,18 @@ class ServiceController extends Controller
         }
     }
 
+    public function deleteClient(Request $request)
+    {
+        $clientId = $request->input('clientId');
+        $client = Client::find($clientId);
+        if ($client) {
+            $client->delete();
+            return response()->json(['message' => 'Категория удалена']);
+        } else {
+            return response()->json(['message' => 'Категория не найдена']);
+        }
+    }
+
     public function deleteCategory(Request $request){
         $categoryId = $request->input('categoryId');
         $category = Category::find($categoryId);
