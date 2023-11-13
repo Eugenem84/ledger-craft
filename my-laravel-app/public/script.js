@@ -363,6 +363,11 @@ function edit(){
             xhr.send()
         }
 
+        function updateClientList(){
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET')
+        }
+
         //обработчик кнопки "Добавить новую специализацию"
         let showAddSpecializationFormButton = document.getElementById('addNewSpecializationButton')
         let newSpecializationForm = document.getElementById('addSpecializationDiv')
@@ -430,8 +435,8 @@ function edit(){
             xhr.onload = function (){
                 if (xhr.status === 200) {
                     console.log('Клиент успешно добавлен')
-                    console.log(xhr.responseText)
-                    location.reload()
+                    document.getElementById('addClientDiv').style.display = 'none'
+                    loadClientsBySpecialization(currentSpecializationId)
                 } else {
                     console.error(xhr.statusText)
                 }
