@@ -255,7 +255,7 @@ function edit(){
                         clients.forEach(function (client){
                             let option = document.createElement('option')
                             option.value = client.id
-                            option.textContent = client.name
+                            option.textContent = client.name + " - " + client.phone
                             clientSelect.appendChild(option)
                         })
                     }
@@ -618,6 +618,30 @@ function edit(){
             document.getElementById('editSpecializationDiv').style.display = 'block'
         })
 
+        // обработчик кнопки "изменить клиента"
+        let editClientButton = document.getElementById('editClientButton')
+        editClientButton.addEventListener('click', function (){
+            document.getElementById('editClientDiv').style.display = 'block'
+            let clientSelect = document.getElementById('client')
+            let selectedClientId = clientSelect.value
+            let selectClientName = ''
+            let selectClientPhone = ''
+            if (selectedClientId !== '') {
+                let selectedOption = clientSelect.querySelector(`option[value="${selectedClientId}"]`)
+                let clientInfoArray = selectedOption.textContent.split('-')
+                if (clientInfoArray.length === 2){
+                    selectClientName = clientInfoArray[0].trim()
+                    selectClientPhone = clientInfoArray[1].trim()
+                } else {
+                    console.log('не могу отделить имя от телефона')
+                }
+            } else {
+                console.log('тут ничего нет')
+            }
+            document.getElementById('editClientNameInput').value = selectClientName
+            document.getElementById('editClientPhoneInput').value = selectClientPhone
+        })
+
         // обработчик для кнопки "изменить услугу"
         const editButton = document.getElementById('editService')
         editButton.addEventListener('click', function (){
@@ -680,6 +704,35 @@ function edit(){
             }
             xhr.send(formData)
             location.reload()
+        })
+
+        // обработчик формы редактирования клиента
+        document.getElementById('editClientDiv').addEventListener('submit', function (e){
+            e.preventDefault()
+            let selectedSpecializationId = document.getElementById('specialization').value
+            let selectedClientId = document.getElementById('client').value
+            let newClientName = document.getElementById('editClientNameInput').value
+            let newClientPhone = document.getElementById('editClientPhoneInput').value
+            let formData = new FormData()
+            formData.append('id', selectedClientId)
+            formData.append('name', newClientName)
+            formData.append('phone', newClientPhone)
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/edit_client', true)
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status === 200){
+                    console.log('Клиент успешно изменен')
+                    loadClientsBySpecialization(selectedSpecializationId)
+                } else {
+                    console.log(xhr.status)
+                }
+            }
+            xhr.onerror = function (){
+                console.error('ошибка сети')
+            }
+            xhr.send(formData)
+            document.getElementById('editClientDiv').style.display = 'none'
         })
 
         // обработчик формы редактирования категории

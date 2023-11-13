@@ -38,3 +38,4 @@ Route::get('/get_categories/{specializationId}', [ServiceController::class, 'get
 Route::get('/get_clients/{specializationId}', [ServiceController::class, 'getClientsBySpecialization']);
 Route::post('/add_client', [ServiceController::class, 'addNewClient']);
 Route::post('/delete_client', [ServiceController::class, 'deleteClient']);
+Route::post('/edit_client', [ServiceController::class, 'editClient']);

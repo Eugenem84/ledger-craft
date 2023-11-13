@@ -35,7 +35,7 @@
     <br>
     <select name="client" id="client">
         @foreach($clients as $client)
-            <option value="{{ $client->id }}">{{ $client->name }}</option>
+            <option value="{{ $client->id }}">{{ $client->name }} - {{ $client->phone }}</option>
         @endforeach
     </select>
     <lable for="client">выберите клиента</lable>

@@ -119,6 +119,22 @@ class ServiceController extends Controller
         }
     }
 
+    public function editClient(Request $request){
+        $clientId = $request->input('id');
+        $newClientName = $request->input('name');
+        $newClientPhone = $request->input('phone');
+        $client = Client::find($clientId);
+        if ($client){
+            $client->name = $newClientName;
+            $client->phone = $newClientPhone;
+            $client->save();
+            return response()->json(['message' => 'Клиент успешно сохранен'], 200);
+        } else {
+            return response()->json(['message' => 'Клиент не найден']);
+        }
+
+    }
+
     public function editCategory(Request $request){
         $categoryId = $request->input('id');
         $newCategoryName = $request->input('category_name');
