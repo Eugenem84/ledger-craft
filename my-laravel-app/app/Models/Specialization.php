@@ -9,6 +9,11 @@ class Specialization extends Model
 {
     use HasFactory;
 
+    public function clients()
+    {
+        return $this->hasMany(Client::class, 'specialization_id');
+    }
+
     public function categories()
     {
         return $this->hasMany(Category::class, 'specialization_id');

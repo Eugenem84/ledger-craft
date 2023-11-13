@@ -32,6 +32,14 @@
         </form>
     </div>
 
+    <br>
+    <select name="client" id="client">
+        @foreach($clients as $client)
+            <option value="{{ $client->id }}">{{ $client->name }}</option>
+        @endforeach
+    </select>
+    <lable for="client">выберите клиента</lable>
+
     <br><br>
     <select name="category" id="category">
         @foreach($categories as $category)

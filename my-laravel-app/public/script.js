@@ -16,6 +16,7 @@ function order(){
 
         let defaultSpecializationId = document.getElementById('specialization').value
         loadCategoryBySpecialization(defaultSpecializationId)
+
         //для правильной загрузки, изначально грузит вообще все, надо будет испралять в контролере
         loadServicesByCategory(defaultCategoryId)
 
@@ -115,12 +116,16 @@ function order(){
 
         // получаем все элементы с классом 'service'
         const serviceDivs = document.querySelectorAll('.service')
+
         // массив для хранения выбранных сервисов
         const selectedServices = []
+
         // массив для хранения добавленных сервисов
         let addedService = []
+
         // элемент, в котором будут выводиться выбранные сервисы
         const displaySelectedWorks = document.getElementById('displaySelectedWorks')
+
         // выводим в консоль переменную service
         console.log(services)
 
@@ -229,11 +234,41 @@ function edit(){
         console.log('Выбрана категория с id: ', defaultCategory)
         loadCategoryBySpecialization(defaultSpecialization)
         loadServicesByCategory(defaultCategory)
+        loadClientsBySpecialization(defaultSpecialization)
+
+        //подгружаем всех клиентов
+        function loadClientsBySpecialization(specializationId){
+            console.log('подгружаем всех клиентов')
+            let xhr = new XMLHttpRequest()
+            xhr.open('GET', `/get_clients/${specializationId}`, true)
+            xhr.onload = function (){
+                if (xhr.status >= 200 && xhr.status < 400){
+                    let clients = JSON.parse(xhr.responseText)
+                    let clientSelect = document.getElementById('client')
+                    clientSelect.innerHTML = ''
+                    if (clients.length === 0) {
+                        let option = document.createElement('option')
+                        option.value = ''
+                        option.textContent = 'клиентов нет'
+                        clientSelect.appendChild(option)
+                    } else {
+                        clients.forEach(function (client){
+                            let option = document.createElement('option')
+                            option.value = client.id
+                            option.textContent = client.name
+                            clientSelect.appendChild(option)
+                        })
+                    }
+                }
+            }
+            xhr.send()
+        }
 
         //обработчик селектора изменение специализации
         document.getElementById('specialization').addEventListener('change', function (){
             let specializationID = this.value
             loadCategoryBySpecialization(specializationID)
+            loadClientsBySpecialization(specializationID)
         })
 
         //обработчик селектора изменение категории
@@ -334,6 +369,7 @@ function edit(){
         showAddSpecializationFormButton.addEventListener('click', function (){
             newSpecializationForm.style.display = 'block'
         })
+
         //обработчсик кнопки "добавить новую категорию"
         const showAddCategoryFormButton = document.getElementById('showAddCategoryForm')
         const newCategoryForm = document.getElementById('addCategoryDiv')

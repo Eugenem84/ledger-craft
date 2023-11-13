@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Client;
 use App\Models\Service;
 use App\Http\Controllers\Controller;
 use App\Models\Specialization;
@@ -41,11 +42,21 @@ class ServiceController extends Controller
         }
     }
 
+    public function getClientsBySpecialization($specializationId){
+        $clients = Client::where('specialization_id', $specializationId)->get();
+        if ($clients){
+            return response()->json($clients);
+        } else {
+            return response()->json(['message' => 'У данной специализации нет клиентов']);
+        }
+    }
+
     public function editServices() {
         $categories = Category::all();
         $services = Service::all();
         $specializations = Specialization::all();
-        return view('service.edit', compact('categories', 'services', 'specializations'));
+        $clients = Client::all();
+        return view('service.edit', compact('categories', 'services', 'specializations', 'clients'));
     }
 
     public function showHistoryOrders(){
