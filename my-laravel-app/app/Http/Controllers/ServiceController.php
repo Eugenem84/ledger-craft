@@ -133,6 +133,14 @@ class ServiceController extends Controller
         }
     }
 
+    public function addNewClient(Request $request){
+        $clients = new Client();
+        $clients->name = $request->input('name');
+        $clients->phone = $request->input('phone');
+        $clients->specialization_id = $request->input('specialization_id');
+        $clients->save();
+    }
+
     public function addNewCategory(Request $request){
         $categories = new Category();
         $categories->category_name = $request->input('category_name');

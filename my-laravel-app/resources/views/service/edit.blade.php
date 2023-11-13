@@ -39,6 +39,29 @@
         @endforeach
     </select>
     <lable for="client">выберите клиента</lable>
+    <br><br>
+
+    <button id="editClientButton">Изменить клиента</button>
+    <button id="showAddClientForm">Добавить клиента</button>
+    <button id="deleteClient">Удалить клиента</button>
+
+    <div id="addClientDiv" style="display: none">
+        <form id="addClientForm">
+            <br>
+            <input type="text" name="clientName" placeholder="Имя клиента">
+            <input type="text" name="clientPhone" placeholder="Телефон">
+            <button type="submit" name="saveClient">Сохранить</button>
+        </form>
+    </div>
+
+    <div id="editClientDiv" style="display: none">
+        <form id="editClientForm">
+            <br>
+            <input type="text" id="editClientNameInput" name="name">
+            <input type="text" id="editClientPhoneInput" name="phone">
+            <button type="submit" name="saveNewClientButton">Сохранить</button>
+        </form>
+    </div>
 
     <br><br>
     <select name="category" id="category">
@@ -64,8 +87,6 @@
         </form>
         <br>
     </div>
-
-
 
     <div id="editCategoryDiv" style="display: none">
         <form id="editCategoryForm" style="display: block">

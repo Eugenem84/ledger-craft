@@ -36,4 +36,4 @@ Route::get('/get_service/{categoryId}', [ServiceController::class, 'getServicesB
 Route::get('/get_categories/{specializationId}', [ServiceController::class, 'getCategoriesBySpecialization']);
 //Route::get('/get_all_clients', [ClientController::class, 'getAllClients']);
 Route::get('/get_clients/{specializationId}', [ServiceController::class, 'getClientsBySpecialization']);
-
+Route::post('/add_client', [ServiceController::class, 'addNewClient']);

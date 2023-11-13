@@ -370,6 +370,13 @@ function edit(){
             newSpecializationForm.style.display = 'block'
         })
 
+        //обработчик кнопки "Добавить клиента"
+        let showAddClientFormButton = document.getElementById('showAddClientForm')
+        let newClientDiv = document.getElementById('addClientDiv')
+        showAddClientFormButton.addEventListener('click', function (){
+            newClientDiv.style.display = 'block'
+        })
+
         //обработчсик кнопки "добавить новую категорию"
         const showAddCategoryFormButton = document.getElementById('showAddCategoryForm')
         const newCategoryForm = document.getElementById('addCategoryDiv')
@@ -396,6 +403,34 @@ function edit(){
             xhr.onload = function (){
                 if (xhr.status === 200){
                     console.log('Специализация успешно добавлена')
+                    location.reload()
+                } else {
+                    console.error(xhr.statusText)
+                }
+            }
+            xhr.onerror = function (){
+                console.log('Ошибка сети')
+            }
+            xhr.send(formData)
+        })
+
+        //обработчик формы "добавить клиента"
+        document.getElementById('addClientDiv').addEventListener('submit', function (e){
+            e.preventDefault()
+            let clientName = this.querySelector('input[name="clientName"]').value
+            let clientPhone = this.querySelector('input[name="clientPhone"]').value
+            let currentSpecializationId = document.getElementById('specialization').value
+            let formData = new FormData()
+            formData.append('name', clientName)
+            formData.append('phone', clientPhone)
+            formData.append('specialization_id', currentSpecializationId)
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/add_client', true)
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status === 200) {
+                    console.log('Клиент успешно добавлен')
+                    console.log(xhr.responseText)
                     location.reload()
                 } else {
                     console.error(xhr.statusText)
