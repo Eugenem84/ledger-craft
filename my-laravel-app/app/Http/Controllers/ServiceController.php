@@ -20,8 +20,9 @@ class ServiceController extends Controller
         $specializations = Specialization::all();
         $categories = Category::all();
         $services = Service::all();
+        $clients = Client::all();
 
-        return view('service.show', compact('categories', 'services', 'specializations'));
+        return view('service.show', compact('categories', 'services', 'specializations', 'clients'));
     }
 
     public function getCategoriesBySpecialization($specializationId){
@@ -44,10 +45,10 @@ class ServiceController extends Controller
 
     public function getClientsBySpecialization($specializationId){
         $clients = Client::where('specialization_id', $specializationId)->get();
-        if ($clients){
-            return response()->json($clients);
-        } else {
+        if ($clients->isEmpty()){
             return response()->json(['message' => 'У данной специализации нет клиентов']);
+        } else {
+            return response()->json($clients);
         }
     }
 

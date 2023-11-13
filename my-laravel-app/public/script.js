@@ -20,6 +20,9 @@ function order(){
         //для правильной загрузки, изначально грузит вообще все, надо будет испралять в контролере
         loadServicesByCategory(defaultCategoryId)
 
+        //загрузка клиента при обновлении страницы
+        loadClientsBySpecialization(defaultSpecializationId)
+
         //грузим категории по специализации
         function  loadCategoryBySpecialization(specializationId){
             console.log('Выбрана специализация: ', specializationId)
@@ -82,6 +85,28 @@ function order(){
             xhr.send()
         }
 
+        function loadClientsBySpecialization(specializationId){
+            console.log('ok')
+            let xhr = new XMLHttpRequest()
+            xhr.open('GET', `/get_clients/${specializationId}`, true)
+            xhr.onload = function (){
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    let clients = JSON.parse(xhr.responseText)
+                    let clientSelect = document.getElementById('clients')
+                    clientSelect.innerHTML = ''
+                    clients.forEach(function (client){
+                        let option = document.createElement('option')
+                        option.value = client.id
+                        option.textContent = client.name + " - " + client.phone
+                        clientSelect.appendChild(option)
+                    })
+                } else {
+                    console.log('Ошибка: ' + xhr.statusText)
+                }
+            }
+            xhr.send()
+        }
+
         //обработчик клика для сервисов
         function addClickHandlers(){
             const serviceDivs = document.querySelectorAll('.selectable')
@@ -106,6 +131,7 @@ function order(){
         document.getElementById('specialization').addEventListener('change', function (){
             let specializationId = this.value
             loadCategoryBySpecialization(specializationId)
+            loadClientsBySpecialization(specializationId)
         })
 
         //обработчик события выбора категории

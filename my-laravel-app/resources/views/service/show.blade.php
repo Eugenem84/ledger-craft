@@ -7,6 +7,13 @@
             <option value="{{ $specialization->id }}">{{ $specialization->specializationName  }}</option>
         @endforeach
     </select>
+<br><br>
+    <lable for="clients">Выберите клиента</lable>
+    <select name="clients" id="clients">
+        @foreach($clients as $client)
+            <option value="{{ $client->id }}">{{ $client->name }} - {{ $client->phone }}</option>
+        @endforeach
+    </select>
 
     <br><br>
 
