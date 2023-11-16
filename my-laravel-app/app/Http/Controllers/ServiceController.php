@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Client;
+use App\Models\Order;
 use App\Models\Service;
 use App\Http\Controllers\Controller;
 use App\Models\Specialization;
@@ -61,7 +62,9 @@ class ServiceController extends Controller
     }
 
     public function showHistoryOrders(){
-        return view('service.history');
+        $orders = Order::all();
+        echo $orders;
+        return view('service.history', ['orders' => $orders]);
     }
 
     public function showStatistics(){
