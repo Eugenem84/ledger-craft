@@ -9,6 +9,11 @@ class Specialization extends Model
 {
     use HasFactory;
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
     public function clients()
     {
         return $this->hasMany(Client::class, 'specialization_id');

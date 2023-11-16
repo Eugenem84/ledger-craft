@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('specialization_id');
             $table->unsignedBigInteger('client_id');
-            $table->integer('hours'); //??? а как потом в часах считать?
-            $table->integer('minutes');
-            $table->decimal('total_amount', 10, 2); // без запятой
-            $table->text('description')->nullable();
+            $table->integer('hours')->nullable();
+            $table->integer('minutes')->nullable();
+            $table->integer('total_amount')->nullable();
             $table->text('comments')->nullable();
             $table->text('materials')->nullable();
             $table->timestamps();
