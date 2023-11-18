@@ -26,6 +26,15 @@ class ServiceController extends Controller
         return view('service.show', compact('categories', 'services', 'specializations', 'clients'));
     }
 
+    public function showOrderDetails($orderId){
+        $order = Order::find($orderId);
+        if (!$order){
+            return view(404,'order.not_found');
+        } else {
+            return view('service.order', ['order' => $order]);
+        }
+    }
+
     public function getCategoriesBySpecialization($specializationId){
         $categories = Category::where('specialization_id', $specializationId)->get();
         if ($categories) {
@@ -63,7 +72,6 @@ class ServiceController extends Controller
 
     public function showHistoryOrders(){
         $orders = Order::all();
-        echo $orders;
         return view('service.history', ['orders' => $orders]);
     }
 

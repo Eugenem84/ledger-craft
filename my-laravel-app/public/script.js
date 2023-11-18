@@ -4,9 +4,12 @@ if(document.querySelector('#displaySelectedWorks')){
 }
 
 if (document.getElementById('editService')){
-
     console.log('edit script')
     edit()
+}
+
+if (document.querySelector('#orders')){
+    history()
 }
 
 function order(){
@@ -160,7 +163,7 @@ function order(){
 
         // Функция для снятия выделения с сервисов
         function removeHighlight() {
-            serviceDivs.forEach(function (serviceDiv){
+            serviceDivs.forE24ach(function (serviceDiv){
                 serviceDiv.style.background = ''
             })
         }
@@ -825,4 +828,18 @@ function edit(){
     })
 }
 
-
+function history(){
+    console.log('history script')
+    //обработчик клика по заказ-нарядам
+    document.addEventListener('DOMContentLoaded', function (){
+        let orderList = document.querySelector('#order-list')
+        orderList.addEventListener('click', function (event){
+            let clickedItem = event.target.closest('.order-item')
+            if (clickedItem){
+                clickedItem.classList.toggle('active')
+                let orderId = clickedItem.dataset.orderId
+                console.log('Выбарн заказ-наряд с Id: ', orderId)
+            }
+        })
+    })
+}

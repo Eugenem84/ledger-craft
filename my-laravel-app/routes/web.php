@@ -39,3 +39,4 @@ Route::get('/get_clients/{specializationId}', [ServiceController::class, 'getCli
 Route::post('/add_client', [ServiceController::class, 'addNewClient']);
 Route::post('/delete_client', [ServiceController::class, 'deleteClient']);
 Route::post('/edit_client', [ServiceController::class, 'editClient']);
+Route::get('/order/{orderId}', [ServiceController::class, 'showOrderDetails']);

@@ -1,6 +1,6 @@
 .service {
     border: 1px solid black;
-    margin: 5px;
+    margin: 1px;
 }
 
 .selected {
@@ -16,6 +16,34 @@ nav ul {
 }
 
 nav ul li {
-    margin-right: 10px;
+    margin-right: 12px;
     color: darkolivegreen;
+}
+
+.custom-style {
+    color: red;
+}
+
+.order-item {
+    cursor: pointer;
+}
+
+.order-item:hover {
+    background-color: #4b5563;
+    color: white;
+    cursor: pointer;
+}
+
+.order-item:active {
+    background-color: red;
+    color: white;
+}
+
+.order-item {
+    margin: 0;
+    padding: 0;
+}
+
+.p {
+    margin: 0;
 }

@@ -24,7 +24,7 @@ class Order extends Model
     //связь с таблицей услуг (многие ко многим)
     public function services()
     {
-        return $this->belongsToMany(Service::class, 'order_service')->withTimestamps();
+        return $this->belongsToMany(Service::class, 'order_service');
     }
 
 }

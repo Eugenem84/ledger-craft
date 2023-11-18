@@ -16,6 +16,6 @@ class Service extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class, 'order_service')->withTimestamps();
+        return $this->belongsToMany(Order::class, 'order_service');
     }
 }
