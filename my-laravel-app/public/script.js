@@ -1,3 +1,5 @@
+let csrfToken = document.querySelector('meta[name="csrf-token"]').content
+
 if(document.querySelector('#displaySelectedWorks')){
     console.log('order script')
     order()
@@ -163,7 +165,7 @@ function order(){
 
         // Функция для снятия выделения с сервисов
         function removeHighlight() {
-            serviceDivs.forE24ach(function (serviceDiv){
+            serviceDivs.forEach(function (serviceDiv){
                 serviceDiv.style.background = ''
             })
         }
@@ -231,6 +233,39 @@ function order(){
             updateAddedServiceList()
             console.log('addedService:',addedService)
         })
+
+        //обработчик кнопки "сохранить заказ наряд"
+        let saveOrderButton = document.getElementById('saveOrderButton')
+        saveOrderButton.addEventListener('click', function (){
+           console.log('сохраняем заказ наряд')
+            saveOrder()
+            })
+
+        //функция сохранения заказа
+        function saveOrder(){
+            let specializationId = document.getElementById('specialization').value
+            console.log('specializationId: ', specializationId)
+            let clientId = document.getElementById('clients').value
+            console.log('addedServices: ', addedService)
+            let orderData = {
+                specializationId: specializationId,
+                clientId: clientId,
+                services: addedService
+            }
+            let xhr = new XMLHttpRequest()
+            xhr.open('POST', '/save_order', true)
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+            xhr.onload = function (){
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    console.log('Заказ успешно сохранен')
+                } else {
+                    console.error('Ошибка при сохранении')
+                }
+            }
+            xhr.send(JSON.stringify(orderData))
+            console.log(orderData)
+        }
 
         // Функция для обновления общей суммы
         function updateTotalPrice(){
@@ -838,7 +873,7 @@ function history(){
             if (clickedItem){
                 clickedItem.classList.toggle('active')
                 let orderId = clickedItem.dataset.orderId
-                console.log('Выбарн заказ-наряд с Id: ', orderId)
+                console.log('Выбарн заказ с Id: ', orderId)
             }
         })
     })

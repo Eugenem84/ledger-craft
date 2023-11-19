@@ -15,11 +15,10 @@ return new class extends Migration
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('service_id');
 
-            $table->primary('order_id', 'service_id');
+            //$table->primary('order_id', 'service_id');
 
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
-
         });
     }
 

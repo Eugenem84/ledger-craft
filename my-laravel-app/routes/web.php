@@ -40,3 +40,4 @@ Route::post('/add_client', [ServiceController::class, 'addNewClient']);
 Route::post('/delete_client', [ServiceController::class, 'deleteClient']);
 Route::post('/edit_client', [ServiceController::class, 'editClient']);
 Route::get('/order/{orderId}', [ServiceController::class, 'showOrderDetails']);
+Route::post('/save_order', [ServiceController::class, 'saveOrder']);

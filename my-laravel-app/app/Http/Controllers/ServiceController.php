@@ -16,6 +16,17 @@ use PHPUnit\Exception;
 
 class ServiceController extends Controller
 {
+    public function saveOrder(Request $request)
+    {
+        //сохранение заказ-наряда
+        $order = new Order();
+        $order->client_id = $request->input('clientId');
+        $order->specialization_id = $request->input('specializationId');
+        $order->save();
+        if ($request->has('services') && is_array($request->input('services'))) {
+            $order->services()->attach($request->input('services'));
+        }
+    }
     public function show()
     {
         $specializations = Specialization::all();
