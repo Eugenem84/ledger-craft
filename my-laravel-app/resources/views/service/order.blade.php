@@ -5,7 +5,7 @@
         <h3>Заказ наряд: </h3>
 
         @if($order)
-            <p>ID: {{ $order->id }}</p>
+            <p>ID: <span id="orderId"> {{ $order->id }} </span> </p>
             <p>специализация: {{ $order->specialization->specializationName }}</p>
             <p>Клиент: {{ $order->client->name }}</p>
             <p>Время выполнения: {{ $order->hours }} часов {{ $order->minutes }} минут</p>
@@ -34,6 +34,8 @@
         @else
             <p>нет заказ нарядов</p>
         @endif
+
+        <button id="editOrderButton">Редактировать</button>
 
     </div>
 

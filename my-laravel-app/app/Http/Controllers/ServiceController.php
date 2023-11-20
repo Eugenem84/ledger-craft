@@ -16,6 +16,23 @@ use PHPUnit\Exception;
 
 class ServiceController extends Controller
 {
+
+    public function editOrder($orderId){
+        $order = Order::find($orderId);
+        //получаем специализацию заказа
+        $specialization = $order->specialization;
+        //получаем клиентов специализации
+        $clients = $specialization->clients;
+        if (!$order){
+            return view(404,'order.not_found');
+        } else {
+            return view('service.edit_order', [
+                'order' => $order,
+                'clients' => $clients,
+            ]);
+        }
+    }
+
     public function saveOrder(Request $request)
     {
         //сохранение заказ-наряда
