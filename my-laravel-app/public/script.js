@@ -26,12 +26,49 @@ if (document.querySelector('#order')) {
     oldOrder()
 }
 
-if (document.querySelector('#editOrder')){
-    function editOrder(){
-        document.addEventListener('DOMContentLoaded', function (){
+if (document.querySelector('#editOldOrder')){
+    editOldOrder()
+}
 
-        })
-    }
+function updateAddedOldServiceList(addedServicesId){
+    console.log('обновление списка учлуг', addedServicesId)
+    let displaySelectedWorks = document.getElementById('displaySelectedWorks')
+    displaySelectedWorks.innerHTML = ''
+    let total = 0
+    addedServiceId.forEach(function (serviceId){
+        const serviceCh = services.find(service => service.id === serviceId )
+        if (serviceCh) {
+            const serviceDiv = document.createElement('div');
+            serviceDiv.textContent = `${serviceCh.service} - ${serviceCh.price}`
+            //serviceDiv.classList.add('selectable')
+            serviceDiv.dataset.id = serviceCh.id
+
+            const deleteButton = document.createElement('button')
+            deleteButton.textContent = 'удалить'
+            deleteButton.addEventListener('click', function (){
+                const idToRemove = parseInt(this.parentElement.dataset.id)
+                console.log("idToRemove: ",idToRemove)
+                console.log(addedServiceId)
+                const indexToRemove = addedService.indexOf(idToRemove)
+                console.log("indexToRemove: ",indexToRemove)
+                if (indexToRemove !== -1) {
+                    console.log('ok remove')
+                    addedService.splice(indexToRemove,1)
+                    this.parentElement.remove()
+                    updateTotalPrice()
+                } else {
+                    console.log("!не найден в addedService!")
+                }
+                console.log("remove click")
+                console.log("addedService: ",addedService)
+            })
+            serviceDiv.appendChild(deleteButton)
+
+            displaySelectedWorks.appendChild(serviceDiv)
+            total += parseInt(serviceCh.price)
+        }
+    })
+    //Тут нужно все переписать
 }
 
 function  loadCategoryBySpecialization(specializationId){
@@ -354,7 +391,7 @@ function order(){
         saveOrderButton.addEventListener('click', function (){
            console.log('сохраняем заказ наряд')
             saveOrder()
-            //location.reload()
+            //location.reload()настроил подгрузку клиентов с установкой по умолчанию текущего
             })
 
         //функция сохранения заказа
@@ -404,7 +441,6 @@ function order(){
             totalAmount.textContent = total
         }
     })
-
 }
 
 function edit(){
@@ -1013,4 +1049,34 @@ function oldOrder(){
         let editUrl = `/edit_order/${orderId}`
         window.location.href = editUrl
     })
+}
+
+function editOldOrder(){
+    let addedServiceList = []
+    console.log('editOldOrder script')
+    let currentCategoryId = document.getElementById('category').value
+    let addToServiceListButton = document.getElementById('addToServiceList')
+    console.log('выбрана категория Id: ', currentCategoryId)
+    loadServicesByCategory(currentCategoryId)
+    document.getElementById('category').addEventListener('change', function (){
+        let categoryId = this.value
+        loadServicesByCategory(categoryId)
+    })
+
+    updateAddedOldServiceList(addedServiceList)
+
+    // Добавляем обработчик клика для кнопки 'addToService'
+    addToServiceListButton.addEventListener('click', function (){
+        console.log('добавление в заказ наряд')
+        selectedServices.forEach(function (serviceId){
+            //проверяем наличие такого id
+            if (!addedService.includes(serviceId)) {
+                addedService.push(serviceId)
+            }
+        })
+        selectedServices.length = 0
+
+        console.log('addedService:',addedService)
+    })
+    //  ТУТ ППЦ надо все переписывать
 }

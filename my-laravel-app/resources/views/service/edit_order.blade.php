@@ -1,7 +1,7 @@
 <x-layout>
     <x-slot name="title">Редактирование заказ наряда</x-slot>
 
-    <div id="editOrder">
+    <div id="editOldOrder">
         <h3>Редактирование заказ-наряда: </h3>
 
         @if($order)
@@ -26,7 +26,23 @@
                 @endforeach
             </select>
             <h3>Выберите вид работ: </h3>
+
             <div id="services">
+            </div>
+
+            <br>
+            <h3>Заказ наряд:</h3>
+            <div class="order">
+            </div>
+
+            <br>
+            <button id="addToServiceList" data-id="addToServiceList">добавить в заказ наряд</button>
+
+
+            <div id="displaySelectedWorks"></div>
+            <br>
+            <div id="totalDiv">
+                <span id="totalText">Общая сумма: </span> <span id="totalAmount"></span>
             </div>
 
             <h4>Выполненные услуги</h4>
