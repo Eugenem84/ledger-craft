@@ -1,7 +1,7 @@
 <x-layout>
     <x-slot name="title">История Заказов</x-slot>
 
-    <div id="orders">
+    <div id="order">
         <h3>Заказ наряд: </h3>
 
         @if($order)
@@ -16,7 +16,7 @@
             @if(count($order->services) > 0)
                 <ul>
                     @foreach($order->services as $service)
-                        <li>{{ $service->service }} - {{ $service->price }}</li>
+                        <li>{{ $service->service }} - {{ $service->price }} </li>
                     @endforeach
                 </ul>
             @else

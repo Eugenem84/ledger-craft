@@ -43,8 +43,10 @@
 
     <div id="displaySelectedWorks"></div>
     <br>
-    <p>Общая сумма: </p>
-    <div id="totalDiv"></div>
+    <div id="totalDiv">
+        <span id="totalText">Общая сумма: </span> <span id="totalAmount">0</span>
+    </div>
+
     <button id="saveOrderButton">Сохранить заказ наряд</button>
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>

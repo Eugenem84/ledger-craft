@@ -14,6 +14,10 @@ if (document.querySelector('#orders')){
     history()
 }
 
+if (document.querySelector('#order')) {
+    oldOrder()
+}
+
 function order(){
     document.addEventListener('DOMContentLoaded', function (){
         let defaultCategoryId = document.getElementById('category').value
@@ -127,7 +131,6 @@ function order(){
                         this.style.background = ''
                     }
                     console.log('selected Service', selectedServices)
-
                 })
             })
         }
@@ -146,7 +149,7 @@ function order(){
         })
 
         // получаем все элементы с классом 'service'
-        const serviceDivs = document.querySelectorAll('.service')
+        //const serviceDivs = document.querySelectorAll('.service')
 
         // массив для хранения выбранных сервисов
         const selectedServices = []
@@ -165,11 +168,15 @@ function order(){
 
         // Функция для снятия выделения с сервисов
         function removeHighlight() {
-            serviceDivs.forEach(function (serviceDiv){
-                serviceDiv.style.background = ''
+
+            const serviceDivs = document.querySelectorAll('.selectable')
+            serviceDivs.forEach(function (serviceDivs){
+                serviceDivs.style.background = ''
             })
+            console.log('снятие выделения')
         }
-        // Функция для обновления списка добавленный сервисов
+
+        // Функция для обновления списка добавленных сервисов
         function updateAddedServiceList() {
             displaySelectedWorks.innerHTML = ''
             let total = 0
@@ -178,7 +185,7 @@ function order(){
                 if (serviceCh) {
                     const serviceDiv = document.createElement('div');
                     serviceDiv.textContent = `${serviceCh.service} - ${serviceCh.price}`
-                    serviceDiv.classList.add('selectable')
+                    //serviceDiv.classList.add('selectable')
                     serviceDiv.dataset.id = serviceCh.id
 
                     const deleteButton = document.createElement('button')
@@ -206,22 +213,12 @@ function order(){
                     total += parseInt(serviceCh.price)
                 }
             })
-            const totalPrice = document.getElementById('totalDiv');
-            totalPrice.textContent = total
-
-            const selectableDivs = document.querySelectorAll('.selectable')
-            selectableDivs.forEach(function (div){
-                div.addEventListener('click', function (){
-                    selectableDivs.forEach(function (div){
-                        div.classList.remove('selected')
-                    })
-                    this.classList.toggle('selected')
-                })
-            })
+            updateTotalPrice()
         }
 
         // Добавляем обработчик клика для кнопки 'addToService'
         addButton.addEventListener('click', function (){
+            console.log('добавление в заказ наряд')
             selectedServices.forEach(function (serviceId){
                 //проверяем наличие такого id
                 if (!addedService.includes(serviceId)) {
@@ -229,8 +226,8 @@ function order(){
                 }
             })
             selectedServices.length = 0
-            removeHighlight()
             updateAddedServiceList()
+            removeHighlight()
             console.log('addedService:',addedService)
         })
 
@@ -239,6 +236,7 @@ function order(){
         saveOrderButton.addEventListener('click', function (){
            console.log('сохраняем заказ наряд')
             saveOrder()
+            location.reload()
             })
 
         //функция сохранения заказа
@@ -276,8 +274,8 @@ function order(){
                     total += parseInt(serviceCh.price)
                 }
             })
-            const totalPrice = document.getElementById('totalDiv')
-            totalPrice.textContent = total
+            const totalAmount = document.getElementById('totalAmount')
+            totalAmount.textContent = total
         }
     })
 
@@ -874,7 +872,12 @@ function history(){
                 clickedItem.classList.toggle('active')
                 let orderId = clickedItem.dataset.orderId
                 console.log('Выбарн заказ с Id: ', orderId)
+                window.location.href = '/order/' + orderId
             }
         })
     })
+}
+
+function oldOrder(){
+    console.log('oldOrder script')
 }

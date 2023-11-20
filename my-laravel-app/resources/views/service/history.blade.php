@@ -7,7 +7,7 @@
             <div id ="order-list" class="order-list">
                 @foreach($orders as $order)
                     <div class="order-item" id="order-item" data-order-id=" {{$order->id}} ">
-                        <p>{{ $order->specialization->specializationName}} - {{ $order->client->name}} - {{ $order->total_amount }}</p>
+                        <p>{{$order->created_at}} - {{ $order->specialization->specializationName}} - {{ $order->client->name}} - {{ $order->total_amount }}</p>
                     </div>
                 @endforeach
             </div>
