@@ -6,11 +6,10 @@
 
         @if($order)
             <p>ID: {{ $order->id }}</p>
-            <p>специализация: {{ $order->specialization->name }}</p>
-            <p>Клмент: {{ $order->client->name }}</p>
+            <p>специализация: {{ $order->specialization->specializationName }}</p>
+            <p>Клиент: {{ $order->client->name }}</p>
             <p>Время выполнения: {{ $order->hours }} часов {{ $order->minutes }} минут</p>
             <p>Общая сумма: {{ $order->total_amount }}</p>
-
 
             <h4>Выполненные услуги</h4>
             @if(count($order->services) > 0)
@@ -22,6 +21,16 @@
             @else
                 <p>нет выполненных услуг</p>
             @endif
+
+            <p>Материалы:
+                @if($order->materials) {{ $order->materials }}
+                @else нет материалов
+                @endif
+            </p>
+            <p>Коментарии:
+                @if( ! $order->comments ) нет коментариев
+                @endif{{ $order->comments }}</p>
+
         @else
             <p>нет заказ нарядов</p>
         @endif

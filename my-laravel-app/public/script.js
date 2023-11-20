@@ -1,5 +1,11 @@
 let csrfToken = document.querySelector('meta[name="csrf-token"]').content
 
+function delay(sec){
+    setTimeout(function (){
+        console.log('go')
+    }, sec*1000)
+}
+
 if(document.querySelector('#displaySelectedWorks')){
     console.log('order script')
     order()
@@ -67,6 +73,7 @@ function order(){
             xhr.send()
 
         }
+
         function loadServicesByCategory(categoryId){
             let xhr = new XMLHttpRequest()
             xhr.open('GET', `/get_service/${categoryId}`, true)
@@ -236,7 +243,7 @@ function order(){
         saveOrderButton.addEventListener('click', function (){
            console.log('сохраняем заказ наряд')
             saveOrder()
-            location.reload()
+            //location.reload()
             })
 
         //функция сохранения заказа
@@ -245,10 +252,18 @@ function order(){
             console.log('specializationId: ', specializationId)
             let clientId = document.getElementById('clients').value
             console.log('addedServices: ', addedService)
+            let totalAmount = document.getElementById('totalAmount').textContent
+            console.log('totalAmount',totalAmount)
+            let materials = document.getElementById('materials').value
+            console.log('materials: ', materials)
+            let comments = document.getElementById('comments').value
             let orderData = {
                 specializationId: specializationId,
                 clientId: clientId,
-                services: addedService
+                services: addedService,
+                totalAmount: totalAmount,
+                materials: materials,
+                comments: comments,
             }
             let xhr = new XMLHttpRequest()
             xhr.open('POST', '/save_order', true)

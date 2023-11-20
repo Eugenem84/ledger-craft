@@ -47,3 +47,10 @@ nav ul li {
 .p {
     margin: 0;
 }
+
+textarea {
+    resize: vertical ;
+    overflow: auto;
+    min-height: 50px;
+    height: auto;
+}

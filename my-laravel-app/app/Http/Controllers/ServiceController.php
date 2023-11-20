@@ -22,9 +22,14 @@ class ServiceController extends Controller
         $order = new Order();
         $order->client_id = $request->input('clientId');
         $order->specialization_id = $request->input('specializationId');
+        $order->total_amount = (int)$request->input('totalAmount');
+        $order->materials = $request->input('materials');
+        $order->comments = $request->input('comments');
         $order->save();
         if ($request->has('services') && is_array($request->input('services'))) {
             $order->services()->attach($request->input('services'));
+        } else {
+            return response()->json(['message' => 'ошибка записи']);
         }
     }
     public function show()
