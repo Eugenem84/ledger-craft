@@ -2,18 +2,13 @@
     <x-slot name="title">Редактирование заказ наряда</x-slot>
 
     <div id="editOrder">
-        <h3>Редактирование - Заказ наряда: </h3>
+        <h3>Редактирование заказ-наряда: </h3>
 
         @if($order)
-            <p>ID: <span id="orderId"> {{ $order->id }} </span></p>
-            <p>специализация: {{$order->specialization->specializationName}}</p>
 
-{{--            <lable for="specialization">специализация</lable>--}}
-{{--            <select name="specialization" id="specialization">--}}
-{{--                @foreach($specializations as $specialization)--}}
-{{--                    <option value="{{ $specialization->id }}">{{ $specialization->specializationName  }}</option>--}}
-{{--                @endforeach--}}
-{{--            </select>--}}
+                ID: <span id="orderId"> {{ $order->id }} | </span>
+                <span id="specializationSpan"> специализация: {{$order->specialization->specializationName}} | </span>
+
 
             <lable for="clients">Клиент</lable>
             <select name="clients" id="clients">
@@ -23,19 +18,16 @@
                     </option>
                 @endforeach
             </select>
-
-{{--            <lable for="category">категория</lable>--}}
-{{--            <select name="category" id="category">--}}
-{{--                @foreach($categories as $category)--}}
-{{--                    <option value="{{ $category->id }}">{{ $category->category_name }}</option>--}}
-{{--                @endforeach--}}
-{{--            </select>--}}
-{{--            <h3>Выберите вид работ: </h3>--}}
-{{--            <div id="services">--}}
-{{--            </div>--}}
-
-            <p>Время выполнения: {{ $order->hours }} часов {{ $order->minutes }} минут</p>
-            <p>Общая сумма: {{ $order->total_amount }}</p>
+            <br>
+            <lable for="category">категория</lable>
+            <select name="category" id="category">
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                @endforeach
+            </select>
+            <h3>Выберите вид работ: </h3>
+            <div id="services">
+            </div>
 
             <h4>Выполненные услуги</h4>
             @if(count($order->services) > 0)
@@ -47,6 +39,9 @@
             @else
                 <p>нет выполненных услуг</p>
             @endif
+
+            <p>Общая сумма: {{ $order->total_amount }}</p>
+
 
             <p>Материалы:
                 @if($order->materials) {{ $order->materials }}

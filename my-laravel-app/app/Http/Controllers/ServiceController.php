@@ -23,12 +23,15 @@ class ServiceController extends Controller
         $specialization = $order->specialization;
         //получаем клиентов специализации
         $clients = $specialization->clients;
+        //получаем категории по специализации
+        $categories = Category::where('specialization_id', $specialization->id)->get();
         if (!$order){
             return view(404,'order.not_found');
         } else {
             return view('service.edit_order', [
                 'order' => $order,
                 'clients' => $clients,
+                'categories' => $categories,
             ]);
         }
     }
