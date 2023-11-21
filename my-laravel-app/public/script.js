@@ -2,6 +2,9 @@ let csrfToken = document.querySelector('meta[name="csrf-token"]').content
 
 let selectedServices = []
 
+//вспомогательная для  editOldOrder
+let loadedServices = []
+
 function delay(sec){
     setTimeout(function (){
         console.log('go')
@@ -76,6 +79,8 @@ function loadServicesByCategory(categoryId){
     xhr.onload = function (){
         if (xhr.status >= 200 && xhr.status < 400) {
             let services = JSON.parse(xhr.responseText)
+            loadedServices = services
+            console.log('loadedServices', loadedServices)
             console.log('Категория Id: ', categoryId, ' сервисы: ', services)
             let servicesDiv = document.getElementById('services')
             servicesDiv.innerHTML = ''
@@ -1021,29 +1026,126 @@ function oldOrder(){
 }
 
 function editOldOrder(){
+    //зраним добавленые в заказ наряд id
     let addedServiceList = []
+
     console.log('editOldOrder script')
+
+    //перебираем имеющиеся дивы и добавляем в addServiceList
     let serviceItems = document.querySelectorAll('.serviceItem')
     serviceItems.forEach(function (serviceItem){
         let serviceId = serviceItem.getAttribute('data-service-id')
-        addedServiceList.push(serviceId)
+        addedServiceList.push(parseInt(serviceId))
     })
     console.log('Выполненные услуги', addedServiceList)
+
+    //получение текущей категории
     let currentCategoryId = document.getElementById('category').value
+
     let addToServiceListButton = document.getElementById('addToServiceList')
     console.log('выбрана категория Id: ', currentCategoryId)
+
+    //загружаем сервисы по категориям
     loadServicesByCategory(currentCategoryId)
+
+    //обработчик изменения категории
     document.getElementById('category').addEventListener('change', function (){
         let categoryId = this.value
         loadServicesByCategory(categoryId)
     })
+
+    //отображаем сервис лист
+    function displayAddedServices(addedServiceList){
+        //див с выполненными услугами
+        let serviceDoneDiv = document.getElementById('serviceDoneDiv')
+
+        //очищаем
+        serviceDoneDiv.innerHTML = ''
+        if (addedServiceList.length > 0) {
+            addedServiceList.forEach(function (serviceId){
+
+                //ищем в блейде переменные содержащие этот id
+                let serviceCh = services.find(service => service.id === parseInt(serviceId, 10))
+
+                //если содержит
+                if (serviceCh) {
+
+                    //создаем новый див
+                    let newServiceDiv = document.createElement('div')
+
+                    //вставляем данные
+                    newServiceDiv.dataset.serviceId = serviceId
+                    newServiceDiv.classList.add('serviceItem')
+                    newServiceDiv.textContent = `${serviceCh.service} - ${serviceCh.price}`
+
+                    let removeButton = document.createElement('button')
+                    removeButton.classList.add('removeServiceButton')
+                    removeButton.textContent = 'удалить'
+                    removeButton.addEventListener('click', function (){
+                        console.log('Удаляем услугу с Id: ', serviceCh.id)
+
+                        //тут логика для удаления
+                        let indexToRemove = addedServiceList.indexOf(serviceId)
+                        if (indexToRemove !== -1){
+                            addedServiceList.splice(indexToRemove, 1)
+                            newServiceDiv.remove()
+                            console.log('список добавденных услуг', addedServiceList)
+                        }
+                    })
+
+                    newServiceDiv.appendChild(removeButton)
+                    serviceDoneDiv.appendChild(newServiceDiv)
+                }
+            })
+        }else {
+            serviceDoneDiv.textContent = 'нет выполненных услуг'
+        }
+    }
+    function displayNewAddedServices(){
+        let serviceDoneDiv = document.getElementById('serviceDoneDiv')
+
+        if (addedServiceList.length > 0) {
+            addedServiceList.forEach(function (serviceId){
+
+            let newServiceDiv = document.createElement('div')
+                newServiceDiv.dataset.serviceId = serviceId
+                newServiceDiv.classList.add('serviceItem')
+                newServiceDiv.textContent = `${loadedServices.service} - ${loadedServices.price}`
+
+                let removeButton = document.createElement('button')
+                removeButton.classList.add('removeServiceButton')
+                removeButton.textContent = 'удалить'
+                removeButton.addEventListener('click', function (){
+                    console.log('Удаляем услугу с Id: ', loadedServices.id)
+
+                    //тут логика для удаления
+                    let indexToRemove = addedServiceList.indexOf(serviceId)
+                    if (indexToRemove !== -1){
+                        addedServiceList.splice(indexToRemove, 1)
+                        newServiceDiv.remove()
+                        console.log('список добавденных услуг', addedServiceList)
+                    }
+                })
+
+                newServiceDiv.appendChild(removeButton)
+                serviceDoneDiv.appendChild(newServiceDiv)
+
+            })
+        }else {
+            serviceDoneDiv.textContent = 'нет выполненных услуг'
+        }
+    }
+
+    //обработчик кнопки добавления "добавить в заказ наряд"
     addToServiceListButton.addEventListener('click', function (){
         let selectedServiceString = selectedServices.map(serviceId => String(serviceId))
         let newServices = selectedServiceString.filter(serviceId => !addedServiceList.includes(serviceId))
-        addedServiceList = addedServiceList.concat(newServices)
-        console.log(addedServiceList)
+        addedServiceList = addedServiceList.concat(parseInt(newServices))
+        console.log('обновляем список услуг: ', addedServiceList)
+        displayNewAddedServices()
         selectedServices.length = 0
         removeHighlight()
-    })
 
+    })
+    displayAddedServices(addedServiceList)
 }

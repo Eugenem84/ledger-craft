@@ -38,6 +38,11 @@
             <br>
             <button id="addToServiceList" data-id="addToServiceList">добавить в заказ наряд</button>
 
+            <script>
+                const services = {!! json_encode($order->services) !!};
+                const servicesByCategory = {!! json_encode($category->service) !!};
+            </script>
+
 
             <div id="displayOldSelectedWorks"></div>
             <br>
@@ -46,18 +51,20 @@
             </div>
 
             <h4>Выполненные услуги</h4>
-            @if(count($order->services) > 0)
-                <ul>
-                    @foreach($order->services as $service)
-                        <div class="serviceItem" data-service-id="{{ $service->id }}">
-                            {{ $service->service }} - {{ $service->price }}
-                            <button class="removeServiceButton">Удалить</button>
-                        </div>
-                    @endforeach
-                </ul>
-            @else
-                <p>нет выполненных услуг</p>
-            @endif
+            <div id="serviceDoneDiv">
+                @if(count($order->services) > 0)
+                    <ul>
+                        @foreach($order->services as $service)
+                            <div class="serviceItem" data-service-id="{{ $service->id }}">
+                                {{ $service->service }} - {{ $service->price }}
+                                <button class="removeServiceButton">Удалить</button>
+                            </div>
+                      @endforeach
+                    </ul>
+                @else
+                    <p>нет выполненных услуг</p>
+               @endif
+            </div>
 
             <p>Общая сумма: {{ $order->total_amount }}</p>
 
