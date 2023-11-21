@@ -31,15 +31,15 @@
             </div>
 
             <br>
-            <h3>Заказ наряд:</h3>
-            <div class="order">
+            <h3>Заказ наряд: </h3>
+            <div class="oldOrder">
             </div>
 
             <br>
             <button id="addToServiceList" data-id="addToServiceList">добавить в заказ наряд</button>
 
 
-            <div id="displaySelectedWorks"></div>
+            <div id="displayOldSelectedWorks"></div>
             <br>
             <div id="totalDiv">
                 <span id="totalText">Общая сумма: </span> <span id="totalAmount"></span>
@@ -49,7 +49,10 @@
             @if(count($order->services) > 0)
                 <ul>
                     @foreach($order->services as $service)
-                        <li>{{ $service->service }} - {{ $service->price }} </li>
+                        <div class="serviceItem" data-service-id="{{ $service->id }}">
+                            {{ $service->service }} - {{ $service->price }}
+                            <button class="removeServiceButton">Удалить</button>
+                        </div>
                     @endforeach
                 </ul>
             @else
@@ -57,7 +60,6 @@
             @endif
 
             <p>Общая сумма: {{ $order->total_amount }}</p>
-
 
             <p>Материалы:
                 @if($order->materials) {{ $order->materials }}

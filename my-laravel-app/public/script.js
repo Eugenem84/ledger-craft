@@ -32,46 +32,10 @@ if (document.querySelector('#editOldOrder')){
 
 function updateAddedOldServiceList(addedServicesId){
     console.log('обновление списка учлуг', addedServicesId)
-    let displaySelectedWorks = document.getElementById('displaySelectedWorks')
-    displaySelectedWorks.innerHTML = ''
-    let total = 0
-    addedServiceId.forEach(function (serviceId){
-        const serviceCh = services.find(service => service.id === serviceId )
-        if (serviceCh) {
-            const serviceDiv = document.createElement('div');
-            serviceDiv.textContent = `${serviceCh.service} - ${serviceCh.price}`
-            //serviceDiv.classList.add('selectable')
-            serviceDiv.dataset.id = serviceCh.id
 
-            const deleteButton = document.createElement('button')
-            deleteButton.textContent = 'удалить'
-            deleteButton.addEventListener('click', function (){
-                const idToRemove = parseInt(this.parentElement.dataset.id)
-                console.log("idToRemove: ",idToRemove)
-                console.log(addedServiceId)
-                const indexToRemove = addedService.indexOf(idToRemove)
-                console.log("indexToRemove: ",indexToRemove)
-                if (indexToRemove !== -1) {
-                    console.log('ok remove')
-                    addedService.splice(indexToRemove,1)
-                    this.parentElement.remove()
-                    updateTotalPrice()
-                } else {
-                    console.log("!не найден в addedService!")
-                }
-                console.log("remove click")
-                console.log("addedService: ",addedService)
-            })
-            serviceDiv.appendChild(deleteButton)
-
-            displaySelectedWorks.appendChild(serviceDiv)
-            total += parseInt(serviceCh.price)
-        }
-    })
-    //Тут нужно все переписать
 }
 
-function  loadCategoryBySpecialization(specializationId){
+function loadCategoryBySpecialization(specializationId){
     console.log('Выбрана специализация: ', specializationId)
     let xhr = new XMLHttpRequest()
     xhr.open('GET', `/get_categories/${specializationId}`, true)
@@ -171,6 +135,15 @@ function addClickHandlers(){
             console.log('selected Service', selectedServices)
         })
     })
+}
+
+function removeHighlight() {
+
+    const serviceDivs = document.querySelectorAll('.selectable')
+    serviceDivs.forEach(function (serviceDivs){
+        serviceDivs.style.background = ''
+    })
+    console.log('снятие выделения')
 }
 
 function order(){
@@ -322,52 +295,48 @@ function order(){
         const addButton = document.getElementById('addToServiceList')
 
         // Функция для снятия выделения с сервисов
-        function removeHighlight() {
-
-            const serviceDivs = document.querySelectorAll('.selectable')
-            serviceDivs.forEach(function (serviceDivs){
-                serviceDivs.style.background = ''
-            })
-            console.log('снятие выделения')
-        }
+        // function removeHighlight() {
+        //
+        //     const serviceDivs = document.querySelectorAll('.selectable')
+        //     serviceDivs.forEach(function (serviceDivs){
+        //         serviceDivs.style.background = ''
+        //     })
+        //     console.log('снятие выделения')
+        // }
 
         // Функция для обновления списка добавленных сервисов
         function updateAddedServiceList() {
             displaySelectedWorks.innerHTML = ''
             let total = 0
-            addedService.forEach(function (serviceId){
-                const serviceCh = services.find(service => service.id === serviceId )
+
+            addedService.forEach(function (serviceId) {
+                const serviceCh = services.find(service => service.id === parseInt(serviceId, 10));
+
                 if (serviceCh) {
-                    const serviceDiv = document.createElement('div');
+                    const serviceDiv = document.createElement('div')
                     serviceDiv.textContent = `${serviceCh.service} - ${serviceCh.price}`
-                    //serviceDiv.classList.add('selectable')
+                    serviceDiv.classList.add('selectable')
                     serviceDiv.dataset.id = serviceCh.id
 
                     const deleteButton = document.createElement('button')
                     deleteButton.textContent = 'удалить'
-                    deleteButton.addEventListener('click', function (){
-                        const idToRemove = parseInt(this.parentElement.dataset.id)
-                        console.log("idToRemove: ",idToRemove)
-                        console.log(addedService)
+                    deleteButton.addEventListener('click', function () {
+                        const idToRemove = parseInt(this.parentElement.dataset.id, 10)
+                        console.log('удаляем услугу с id: ', idToRemove)
                         const indexToRemove = addedService.indexOf(idToRemove)
-                        console.log("indexToRemove: ",indexToRemove)
+
                         if (indexToRemove !== -1) {
-                            console.log('ok remove')
-                            addedService.splice(indexToRemove,1)
+                            addedService.splice(indexToRemove, 1)
                             this.parentElement.remove()
                             updateTotalPrice()
-                        } else {
-                            console.log("!не найден в addedService!")
                         }
-                        console.log("remove click")
-                        console.log("addedService: ",addedService)
-                    })
-                    serviceDiv.appendChild(deleteButton)
+                    });
 
+                    serviceDiv.appendChild(deleteButton)
                     displaySelectedWorks.appendChild(serviceDiv)
-                    total += parseInt(serviceCh.price)
+                    total += parseInt(serviceCh.price, 10)
                 }
-            })
+            });
             updateTotalPrice()
         }
 
@@ -1054,6 +1023,12 @@ function oldOrder(){
 function editOldOrder(){
     let addedServiceList = []
     console.log('editOldOrder script')
+    let serviceItems = document.querySelectorAll('.serviceItem')
+    serviceItems.forEach(function (serviceItem){
+        let serviceId = serviceItem.getAttribute('data-service-id')
+        addedServiceList.push(serviceId)
+    })
+    console.log('Выполненные услуги', addedServiceList)
     let currentCategoryId = document.getElementById('category').value
     let addToServiceListButton = document.getElementById('addToServiceList')
     console.log('выбрана категория Id: ', currentCategoryId)
@@ -1062,21 +1037,13 @@ function editOldOrder(){
         let categoryId = this.value
         loadServicesByCategory(categoryId)
     })
-
-    updateAddedOldServiceList(addedServiceList)
-
-    // Добавляем обработчик клика для кнопки 'addToService'
     addToServiceListButton.addEventListener('click', function (){
-        console.log('добавление в заказ наряд')
-        selectedServices.forEach(function (serviceId){
-            //проверяем наличие такого id
-            if (!addedService.includes(serviceId)) {
-                addedService.push(serviceId)
-            }
-        })
+        let selectedServiceString = selectedServices.map(serviceId => String(serviceId))
+        let newServices = selectedServiceString.filter(serviceId => !addedServiceList.includes(serviceId))
+        addedServiceList = addedServiceList.concat(newServices)
+        console.log(addedServiceList)
         selectedServices.length = 0
-
-        console.log('addedService:',addedService)
+        removeHighlight()
     })
-    //  ТУТ ППЦ надо все переписывать
+
 }
