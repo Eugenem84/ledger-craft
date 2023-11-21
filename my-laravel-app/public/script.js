@@ -79,7 +79,7 @@ function loadServicesByCategory(categoryId){
     xhr.onload = function (){
         if (xhr.status >= 200 && xhr.status < 400) {
             let services = JSON.parse(xhr.responseText)
-            loadedServices = services
+            loadedServices.push(...services)
             console.log('loadedServices', loadedServices)
             console.log('Категория Id: ', categoryId, ' сервисы: ', services)
             let servicesDiv = document.getElementById('services')
@@ -1026,7 +1026,7 @@ function oldOrder(){
 }
 
 function editOldOrder(){
-    //зраним добавленые в заказ наряд id
+    //храним добавленые в заказ наряд id
     let addedServiceList = []
 
     console.log('editOldOrder script')
@@ -1102,33 +1102,38 @@ function editOldOrder(){
         }
     }
     function displayNewAddedServices(){
+
         let serviceDoneDiv = document.getElementById('serviceDoneDiv')
+        serviceDoneDiv.innerHTML = ''
+
 
         if (addedServiceList.length > 0) {
             addedServiceList.forEach(function (serviceId){
 
-            let newServiceDiv = document.createElement('div')
+                let loadedService = loadedServices.find(service => service.id === parseInt(serviceId, 10))
+
+                let newServiceDiv = document.createElement('div')
                 newServiceDiv.dataset.serviceId = serviceId
                 newServiceDiv.classList.add('serviceItem')
-                newServiceDiv.textContent = `${loadedServices.service} - ${loadedServices.price}`
+                newServiceDiv.textContent = `${loadedService.service} - ${loadedService.price}`
 
                 let removeButton = document.createElement('button')
                 removeButton.classList.add('removeServiceButton')
                 removeButton.textContent = 'удалить'
                 removeButton.addEventListener('click', function (){
-                    console.log('Удаляем услугу с Id: ', loadedServices.id)
+                console.log('Удаляем услугу с Id: ', loadedServices.id)
 
-                    //тут логика для удаления
-                    let indexToRemove = addedServiceList.indexOf(serviceId)
-                    if (indexToRemove !== -1){
-                        addedServiceList.splice(indexToRemove, 1)
-                        newServiceDiv.remove()
-                        console.log('список добавденных услуг', addedServiceList)
-                    }
-                })
+                //тут логика для удаления
+                let indexToRemove = addedServiceList.indexOf(serviceId)
+                if (indexToRemove !== -1){
+                    addedServiceList.splice(indexToRemove, 1)
+                    newServiceDiv.remove()
+                    console.log('список добавденных услуг', addedServiceList)
+                }
+            })
 
-                newServiceDiv.appendChild(removeButton)
-                serviceDoneDiv.appendChild(newServiceDiv)
+            newServiceDiv.appendChild(removeButton)
+            serviceDoneDiv.appendChild(newServiceDiv)
 
             })
         }else {
@@ -1140,6 +1145,13 @@ function editOldOrder(){
     addToServiceListButton.addEventListener('click', function (){
         let selectedServiceString = selectedServices.map(serviceId => String(serviceId))
         let newServices = selectedServiceString.filter(serviceId => !addedServiceList.includes(serviceId))
+        //
+        // newServices.forEach(serviceId => {
+        //     if(!addedServiceList.includes(serviceId)) {
+        //         addedServiceList.concat(parseInt(newServices))
+        //     }
+        // })
+
         addedServiceList = addedServiceList.concat(parseInt(newServices))
         console.log('обновляем список услуг: ', addedServiceList)
         displayNewAddedServices()

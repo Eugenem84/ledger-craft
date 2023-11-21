@@ -40,7 +40,7 @@
 
             <script>
                 const services = {!! json_encode($order->services) !!};
-                const servicesByCategory = {!! json_encode($category->service) !!};
+                {{--const servicesByCategory = {!! json_encode($category->service) !!};--}}
             </script>
 
 
