@@ -40,14 +40,13 @@
 
             <script>
                 const services = {!! json_encode($order->services) !!};
-                {{--const servicesByCategory = {!! json_encode($category->service) !!};--}}
             </script>
 
 
             <div id="displayOldSelectedWorks"></div>
             <br>
             <div id="totalDiv">
-                <span id="totalText">Общая сумма: </span> <span id="totalAmount"></span>
+                <span id="totalText">Общая сумма: </span> <span id="totalAmount"> {{ $order->total_amount }} </span>
             </div>
 
             <h4>Выполненные услуги</h4>
@@ -65,8 +64,6 @@
                     <p>нет выполненных услуг</p>
                @endif
             </div>
-
-            <p>Общая сумма: {{ $order->total_amount }}</p>
 
             <p>Материалы:
                 @if($order->materials) {{ $order->materials }}

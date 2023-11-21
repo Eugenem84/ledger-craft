@@ -5,11 +5,6 @@ let selectedServices = []
 //вспомогательная для  editOldOrder
 let loadedServices = []
 
-function delay(sec){
-    setTimeout(function (){
-        console.log('go')
-    }, sec*1000)
-}
 
 if(document.querySelector('#displaySelectedWorks')){
     console.log('order script')
@@ -33,10 +28,6 @@ if (document.querySelector('#editOldOrder')){
     editOldOrder()
 }
 
-function updateAddedOldServiceList(addedServicesId){
-    console.log('обновление списка учлуг', addedServicesId)
-
-}
 
 function loadCategoryBySpecialization(specializationId){
     console.log('Выбрана специализация: ', specializationId)
@@ -1028,6 +1019,12 @@ function oldOrder(){
 function editOldOrder(){
     //храним добавленые в заказ наряд id
     let addedServiceList = []
+    let totalAmount = 0
+
+    function updateTotalAmount(){
+        document.getElementById('totalAmount').textContent = totalAmount
+        //console.log('totalAmount: ', totalAmount)
+    }
 
     console.log('editOldOrder script')
 
@@ -1103,6 +1100,7 @@ function editOldOrder(){
     }
     function displayNewAddedServices(){
 
+        totalAmount = 0
         let serviceDoneDiv = document.getElementById('serviceDoneDiv')
         serviceDoneDiv.innerHTML = ''
 
@@ -1116,42 +1114,38 @@ function editOldOrder(){
                 newServiceDiv.dataset.serviceId = serviceId
                 newServiceDiv.classList.add('serviceItem')
                 newServiceDiv.textContent = `${loadedService.service} - ${loadedService.price}`
+                totalAmount += loadedService.price
+                //console.log('totalAmount',totalAmount)
 
                 let removeButton = document.createElement('button')
                 removeButton.classList.add('removeServiceButton')
                 removeButton.textContent = 'удалить'
                 removeButton.addEventListener('click', function (){
-                console.log('Удаляем услугу с Id: ', loadedServices.id)
+                    console.log('Удаляем услугу с Id: ', loadedServices.id)
 
-                //тут логика для удаления
-                let indexToRemove = addedServiceList.indexOf(serviceId)
-                if (indexToRemove !== -1){
-                    addedServiceList.splice(indexToRemove, 1)
-                    newServiceDiv.remove()
-                    console.log('список добавденных услуг', addedServiceList)
-                }
-            })
+                    //тут логика для удаления
+                    let indexToRemove = addedServiceList.indexOf(serviceId)
+                    if (indexToRemove !== -1){
+                        addedServiceList.splice(indexToRemove, 1)
+                        newServiceDiv.remove()
+                        console.log('список добавденных услуг', addedServiceList)
+                    }
+                })
 
-            newServiceDiv.appendChild(removeButton)
-            serviceDoneDiv.appendChild(newServiceDiv)
+                newServiceDiv.appendChild(removeButton)
+                serviceDoneDiv.appendChild(newServiceDiv)
 
             })
         }else {
             serviceDoneDiv.textContent = 'нет выполненных услуг'
         }
+        updateTotalAmount()
     }
 
     //обработчик кнопки добавления "добавить в заказ наряд"
     addToServiceListButton.addEventListener('click', function (){
         let selectedServiceString = selectedServices.map(serviceId => String(serviceId))
         let newServices = selectedServiceString.filter(serviceId => !addedServiceList.includes(serviceId))
-        //
-        // newServices.forEach(serviceId => {
-        //     if(!addedServiceList.includes(serviceId)) {
-        //         addedServiceList.concat(parseInt(newServices))
-        //     }
-        // })
-
         addedServiceList = addedServiceList.concat(parseInt(newServices))
         console.log('обновляем список услуг: ', addedServiceList)
         displayNewAddedServices()
