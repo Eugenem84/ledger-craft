@@ -1019,9 +1019,20 @@ function oldOrder(){
 function editOldOrder(){
     //храним добавленые в заказ наряд id
     let addedServiceList = []
-    let totalAmount = 0
 
     function updateTotalAmount(){
+
+        //НЕ РАБОТАЕТ
+
+        let totalAmount = 0
+
+        addedServiceList.forEach(function (serviceId){
+            let service = services.find(s => s.id === parseInt(serviceId, 10))
+            if (service){
+                totalAmount += service.price
+            }
+        })
+
         document.getElementById('totalAmount').textContent = totalAmount
         //console.log('totalAmount: ', totalAmount)
     }
@@ -1100,7 +1111,7 @@ function editOldOrder(){
     }
     function displayNewAddedServices(){
 
-        totalAmount = 0
+        //totalAmount = 0
         let serviceDoneDiv = document.getElementById('serviceDoneDiv')
         serviceDoneDiv.innerHTML = ''
 
@@ -1114,14 +1125,13 @@ function editOldOrder(){
                 newServiceDiv.dataset.serviceId = serviceId
                 newServiceDiv.classList.add('serviceItem')
                 newServiceDiv.textContent = `${loadedService.service} - ${loadedService.price}`
-                totalAmount += loadedService.price
+                //totalAmount += loadedService.price
                 //console.log('totalAmount',totalAmount)
 
                 let removeButton = document.createElement('button')
                 removeButton.classList.add('removeServiceButton')
                 removeButton.textContent = 'удалить'
                 removeButton.addEventListener('click', function (){
-                    console.log('Удаляем услугу с Id: ', loadedServices.id)
 
                     //тут логика для удаления
                     let indexToRemove = addedServiceList.indexOf(serviceId)
@@ -1144,9 +1154,14 @@ function editOldOrder(){
 
     //обработчик кнопки добавления "добавить в заказ наряд"
     addToServiceListButton.addEventListener('click', function (){
-        let selectedServiceString = selectedServices.map(serviceId => String(serviceId))
-        let newServices = selectedServiceString.filter(serviceId => !addedServiceList.includes(serviceId))
-        addedServiceList = addedServiceList.concat(parseInt(newServices))
+        let newServices = selectedServices.filter(serviceId => !addedServiceList.includes(serviceId))
+        newServices.forEach(serviceId => {
+            if (!addedServiceList.includes(serviceId)){
+                addedServiceList.push(parseInt(serviceId))
+            } else {
+                console.log('такой сервис уже есть: ', serviceId)
+            }
+        })
         console.log('обновляем список услуг: ', addedServiceList)
         displayNewAddedServices()
         selectedServices.length = 0
