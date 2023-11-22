@@ -70,7 +70,12 @@ function loadServicesByCategory(categoryId){
     xhr.onload = function (){
         if (xhr.status >= 200 && xhr.status < 400) {
             let services = JSON.parse(xhr.responseText)
-            loadedServices.push(...services)
+            services.forEach(service => {
+                if (!loadedServices.includes(service)){
+                    loadedServices.push(service)
+                }
+            })
+            //loadedServices.push(...services)
             console.log('loadedServices', loadedServices)
             console.log('Категория Id: ', categoryId, ' сервисы: ', services)
             let servicesDiv = document.getElementById('services')
@@ -1020,6 +1025,10 @@ function editOldOrder(){
     //храним добавленые в заказ наряд id
     let addedServiceList = []
 
+    function loadAllServices(){
+        //нужно опдгрузить все сервисы находящиеся в ордере
+    }
+
     function updateTotalAmount(){
 
         //НЕ РАБОТАЕТ
@@ -1047,6 +1056,7 @@ function editOldOrder(){
     })
     console.log('Выполненные услуги', addedServiceList)
 
+    //loadedServices.push(...services)
     //получение текущей категории
     let currentCategoryId = document.getElementById('category').value
 
