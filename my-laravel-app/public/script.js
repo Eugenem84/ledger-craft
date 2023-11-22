@@ -75,7 +75,7 @@ function loadServicesByCategory(categoryId){
                     loadedServices.push(service)
                 }
             })
-            //loadedServices.push(...services)
+            loadedServices.push(...services)
             console.log('loadedServices', loadedServices)
             console.log('Категория Id: ', categoryId, ' сервисы: ', services)
             let servicesDiv = document.getElementById('services')
@@ -1024,6 +1024,7 @@ function oldOrder(){
 function editOldOrder(){
     //храним добавленые в заказ наряд id
     let addedServiceList = []
+    let totalAmount
 
     function loadAllServices(){
         //нужно опдгрузить все сервисы находящиеся в ордере
@@ -1033,17 +1034,16 @@ function editOldOrder(){
 
         //НЕ РАБОТАЕТ
 
-        let totalAmount = 0
-
+        totalAmount = 0
         addedServiceList.forEach(function (serviceId){
-            let service = services.find(s => s.id === parseInt(serviceId, 10))
+            let service = loadedServices.find(s => s.id === serviceId)
             if (service){
                 totalAmount += service.price
             }
         })
 
         document.getElementById('totalAmount').textContent = totalAmount
-        //console.log('totalAmount: ', totalAmount)
+        console.log('totalAmount: ', totalAmount)
     }
 
     console.log('editOldOrder script')
@@ -1054,9 +1054,9 @@ function editOldOrder(){
         let serviceId = serviceItem.getAttribute('data-service-id')
         addedServiceList.push(parseInt(serviceId))
     })
-    console.log('Выполненные услуги', addedServiceList)
+    console.log('addedServiceList', addedServiceList)
 
-    //loadedServices.push(...services)
+    loadedServices.push(...services)
     //получение текущей категории
     let currentCategoryId = document.getElementById('category').value
 
@@ -1121,7 +1121,7 @@ function editOldOrder(){
     }
     function displayNewAddedServices(){
 
-        //totalAmount = 0
+        //let totalAmount = 0
         let serviceDoneDiv = document.getElementById('serviceDoneDiv')
         serviceDoneDiv.innerHTML = ''
 
@@ -1142,7 +1142,6 @@ function editOldOrder(){
                 removeButton.classList.add('removeServiceButton')
                 removeButton.textContent = 'удалить'
                 removeButton.addEventListener('click', function (){
-
                     //тут логика для удаления
                     let indexToRemove = addedServiceList.indexOf(serviceId)
                     if (indexToRemove !== -1){
@@ -1150,11 +1149,11 @@ function editOldOrder(){
                         newServiceDiv.remove()
                         console.log('список добавденных услуг', addedServiceList)
                     }
+                    updateTotalAmount()
                 })
 
                 newServiceDiv.appendChild(removeButton)
                 serviceDoneDiv.appendChild(newServiceDiv)
-
             })
         }else {
             serviceDoneDiv.textContent = 'нет выполненных услуг'

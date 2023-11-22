@@ -58,7 +58,7 @@
                                 {{ $service->service }} - {{ $service->price }}
                                 <button class="removeServiceButton">Удалить</button>
                             </div>
-                      @endforeach
+                        @endforeach
                     </ul>
                 @else
                     <p>нет выполненных услуг</p>
