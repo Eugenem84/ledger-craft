@@ -6,8 +6,8 @@
 
         @if($order)
 
-                ID: <span id="orderId"> {{ $order->id }} | </span>
-                <span id="specializationSpan"> специализация: {{$order->specialization->specializationName}} | </span>
+                ID: <span id="orderId"> {{ $order->id }} </span>
+                <span id="specializationSpan" data-specialization-id="{{ $order->specialization->id }}"> специализация: {{$order->specialization->specializationName}} | </span>
 
 
             <lable for="clients">Клиент</lable>
@@ -39,7 +39,7 @@
             <button id="addToServiceList" data-id="addToServiceList">добавить в заказ наряд</button>
 
             <script>
-                const services = {!! json_encode($order->services) !!};
+                let services = {!! json_encode($order->services) !!};
             </script>
 
 
@@ -80,6 +80,7 @@
 
     </div>
 
+    <button id="saveOrderButton">Сохранить</button>
 
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>

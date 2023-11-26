@@ -42,3 +42,4 @@ Route::post('/edit_client', [ServiceController::class, 'editClient']);
 Route::get('/order/{orderId}', [ServiceController::class, 'showOrderDetails']);
 Route::post('/save_order', [ServiceController::class, 'saveOrder']);
 Route::get('/edit_order/{orderId}', [ServiceController::class, 'editOrder']);
+Route::post('/update_order', [ServiceController::class, 'updateOrder']);

@@ -17,6 +17,23 @@ use PHPUnit\Exception;
 class ServiceController extends Controller
 {
 
+    //обновление ордера
+    public function updateOrder(Request $request){
+        $orderId = $request->input('id');
+        $clientId = $request->input('client_id');
+        $specializationId = $request->input('specialization_id');
+        $serviceData = $request->input('services');
+        $totalAmount = $request->input('total_amount');
+
+        $order = Order::find($orderId);
+        $order->client_id = $clientId;
+        $order->total_amount = $totalAmount;
+        $order->services()->sync($serviceData);
+
+        return response()->json(['message'=> 'Ордер успешно обновился']);
+    }
+
+    //запрос на редактирование(отдает данные для редактора)
     public function editOrder($orderId){
         $order = Order::find($orderId);
         //получаем специализацию заказа

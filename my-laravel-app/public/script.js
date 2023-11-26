@@ -155,114 +155,8 @@ function order(){
         let defaultSpecializationId = document.getElementById('specialization').value
         loadCategoryBySpecialization(defaultSpecializationId)
 
-        //для правильной загрузки, изначально грузит вообще все, надо будет испралять в контролере
-        //loadServicesByCategory(defaultCategoryId)
-
         //загрузка клиента при обновлении страницы
         loadClientsBySpecialization(defaultSpecializationId)
-
-        //грузим категории по специализации
-        // function  loadCategoryBySpecialization(specializationId){
-        //     console.log('Выбрана специализация: ', specializationId)
-        //     let xhr = new XMLHttpRequest()
-        //     xhr.open('GET', `/get_categories/${specializationId}`, true)
-        //     xhr.onload = function (){
-        //         if (xhr.status >= 200 && xhr.status < 400) {
-        //             let categories = JSON.parse(xhr.responseText)
-        //             let categorySelect = document.getElementById('category')
-        //             categorySelect.innerHTML = ''
-        //             console.log('очистка')
-        //             console.log('categories: ',categories)
-        //             categories.forEach(function (category){
-        //                 console.log(category)
-        //                 let option = document.createElement('option')
-        //                 option.value = category.id
-        //                 option.textContent = category.category_name
-        //                 categorySelect.appendChild(option)
-        //             })
-        //
-        //             //обновление услуг при смене специализации
-        //             let selectedServiceId = document.getElementById('category').value
-        //             console.log('выбрана категория: ', selectedServiceId)
-        //             loadServicesByCategory(selectedServiceId)
-        //
-        //         } else {
-        //             console.error('Ошибка: ' + xhr.statusText)
-        //         }
-        //     }
-        //     xhr.onerror = function (){
-        //         console.error('Ошибка сети')
-        //     }
-        //     xhr.send()
-        // }
-
-        // function loadServicesByCategory(categoryId){
-        //     let xhr = new XMLHttpRequest()
-        //     xhr.open('GET', `/get_service/${categoryId}`, true)
-        //     xhr.onload = function (){
-        //         if (xhr.status >= 200 && xhr.status < 400) {
-        //             let services = JSON.parse(xhr.responseText)
-        //             console.log('Категория Id: ', categoryId, ' сервисы: ', services)
-        //             let servicesDiv = document.getElementById('services')
-        //             servicesDiv.innerHTML = ''
-        //             services.forEach(function (service){
-        //                 let serviceDiv = document.createElement('div')
-        //                 serviceDiv.textContent = `${service.service} - ${service.price}`
-        //                 serviceDiv.classList.add('selectable')
-        //                 serviceDiv.dataset.id = service.id
-        //                 servicesDiv.appendChild(serviceDiv)
-        //             })
-        //             addClickHandlers()
-        //         } else {
-        //             console.error('Ошибка: ' + xhr.statusText)
-        //         }
-        //     }
-        //     xhr.onerror = function (){
-        //         console.error('Ошибка сети')
-        //     }
-        //     xhr.send()
-        // }
-
-        // function loadClientsBySpecialization(specializationId){
-        //     console.log('ok')
-        //     let xhr = new XMLHttpRequest()
-        //     xhr.open('GET', `/get_clients/${specializationId}`, true)
-        //     xhr.onload = function (){
-        //         if (xhr.status >= 200 && xhr.status < 400) {
-        //             let clients = JSON.parse(xhr.responseText)
-        //             let clientSelect = document.getElementById('clients')
-        //             clientSelect.innerHTML = ''
-        //             clients.forEach(function (client){
-        //                 let option = document.createElement('option')
-        //                 option.value = client.id
-        //                 option.textContent = client.name + " - " + client.phone
-        //                 clientSelect.appendChild(option)
-        //             })
-        //         } else {
-        //             console.log('Ошибка: ' + xhr.statusText)
-        //         }
-        //     }
-        //     xhr.send()
-        // }
-
-        //обработчик клика для сервисов
-        // function addClickHandlers(){
-        //     const serviceDivs = document.querySelectorAll('.selectable')
-        //     serviceDivs.forEach(function (serviceDiv){
-        //         serviceDiv.addEventListener('click', function (){
-        //             const serviceId = parseInt(this.dataset.id);
-        //             const index = selectedServices.indexOf(serviceId)
-        //             if (!selectedServices.includes(serviceId)){
-        //                 selectedServices.push(serviceId)
-        //                 this.style.background = 'red'
-        //             } else {
-        //                 selectedServices.splice(selectedServices.indexOf(serviceId), 1)
-        //                 this.style.background = ''
-        //             }
-        //             console.log('selected Service', selectedServices)
-        //         })
-        //     })
-        // }
 
         //обработчик события выбора специализации
         document.getElementById('specialization').addEventListener('change', function (){
@@ -277,12 +171,6 @@ function order(){
             loadServicesByCategory(categoryId)
         })
 
-        // получаем все элементы с классом 'service'
-        //const serviceDivs = document.querySelectorAll('.service')
-
-        // массив для хранения выбранных сервисов
-        //const selectedServices = []
-
         // массив для хранения добавленных сервисов
         let addedService = []
 
@@ -294,16 +182,6 @@ function order(){
 
         // Получаем кнопку с id 'addToService'
         const addButton = document.getElementById('addToServiceList')
-
-        // Функция для снятия выделения с сервисов
-        // function removeHighlight() {
-        //
-        //     const serviceDivs = document.querySelectorAll('.selectable')
-        //     serviceDivs.forEach(function (serviceDivs){
-        //         serviceDivs.style.background = ''
-        //     })
-        //     console.log('снятие выделения')
-        // }
 
         // Функция для обновления списка добавленных сервисов
         function updateAddedServiceList() {
@@ -1026,10 +904,6 @@ function editOldOrder(){
     let addedServiceList = []
     let totalAmount
 
-    function loadAllServices(){
-        //нужно опдгрузить все сервисы находящиеся в ордере
-    }
-
     function updateTotalAmount(){
 
         //НЕ РАБОТАЕТ
@@ -1178,4 +1052,49 @@ function editOldOrder(){
 
     })
     displayAddedServices(addedServiceList)
+
+    function saveOrder(orderData){
+        let xhr = new XMLHttpRequest()
+        xhr.open('POST', '/update_order', true)
+        xhr.setRequestHeader('Content-type', 'application/json')
+        xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));        xhr.onreadystatechange = function (){
+            if (xhr.readyState === 4) {
+                if (xhr.status ===200) {
+                    console.log(JSON.parse(xhr.responseText))
+                } else {
+                    console.log('Ошибка: ', xhr.statusText)
+                }
+            }
+        }
+        xhr.send(JSON.stringify(orderData))
+    }
+
+    let saveOrderButton = document.getElementById('saveOrderButton')
+    saveOrderButton.addEventListener('click', function (){
+        let clientId = document.getElementById('clients').value
+        console.log('клиент: ', clientId)
+        let orderId = document.getElementById('orderId').textContent.trim()
+        console.log('Ордер id: ', orderId)
+        let specializationId = document.getElementById('specializationSpan').dataset.specializationId
+        console.log('специализация id: ', specializationId)
+        let totalAmount = document.getElementById('totalAmount').textContent
+        console.log('общая сумма: ', totalAmount)
+
+        let servicesData = []
+        let serviceItems = document.querySelectorAll('.serviceItem')
+        serviceItems.forEach(function (serviceItem){
+            let serviceId = serviceItem.dataset.serviceId
+            servicesData.push({ service_id: serviceId})
+        })
+        let orderData = {
+            id: orderId,
+            client_id: clientId,
+            specialization_id: specializationId,
+            services: servicesData,
+            total_amount: totalAmount,
+        }
+        console.log(orderData)
+        saveOrder(orderData)
+    })
+
 }
