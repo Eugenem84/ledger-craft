@@ -9,6 +9,8 @@ class Order extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['client_id', 'total_amount'];
+
     // связь с таблтцей специализации( один ко многим)
     public function specialization()
     {

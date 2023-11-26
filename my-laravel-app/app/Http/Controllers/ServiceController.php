@@ -29,8 +29,8 @@ class ServiceController extends Controller
         $order->client_id = $clientId;
         $order->total_amount = $totalAmount;
         $order->services()->sync($serviceData);
-
-        return response()->json(['message'=> 'Ордер успешно обновился']);
+        $order->save();
+        return response()->json(['message'=> 'Ордер успешно обновился', $totalAmount]);
     }
 
     //запрос на редактирование(отдает данные для редактора)
