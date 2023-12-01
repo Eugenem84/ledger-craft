@@ -11,10 +11,10 @@
     </head>
     <body>
         <header>
-            <div class="container">
+            <div class="container-sm">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h1 class="text-black"> Р Е М О Н Т</h1>
+                        <h1 class="text-black"> L  E  D  G  E  R   -   C  R  A  F  T </h1>
                     </div>
                 </div>
 
@@ -24,7 +24,6 @@
                         <a href="/service/edit" class="btn btn-itd btn-lg text-uppercase">редактор каталога</a>
                         <a href="/service/history" class="btn btn-itd btn-lg text-uppercase">история заказов</a>
                         <a href="/service/statistic" class="btn btn-itd btn-lg text-uppercase">статистика</a>
-
                     </div>
                 </div>
 

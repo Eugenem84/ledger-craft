@@ -82,7 +82,15 @@ function loadServicesByCategory(categoryId){
             servicesDiv.innerHTML = ''
             services.forEach(function (service){
                 let serviceDiv = document.createElement('div')
-                serviceDiv.textContent = `${service.service} - ${service.price}`
+                serviceDiv.innerHTML = `
+                    <div class="card border-3" style="margin: 10px">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <h5 class="card-title">${service.service}</h5>
+                            <p class="card-text ml-auto">${service.price}</p>
+                        </div>
+                    </div>
+                `
+                // serviceDiv.textContent = `${service.service} - ${service.price}`
                 serviceDiv.classList.add('selectable')
                 serviceDiv.dataset.id = service.id
                 servicesDiv.appendChild(serviceDiv)
@@ -122,29 +130,41 @@ function loadClientsBySpecialization(specializationId){
 
 function addClickHandlers(){
     const serviceDivs = document.querySelectorAll('.selectable')
+
     serviceDivs.forEach(function (serviceDiv){
         serviceDiv.addEventListener('click', function (){
             const serviceId = parseInt(this.dataset.id);
             const index = selectedServices.indexOf(serviceId)
+            let cardBorder = this.querySelector('.card')
+            //let divToStyle = this
             if (!selectedServices.includes(serviceId)){
                 selectedServices.push(serviceId)
-                this.style.background = 'red'
+                cardBorder.classList.add('border-danger')
+                //this.style.background = 'red'
             } else {
                 selectedServices.splice(selectedServices.indexOf(serviceId), 1)
-                this.style.background = ''
+                cardBorder.classList.remove('border-danger')
+                //this.style.background = ''
+
             }
-            console.log('selected Service', selectedServices)
+            console.log('выбран сервис с id:', selectedServices)
         })
     })
 }
 
 function removeHighlight() {
 
-    const serviceDivs = document.querySelectorAll('.selectable')
-    serviceDivs.forEach(function (serviceDivs){
-        serviceDivs.style.background = ''
-    })
-    console.log('снятие выделения')
+    // const serviceDivs = document.querySelectorAll('.selectable')
+    // serviceDivs.forEach(function (serviceDivs){
+    //     serviceDivs.style.background = ''
+    // })
+    let cardBorderDivs = document.querySelectorAll('.card')
+     cardBorderDivs.forEach(function (cardBorderDiv){
+         cardBorderDiv.classList.remove('border-danger')
+     })
+     console.log('снятие выделения')
+
+
 }
 
 function order(){
@@ -192,26 +212,45 @@ function order(){
                 const serviceCh = services.find(service => service.id === parseInt(serviceId, 10));
 
                 if (serviceCh) {
-                    const serviceDiv = document.createElement('div')
-                    serviceDiv.textContent = `${serviceCh.service} - ${serviceCh.price}`
-                    serviceDiv.classList.add('selectable')
+                    let serviceDiv = document.createElement('div')
+                    serviceDiv.classList.add('card', 'mb-2')
                     serviceDiv.dataset.id = serviceCh.id
 
-                    const deleteButton = document.createElement('button')
+                    let cardBody = document.createElement('div')
+                    cardBody.classList.add('card-body', 'd-flex', 'justify-content-between', 'align-items-center')
+
+                    let cardTitle = document.createElement('h5')
+                    cardTitle.classList.add('card-title')
+                    cardTitle.textContent = serviceCh.service
+
+                    let cardText = document.createElement('p')
+                    cardText.classList.add('card-text', 'ml-auto')
+                    cardText.textContent = `${serviceCh.price} p.`
+
+                    //serviceDiv.textContent = `${serviceCh.service} - ${serviceCh.price}`
+                    //serviceDiv.classList.add('selectable')
+
+                    let deleteButton = document.createElement('button')
+                    deleteButton.classList.add('btn', 'btn-danger')
                     deleteButton.textContent = 'удалить'
-                    deleteButton.addEventListener('click', function () {
-                        const idToRemove = parseInt(this.parentElement.dataset.id, 10)
+                    deleteButton.addEventListener('click', function (event) {
+                        event.preventDefault()
+                        let idToRemove = parseInt(this.parentElement.parentElement.dataset.id, 10)
                         console.log('удаляем услугу с id: ', idToRemove)
-                        const indexToRemove = addedService.indexOf(idToRemove)
+                        let indexToRemove = addedService.indexOf(idToRemove)
 
                         if (indexToRemove !== -1) {
                             addedService.splice(indexToRemove, 1)
-                            this.parentElement.remove()
+                            this.parentElement.parentElement.remove()
                             updateTotalPrice()
                         }
                     });
 
-                    serviceDiv.appendChild(deleteButton)
+                    cardBody.appendChild(cardTitle)
+                    cardBody.appendChild(cardText)
+                    cardBody.appendChild(deleteButton)
+
+                    serviceDiv.appendChild(cardBody)
                     displaySelectedWorks.appendChild(serviceDiv)
                     total += parseInt(serviceCh.price, 10)
                 }
@@ -393,35 +432,59 @@ function edit(){
             let servicesDiv = document.getElementById('servicesDiv')
             selectedCategoryId = categoryId
             console.log('выбрана категория: ', selectedCategoryId)
+
             let xhr = new XMLHttpRequest()
             xhr.open('GET', `/get_service/${categoryId}`, true)
             xhr.onload = function (){
                 if (xhr.status >= 200 && xhr.status < 400) {
+
                     // парсим полученный ответ
                     let services = JSON.parse(xhr.responseText)
                     console.log('Категория Id: ', categoryId, ' сервисы: ', services)
                     servicesDiv.innerHTML = ''
+
+                    let cardDeck = document.createElement('div')
+                    cardDeck.classList.add('card-deck')
+
                     services.forEach(function (service) {
-                        let serviceDiv = document.createElement('div')
-                        serviceDiv.textContent = `${service.service} - ${service.price}`
-                        serviceDiv.classList.add('selectable')
-                        serviceDiv.dataset.id = service.id
-                        servicesDiv.appendChild(serviceDiv)
-                    })
-                        //добавляем обработчик клика
-                    servicesDiv.querySelectorAll('.selectable').forEach(function (div){
-                         div.addEventListener('click', function (){
-                             const serviceId = parseInt(this.dataset.id)
-                             console.log('Выбран сервис с id: ', serviceId)
-                             selectedServiceId = serviceId
-                             //убираю подсветку у всех сервисов
-                             servicesDiv.querySelectorAll('.selectable').forEach(function (div){
-                                 div.classList.remove('selected')
-                             })
-                             //подсвечиваю выбранный
-                             this.classList.add('selected')
+                        let serviceCard = document.createElement('div')
+                        serviceCard.classList.add('card', 'mb-2')
+
+                        let cardBody = document.createElement('div')
+                        cardBody.classList.add('card-body', 'd-flex', 'justify-content-between', 'align-items-center')
+
+                        let cardTitle = document.createElement('h5')
+                        cardTitle.classList.add('card-title')
+                        cardTitle.textContent = service.service
+
+                        let cardText = document.createElement('p')
+                        cardText.classList.add('card-text', 'ml-auto')
+                        cardText.textContent = `${service.price}`
+
+                        cardBody.appendChild(cardTitle)
+                        cardBody.appendChild(cardText)
+                        serviceCard.appendChild(cardBody)
+
+                        //Добавляем обработчик клика
+                        serviceCard.addEventListener('click', function (){
+                            let serviceId = parseInt(serviceCard.dataset.id)
+                            console.log('Выбран сервис с id: ', serviceId)
+                            selectedServiceId = serviceId
+
+                            //Убираем подсветку всех сервисов
+                            servicesDiv.querySelectorAll('.card').forEach(function (card){
+                                card.classList.remove('border-danger')
                             })
+
+                            //подсвечиваем выбранный
+                            serviceCard.classList.add('border-danger')
                         })
+
+                        serviceCard.dataset.id = service.id
+                        cardDeck.appendChild(serviceCard)
+                    })
+
+                    servicesDiv.appendChild(cardDeck)
 
                 } else {
                     servicesDiv.innerHTML = ''

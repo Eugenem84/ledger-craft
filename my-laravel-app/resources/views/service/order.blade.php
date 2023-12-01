@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot name="title">История Заказов</x-slot>
+    <x-slot name="title">Просмотр заказа</x-slot>
 
     <div id="order">
         <h3>Заказ наряд: </h3>
