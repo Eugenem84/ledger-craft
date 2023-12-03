@@ -71,18 +71,22 @@
                 <button class="btn btn-primary" id="deleteCategory">Удалить</button>
             </div>
 
-
         </div>
 
         <br>
         <div id="servicesDiv" class="card-deck">
 
         </div>
+
+        <br>
+        <button type="button" class="btn btn-primary" id="openModalButton">Изменить</button>
+        <button type="button" class="btn btn-primary" id="showAddForm">Добавить</button>
+        <button class="btn btn-primary" id="deleteService">Удалить</button>
+        <br>
+
     </div>
 
     <br><br>
-
-
 
     <div id="addSpecializationDiv" style="display: none">
         <form id="addSpecializationForm">
@@ -138,17 +142,6 @@
     </div>
 
     <br>
-{{--    <div id="servicesDiv">--}}
-{{--        @foreach($services as $service)--}}
-{{--            <div class="serviceForEdit" data-id="{{$service->id}}">{{$service->service}} - {{$service->price}}</div>--}}
-{{--        @endforeach--}}
-{{--    </div>--}}
-
-    <br>
-    <button id="editService">Изменить услугу</button>
-    <button id="showAddForm">Добавить новую услугу</button>
-    <button id="deleteService">Удалить услугу</button>
-    <br>
 
     <div id="serviceForm" style="display: none">
         <form id="addServiceForm">
@@ -158,13 +151,63 @@
         </form>
     </div>
 
-    <div id="editServiceDiv" style="display: none">
-        <form id="editServiceForm" style="display: block">
-            <input type="text" id="editServiceName" name="name">
-            <input type="text" id="editServicePrice" name="price">
-            <button type="submit" name="saveButton">Сохранить</button>
-        </form>
+    <div class="modal fade" id="newServiceModal" tabindex="-1" aria-labelledby="newServiceModalLabel" aria-hiden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newServiceModalLabel">Добавить новую услугу</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newServiceForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="newServiceNameInput" name="name" placeholder="введите название услуги">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="newServicePriceInput" name="price" placeholder="введите цену">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">закрыть</button>
+                    <button type="button" class="btn btn-primary" id="saveNewServiceButton" data-bs-dismiss="modal">Сохранить</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editServiceModalLabel">Редактировать услугу</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editServiceForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="editServiceName" name="name" placeholder="название услуги">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="editServicePrice" name="price" placeholder="цена">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary" id="saveEditServiceButton" data-bs-dismiss="modal" >Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{{--    <div id="editServiceDiv" style="display: none">--}}
+{{--        <form id="editServiceForm" style="display: block">--}}
+{{--            <input type="text" id="editServiceName" name="name">--}}
+{{--            <input type="text" id="editServicePrice" name="price">--}}
+{{--            <button type="submit" name="saveButton">Сохранить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
 
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>

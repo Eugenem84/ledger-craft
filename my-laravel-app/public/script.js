@@ -11,7 +11,7 @@ if(document.querySelector('#displaySelectedWorks')){
     order()
 }
 
-if (document.getElementById('editService')){
+if (document.getElementById('servicesDiv')){
     console.log('edit script')
     edit()
 }
@@ -778,35 +778,46 @@ function edit(){
         })
 
         // обработчик для кнопки "изменить услугу"
-        const editButton = document.getElementById('editService')
-        editButton.addEventListener('click', function (){
-            const selectedService = document.querySelector(`[data-id="${selectedServiceId}"]`)
-            console.log(selectedService)
+        let editButton = document.getElementById('openModalButton')
+        editButton.addEventListener('click', function () {
+            let selectedService = document.querySelector(`[data-id="${selectedServiceId}"]`)
+            //console.log(selectedService)
 
-            if (selectedService){
-                const serviceId = selectedService.dataset.id
-                const serviceInfo = selectedService.textContent.split(' - ')
-                const serviceName = serviceInfo[0] //name
-                const servicePrice = serviceInfo[1] //price
-                console.log('название сервиса: ', serviceName)
+            if (selectedService) {
+                //let serviceId = selectedService.dataset.id
+                let serviceNameElement = selectedService.querySelector('.card-title')
+                let servicePriceElement = selectedService.querySelector('.card-text')
 
-                //Заполняем форму для редактирования
-                //document.getElementById('editServiceId').value = serviceId
-                document.getElementById('editServiceName').value = serviceName
-                document.getElementById('editServicePrice').value = servicePrice
+                if (serviceNameElement && servicePriceElement) {
+                    let serviceName = serviceNameElement.textContent
+                    let servicePrice = servicePriceElement.textContent.trim()
+                    console.log('название сервиса: ', serviceName)
+
+                    //document.getElementById('edit')
+
+                    //document.getElementById('editServiceId').value = serviceId
+                    document.getElementById('editServiceName').value = serviceName
+                    document.getElementById('editServicePrice').value = servicePrice
+
+                    //открываем модальное окно
+                    let modal = new bootstrap.Modal(document.getElementById('editServiceModal'))
+                    modal.show()
+                } else {
+                    console.log('Не удалось найти информацию о сервисе')
+                }
 
                 //Открываем форму для редактирования
-                const editForm = document.getElementById('editServiceDiv')
-                editForm.style.display = 'block'
+                //let editForm = document.getElementById('editServiceDiv')
+                //editForm.style.display = 'block'
 
-                console.log('редактируем: ', serviceId)
+                //console.log('редактируем: ', serviceId)
             } else {
-                console.log('выберите сервис для редактирования')
+                console.log('не удалось найти информацию о сервисе')
             }
         })
 
         // обработчик для кнопки "изменить категорию"
-        const editCategoryButton = document.getElementById('editCategoryButton')
+        let editCategoryButton = document.getElementById('editCategoryButton')
         editCategoryButton.addEventListener('click', function (){
             let selectedCategoryId = document.getElementById('category').value
             let selectedCategoryName = document.getElementById('category').options[document.getElementById('category').selectedIndex].text
@@ -895,26 +906,33 @@ function edit(){
             xhr.send(formData)
         })
 
-        // обработчик формы редактирования услуги
-        document.getElementById('editServiceForm').addEventListener('submit', function (e){
-            e.preventDefault()
-
-            const selectedService = document.querySelector('.serviceForEdit[style="background: red;"]')
-            console.log('меняем сервис с id: ', selectedServiceId)
-            let newServiceName = this.querySelector('input[name="name"]').value
-            console.log('новое имя сервиса: ', newServiceName)
-            const newServicePrice = this.querySelector('input[name="price"]').value
+        // обработчик модульного окна изменения услуги
+        let saveButton = document.getElementById('saveEditServiceButton')
+        saveButton.addEventListener('click', function (){
+            let currentCategory = document.getElementById('category').value
+            console.log(currentCategory)
+            console.log(selectedServiceId)
+            let newServiceName = document.getElementById('editServiceName').value
+            console.log(newServiceName)
+            let newServicePrice = document.getElementById('editServicePrice').value
+            console.log(newServicePrice)
             let formData = new FormData()
             formData.append('id', selectedServiceId)
             formData.append('service', newServiceName)
             formData.append('price', newServicePrice)
+
             let xhr = new XMLHttpRequest()
             xhr.open('POST', '/edit_service', true)
             xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+
             xhr.onload = function (){
-                if (xhr.status === 200) {
-                    console.log('услуга изменена')
-                    location.reload()
+                if (xhr.status === 200){
+                    console.log('Услуга изменена')
+                    clearServicesList()
+                    loadServicesByCategory(currentCategory)
+                    // let modal = new bootstrap.Modal(document.getElementById('editServiceModal'))
+                    // modal.hide()
+                    //location.reload()
                 } else {
                     console.error(xhr.statusText)
                 }
