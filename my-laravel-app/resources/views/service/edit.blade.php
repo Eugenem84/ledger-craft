@@ -79,7 +79,7 @@
         </div>
 
         <br>
-        <button type="button" class="btn btn-primary" id="openModalButton">Изменить</button>
+        <button type="button" class="btn btn-primary" id="openEditServiceModalButton">Изменить</button>
         <button type="button" class="btn btn-primary" id="showAddNewServiceModalButton">Добавить</button>
         <button type="button" class="btn btn-primary" id="deleteServiceButton">Удалить</button>
         <br>
@@ -96,6 +96,28 @@
         </form>
     </div>
 
+    <div class="modal fade" id="addSpecializationModal" tabindex="-1" aria-labelledby="addSpecializationModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSpecializationModalLabel">Добавление специализации</h5>
+                    <button class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSpecializationModalForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="addSpecializationInput">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">закрыть</button>
+                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="editSpecializationDiv" style="display: none">
         <form id="editSpecializationForm">
             <br>
@@ -104,16 +126,38 @@
         </form>
     </div>
 
-{{--    <div id="addClientDiv" style="display: none">--}}
-{{--        <form id="addClientForm">--}}
-{{--            <br>--}}
-{{--            <input type="text" name="clientName" placeholder="Имя клиента">--}}
-{{--            <input type="text" name="clientPhone" placeholder="Телефон">--}}
-{{--            <button type="submit" name="saveClient">Сохранить</button>--}}
-{{--        </form>--}}
-{{--    </div>--}}
+    <div class="model fade" id="editSpecializationModal" tabindex="-1" aria-labelledby="addSpecializationModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editSpecializationModalLabel">Изменить специализацию</h5>
+                    <button class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editSpecializationModalForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="editSpecializationInput">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">закрыть</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveNewNameSpecializationButton">сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+    <div id="addClientDiv" style="display: none">
+        <form id="addClientForm">
+            <br>
+            <input type="text" name="clientName" placeholder="Имя клиента">
+            <input type="text" name="clientPhone" placeholder="Телефон">
+            <button type="submit" name="saveClient">Сохранить</button>
+        </form>
+    </div>
+
+    <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -121,7 +165,7 @@
                     <button class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addCategoryLabel">
+                    <form id="addCategoryModalForm">
                         <div class="mb-3">
                             <input type="text" class="form-control" id="nameClientInput">
                         </div>
@@ -130,18 +174,22 @@
                         </div>
                     </form>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">закрыть</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveNewClientButton">сохранить</button>
+                </div>
             </div>
         </div>
     </div>
 
-{{--    <div id="editClientDiv" style="display: none">--}}
-{{--        <form id="editClientForm">--}}
-{{--            <br>--}}
-{{--            <input type="text" id="editClientNameInput" name="name">--}}
-{{--            <input type="text" id="editClientPhoneInput" name="phone">--}}
-{{--            <button type="submit" name="saveNewClientButton">Сохранить</button>--}}
-{{--        </form>--}}
-{{--    </div>--}}
+    <div id="editClientDiv" style="display: none">
+        <form id="editClientForm">
+            <br>
+            <input type="text" id="editClientNameInput" name="name">
+            <input type="text" id="editClientPhoneInput" name="phone">
+            <button type="submit" name="saveNewClientButton">Сохранить</button>
+        </form>
+    </div>
 
     <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -151,7 +199,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editCategoryLabel">
+                    <form id="editCategoryModalForm">
                         <div class="mb-3">
                             <input type="text" class="form-control" id="newNameClientInput">
                         </div>
@@ -159,6 +207,10 @@
                             <input type="text" class="form-control" id="newPhoneClientInput">
                         </div>
                     </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">закрыть</button>
+                    <button type="button" class="btn ntb-primary" data-bs-dismiss="modal" id="saveNewNameSpecializationButton">сохранить</button>
                 </div>
             </div>
         </div>
@@ -181,7 +233,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addCategoryForm">
+                    <form id="addCategoryModalForm">
                         <div class="mb-3">
                             <input type="text" class="form-control" id="addCategoryNameInput" placeholder="введите название категории">
                         </div>
@@ -211,7 +263,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editCategoryForm">
+                    <form id="editCategoryModalForm">
                         <div class="mb-3">
                             <input type="text" class="form-control" id="editCategoryNameInput">
                         </div>
@@ -225,13 +277,13 @@
         </div>
     </div>
 
-{{--    <div id="serviceForm" style="display: none">--}}
-{{--        <form id="addServiceForm">--}}
-{{--            <input type="text" name="name" placeholder="Название услуги">--}}
-{{--            <input type="text" name="price" placeholder="цена">--}}
-{{--            <button type="submit" name="addButton">Добавить</button>--}}
-{{--        </form>--}}
-{{--    </div>--}}
+    <div id="serviceForm" style="display: none">
+        <form id="addServiceForm">
+            <input type="text" name="name" placeholder="Название услуги">
+            <input type="text" name="price" placeholder="цена">
+            <button type="submit" name="addButton">Добавить</button>
+        </form>
+    </div>
 
     <div class="modal fade" id="newServiceModal" tabindex="-1" aria-labelledby="newServiceModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -241,7 +293,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="newServiceForm">
+                    <form id="newServiceModalForm">
                         <div class="mb-3">
                             <input type="text" class="form-control" id="serviceNameInput" name="name" placeholder="введите название услуги">
                         </div>
@@ -266,7 +318,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editServiceForm">
+                    <form id="editServiceModalForm">
                         <div class="mb-3">
                             <input type="text" class="form-control" id="editServiceName" name="name" placeholder="название услуги">
                         </div>

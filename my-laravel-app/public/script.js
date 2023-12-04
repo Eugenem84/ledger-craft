@@ -512,11 +512,11 @@ function edit(){
             newClientDiv.style.display = 'block'
         })
 
-        //обработчсик кнопки "добавить новую категорию"
-        const showAddCategoryFormButton = document.getElementById('showAddCategoryForm')
-        const newCategoryForm = document.getElementById('addCategoryDiv')
-        showAddCategoryFormButton.addEventListener('click', function (){
-            newCategoryForm.style.display = 'block'
+        //обработчик кнопки добавить новую категорию
+        let showModalNewCategory = document.getElementById('showAddCategoryForm')
+        showModalNewCategory.addEventListener('click', function (){
+            let modal = new bootstrap.Modal(document.getElementById('addCategoryModal'))
+            modal.show()
         })
 
         //обработчик кнопки "добавить новую услугу"
@@ -605,11 +605,11 @@ function edit(){
         })
 
         //обработчик формы "добавить новую категорию"
-        document.getElementById('addCategoryDiv').addEventListener('submit', function (e){
-            e.preventDefault()
-            const categoryName = this.querySelector('input[name="categoryName"]').value
+        document.getElementById('saveNewCategoryButton').addEventListener('click', function (){
+            const newNameCategory = document.getElementById('addCategoryNameInput').value
+            console.log(newNameCategory)
             let formData = new FormData()
-            formData.append('category_name', categoryName)
+            formData.append('category_name', newNameCategory)
             let currentSpecialization = document.getElementById('specialization').value
             console.log('выбрана специализация: ', currentSpecialization)
             formData.append('specialization_id', currentSpecialization)
@@ -628,34 +628,6 @@ function edit(){
                 console.log('Ошибка сети')
             }
             xhr.send(formData)
-        })
-
-        //обработчик формы "добавить новую услугу"
-        document.getElementById('addServiceForm').addEventListener('submit', function (e){
-            e.preventDefault();
-            //получаем значения формы
-            const serviceName = this.querySelector('input[name="name"]').value
-            const servicePrice = this.querySelector('input[name="price"]').value
-            let formData = new FormData()
-            formData.append('service', serviceName)
-            formData.append('price', servicePrice)
-            formData.append('category_id', selectedCategoryId)
-            let xhr = new XMLHttpRequest()
-            xhr.open('POST', '/add_service', true)
-            xhr.setRequestHeader('X-CSRF-TOKEN', document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
-            xhr.onload = function (){
-                if (xhr.status === 200) {
-                    console.log('Услуга успешно добавлена')
-                    location.reload()
-                } else {
-                    console.error(xhr.statusText)
-                }
-            }
-            xhr.onerror = function (){
-                console.log('Ошибка сети')
-            }
-            xhr.send(formData)
-
         })
 
         // Удаление специализации
@@ -805,8 +777,9 @@ function edit(){
         })
 
         // обработчик для кнопки "изменить услугу"
-        let editButton = document.getElementById('openModalButton')
-        editButton.addEventListener('click', function () {
+        let editServiceButton = document.getElementById('openEditServiceModalButton')
+        editServiceButton.addEventListener('click', function () {
+            console.log('меняем услугу')
             let selectedService = document.querySelector(`[data-id="${selectedServiceId}"]`)
             //console.log(selectedService)
 
@@ -899,8 +872,7 @@ function edit(){
         })
 
         // обработчик формы редактирования категории
-        document.getElementById('editCategoryForm').addEventListener('submit', function (e){
-            e.preventDefault()
+        document.getElementById('editCategoryModalForm').addEventListener('click', function (){
             let selectedCategoryId = document.getElementById('category').value
             let newCategoryName = document.getElementById('editCategoryNameInput').value
             let formData = new FormData()
