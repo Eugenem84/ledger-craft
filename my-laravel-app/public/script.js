@@ -760,8 +760,8 @@ function edit(){
         })
 
         // обработчик кнопки для удаления выбранного сервиса
-        let deleteButton = document.getElementById('deleteService')
-        deleteButton.addEventListener('click', function (){
+        let deleteServiceButton = document.getElementById('deleteServiceButton')
+        deleteServiceButton.addEventListener('click', function (){
         console.log('selectedServiceId: ' ,selectedServiceId)
             if (selectedServiceId) {
                 console.log('удаляем сервис: ', selectedServiceId)

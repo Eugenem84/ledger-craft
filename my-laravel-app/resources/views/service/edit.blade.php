@@ -81,7 +81,7 @@
         <br>
         <button type="button" class="btn btn-primary" id="openModalButton">Изменить</button>
         <button type="button" class="btn btn-primary" id="showAddNewServiceModalButton">Добавить</button>
-        <button type="button" class="btn btn-primary" id="deleteService">Удалить</button>
+        <button type="button" class="btn btn-primary" id="deleteServiceButton">Удалить</button>
         <br>
 
     </div>
@@ -104,54 +104,136 @@
         </form>
     </div>
 
-    <div id="addClientDiv" style="display: none">
-        <form id="addClientForm">
-            <br>
-            <input type="text" name="clientName" placeholder="Имя клиента">
-            <input type="text" name="clientPhone" placeholder="Телефон">
-            <button type="submit" name="saveClient">Сохранить</button>
-        </form>
+{{--    <div id="addClientDiv" style="display: none">--}}
+{{--        <form id="addClientForm">--}}
+{{--            <br>--}}
+{{--            <input type="text" name="clientName" placeholder="Имя клиента">--}}
+{{--            <input type="text" name="clientPhone" placeholder="Телефон">--}}
+{{--            <button type="submit" name="saveClient">Сохранить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
+
+    <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addClientModalLabel"> Добавить нового клиента </h5>
+                    <button class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCategoryLabel">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="nameClientInput">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="phoneClientInput">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="editClientDiv" style="display: none">
-        <form id="editClientForm">
-            <br>
-            <input type="text" id="editClientNameInput" name="name">
-            <input type="text" id="editClientPhoneInput" name="phone">
-            <button type="submit" name="saveNewClientButton">Сохранить</button>
-        </form>
+{{--    <div id="editClientDiv" style="display: none">--}}
+{{--        <form id="editClientForm">--}}
+{{--            <br>--}}
+{{--            <input type="text" id="editClientNameInput" name="name">--}}
+{{--            <input type="text" id="editClientPhoneInput" name="phone">--}}
+{{--            <button type="submit" name="saveNewClientButton">Сохранить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
+
+    <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editClientModalLabel">Редактировать клиента</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCategoryLabel">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="newNameClientInput">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="newPhoneClientInput">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <br><br>
+{{--    <div id="addCategoryDiv" style="display: none">--}}
+{{--        <form id="addCategoryForm>">--}}
+{{--            <br>--}}
+{{--            <input type="text" name="categoryName" placeholder="название категории">--}}
+{{--            <button type="submit" name="saveCategoryButton">Сохранить</button>--}}
+{{--        </form>--}}
+{{--        <br>--}}
+{{--    </div>--}}
 
-    <div id="addCategoryDiv" style="display: none">
-        <form id="addCategoryForm>">
-            <br>
-            <input type="text" name="categoryName" placeholder="название категории">
-            <button type="submit" name="saveCategoryButton">Сохранить</button>
-        </form>
-        <br>
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCategoryModalLabel">Добавить новую категорию</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addCategoryForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="addCategoryNameInput" placeholder="введите название категории">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">закрыть</button>
+                    <button type="button" class="btn btn-primary" id="saveNewCategoryButton" data-bs-dismiss="modal">Сохранить</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="editCategoryDiv" style="display: none">
-        <form id="editCategoryForm" style="display: block">
-            <br>
-            <input type="text" id="editCategoryNameInput" name="name">
-            <button type="submit" name="saveNewNameCategoryButton">Сохранить</button>
-        </form>
+{{--    <div id="editCategoryDiv" style="display: none">--}}
+{{--        <form id="editCategoryForm" style="display: block">--}}
+{{--            <br>--}}
+{{--            <input type="text" id="editCategoryNameInput" name="name">--}}
+{{--            <button type="submit" name="saveNewNameCategoryButton">Сохранить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
+
+    <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCategoryModalLabel">Изменить категорию</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editCategoryForm">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="editCategoryNameInput">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">закрыть</button>
+                    <button type="button" class="btn btn-primary" id="saveNewNameCategoryButton" data-bs-dismiss="modal">Сохранить</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <br>
+{{--    <div id="serviceForm" style="display: none">--}}
+{{--        <form id="addServiceForm">--}}
+{{--            <input type="text" name="name" placeholder="Название услуги">--}}
+{{--            <input type="text" name="price" placeholder="цена">--}}
+{{--            <button type="submit" name="addButton">Добавить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
 
-    <div id="serviceForm" style="display: none">
-        <form id="addServiceForm">
-            <input type="text" name="name" placeholder="Название услуги">
-            <input type="text" name="price" placeholder="цена">
-            <button type="submit" name="addButton">Добавить</button>
-        </form>
-    </div>
-
-    <div class="modal fade" id="newServiceModal" tabindex="-1" aria-labelledby="newServiceModalLabel" aria-hiden="true">
+    <div class="modal fade" id="newServiceModal" tabindex="-1" aria-labelledby="newServiceModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
