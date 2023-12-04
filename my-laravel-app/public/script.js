@@ -520,10 +520,37 @@ function edit(){
         })
 
         //обработчик кнопки "добавить новую услугу"
-        const showAddFormButton = document.getElementById('showAddForm')
-        const serviceForm = document.getElementById('serviceForm')
-        showAddFormButton.addEventListener('click', function (){
-            serviceForm.style.display = 'block';
+        let showModalNewService = document.getElementById('showAddNewServiceModalButton')
+        showModalNewService.addEventListener('click', function (){
+            let modal = new bootstrap.Modal(document.getElementById('newServiceModal'))
+            modal.show()
+            let saveServiceButton = document.getElementById('saveNewServiceButton')
+            saveServiceButton.addEventListener('click', function (){
+                let serviceName = document.getElementById('serviceNameInput').value
+                let servicePrice = document.getElementById('servicePriceInput').value
+                console.log('название сервиса: ', serviceName, 'цена: ', servicePrice)
+                let formData = new FormData()
+                formData.append('service', serviceName)
+                formData.append('price', servicePrice)
+                formData.append('category_id', selectedCategoryId)
+                let xhr = new XMLHttpRequest()
+                xhr.open('POST', '/add_service', true)
+                xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken)
+                xhr.onload = function (){
+                    if (xhr.status === 200){
+                        console.log('Услуга успешно добавлена')
+                        clearServicesList()
+                        loadServicesByCategory(selectedCategoryId)
+                        //location.reload()
+                    } else {
+                        console.error(xhr.statusText)
+                    }
+                }
+                xhr.onerror = function (){
+                    console.log('Ошибка сети')
+                }
+                xhr.send(formData)
+            })
         })
 
         //обработчик формы "добавление новой специализации"
@@ -733,7 +760,7 @@ function edit(){
         })
 
         // обработчик кнопки для удаления выбранного сервиса
-        const deleteButton = document.getElementById('deleteService')
+        let deleteButton = document.getElementById('deleteService')
         deleteButton.addEventListener('click', function (){
         console.log('selectedServiceId: ' ,selectedServiceId)
             if (selectedServiceId) {
@@ -792,10 +819,6 @@ function edit(){
                     let serviceName = serviceNameElement.textContent
                     let servicePrice = servicePriceElement.textContent.trim()
                     console.log('название сервиса: ', serviceName)
-
-                    //document.getElementById('edit')
-
-                    //document.getElementById('editServiceId').value = serviceId
                     document.getElementById('editServiceName').value = serviceName
                     document.getElementById('editServicePrice').value = servicePrice
 
@@ -805,12 +828,6 @@ function edit(){
                 } else {
                     console.log('Не удалось найти информацию о сервисе')
                 }
-
-                //Открываем форму для редактирования
-                //let editForm = document.getElementById('editServiceDiv')
-                //editForm.style.display = 'block'
-
-                //console.log('редактируем: ', serviceId)
             } else {
                 console.log('не удалось найти информацию о сервисе')
             }
@@ -906,7 +923,7 @@ function edit(){
             xhr.send(formData)
         })
 
-        // обработчик модульного окна изменения услуги
+        // обработчик модального окна изменения услуги
         let saveButton = document.getElementById('saveEditServiceButton')
         saveButton.addEventListener('click', function (){
             let currentCategory = document.getElementById('category').value

@@ -80,8 +80,8 @@
 
         <br>
         <button type="button" class="btn btn-primary" id="openModalButton">Изменить</button>
-        <button type="button" class="btn btn-primary" id="showAddForm">Добавить</button>
-        <button class="btn btn-primary" id="deleteService">Удалить</button>
+        <button type="button" class="btn btn-primary" id="showAddNewServiceModalButton">Добавить</button>
+        <button type="button" class="btn btn-primary" id="deleteService">Удалить</button>
         <br>
 
     </div>
@@ -161,10 +161,10 @@
                 <div class="modal-body">
                     <form id="newServiceForm">
                         <div class="mb-3">
-                            <input type="text" class="form-control" id="newServiceNameInput" name="name" placeholder="введите название услуги">
+                            <input type="text" class="form-control" id="serviceNameInput" name="name" placeholder="введите название услуги">
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control" id="newServicePriceInput" name="price" placeholder="введите цену">
+                            <input type="text" class="form-control" id="servicePriceInput" name="price" placeholder="введите цену">
                         </div>
                     </form>
                 </div>
