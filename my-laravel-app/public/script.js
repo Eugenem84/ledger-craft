@@ -1111,6 +1111,7 @@ function editOldOrder(){
                             newRow.remove();
                             console.log('Список добавленных услуг', addedServiceList);
                         }
+                        updateTotalAmount()
                     });
 
                     // Добавляем элементы в строку
