@@ -20,9 +20,9 @@ if (document.querySelector('#orders')){
     history()
 }
 
-if (document.querySelector('#order')) {
-    oldOrder()
-}
+// if (document.querySelector('#order')) {
+//     oldOrder()
+// }
 
 if (document.querySelector('#editOldOrder')){
     editOldOrder()
@@ -153,18 +153,11 @@ function addClickHandlers(){
 }
 
 function removeHighlight() {
-
-    // const serviceDivs = document.querySelectorAll('.selectable')
-    // serviceDivs.forEach(function (serviceDivs){
-    //     serviceDivs.style.background = ''
-    // })
     let cardBorderDivs = document.querySelectorAll('.card')
      cardBorderDivs.forEach(function (cardBorderDiv){
          cardBorderDiv.classList.remove('border-danger')
      })
      console.log('снятие выделения')
-
-
 }
 
 function order(){
@@ -349,30 +342,56 @@ function edit(){
 
         //подгружаем всех клиентов
         function loadClientsBySpecialization(specializationId){
-            console.log('подгружаем всех клиентов')
-            let xhr = new XMLHttpRequest()
-            xhr.open('GET', `/get_clients/${specializationId}`, true)
-            xhr.onload = function (){
-                if (xhr.status >= 200 && xhr.status < 400){
-                    let clients = JSON.parse(xhr.responseText)
-                    let clientSelect = document.getElementById('client')
-                    clientSelect.innerHTML = ''
-                    if (clients.length === 0) {
-                        let option = document.createElement('option')
-                        option.value = ''
-                        option.textContent = 'клиентов нет'
-                        clientSelect.appendChild(option)
+            console.log('подгружаем всех клиентов');
+
+            // Создаем объект XMLHttpRequest
+            let xhr = new XMLHttpRequest();
+
+            // Открываем GET запрос на сервер
+            xhr.open('GET', `/get_clients/${specializationId}`, true);
+
+            // Обработчик загрузки данных
+            xhr.onload = function () {
+                // Проверяем, успешен ли запрос
+                if (xhr.status >= 200 && xhr.status < 400) {
+                    // Парсим полученный ответ в формате JSON
+                    let clients = JSON.parse(xhr.responseText);
+
+                    // Получаем элемент select для клиентов
+                    let clientSelect = document.getElementById('client');
+
+                    // Очищаем список клиентов перед добавлением новых данных
+                    clientSelect.innerHTML = '';
+
+                    // Проверяем, есть ли клиенты для данной специализации
+                    if (Array.isArray(clients) && clients.length > 0) {
+                        // Если есть клиенты, добавляем каждого в выпадающий список
+                        clients.forEach(function (client) {
+                            let option = document.createElement('option');
+                            option.value = client.id;
+                            option.textContent = client.name + " - " + client.phone;
+                            clientSelect.appendChild(option);
+                        });
                     } else {
-                        clients.forEach(function (client){
-                            let option = document.createElement('option')
-                            option.value = client.id
-                            option.textContent = client.name + " - " + client.phone
-                            clientSelect.appendChild(option)
-                        })
+                        // Если клиентов нет, добавляем соответствующий вариант в выпадающий список
+                        let option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'клиентов нет';
+                        clientSelect.appendChild(option);
                     }
+                } else {
+                    // Если сервер вернул ошибку, выводим сообщение об ошибке в консоль
+                    console.error('Не удалось получить данные о клиентах: ' + xhr.statusText);
                 }
-            }
-            xhr.send()
+            };
+
+            // Обработчик ошибки сети
+            xhr.onerror = function () {
+                console.error('Ошибка сети');
+            };
+
+            // Отправляем запрос на сервер
+            xhr.send();
         }
 
         //обработчик селектора изменение специализации
@@ -499,17 +518,18 @@ function edit(){
         }
 
         //обработчик кнопки "Добавить новую специализацию"
-        let showAddSpecializationFormButton = document.getElementById('addNewSpecializationButton')
-        let newSpecializationForm = document.getElementById('addSpecializationDiv')
-        showAddSpecializationFormButton.addEventListener('click', function (){
-            newSpecializationForm.style.display = 'block'
+        let showAddSpecializationModalButton = document.getElementById('showAddNewSpecializationModalButton')
+        //let newSpecializationForm = document.getElementById('addSpecializationDiv')
+        showAddSpecializationModalButton.addEventListener('click', function (){
+            let modal = new bootstrap.Modal(document.getElementById('addSpecializationModal'))
+            modal.show()
         })
 
         //обработчик кнопки "Добавить клиента"
-        let showAddClientFormButton = document.getElementById('showAddClientForm')
-        let newClientDiv = document.getElementById('addClientDiv')
-        showAddClientFormButton.addEventListener('click', function (){
-            newClientDiv.style.display = 'block'
+        let showAddClientModalFormButton = document.getElementById('showAddClientModalForm')
+        showAddClientModalFormButton.addEventListener('click', function (){
+            let modal = new bootstrap.Modal(document.getElementById('addClientModal'))
+            modal.show()
         })
 
         //обработчик кнопки добавить новую категорию
@@ -554,9 +574,9 @@ function edit(){
         })
 
         //обработчик формы "добавление новой специализации"
-        document.getElementById('addSpecializationDiv').addEventListener('submit', function (e){
-            e.preventDefault()
-            let specializationName = this.querySelector('input[name="specializationName"]').value
+        document.getElementById('saveNewSpecialization').addEventListener('click', function (){
+            let specializationName = document.getElementById('addSpecializationInput').value
+            console.log(specializationName)
             let formData = new FormData()
             formData.append('specializationName', specializationName)
             let xhr = new XMLHttpRequest()
@@ -577,10 +597,9 @@ function edit(){
         })
 
         //обработчик формы "добавить клиента"
-        document.getElementById('addClientDiv').addEventListener('submit', function (e){
-            e.preventDefault()
-            let clientName = this.querySelector('input[name="clientName"]').value
-            let clientPhone = this.querySelector('input[name="clientPhone"]').value
+        document.getElementById('saveNewClientButton').addEventListener('click', function (){
+            let clientName = document.getElementById('nameClientInput').value
+            let clientPhone = document.getElementById('phoneClientInput').value
             let currentSpecializationId = document.getElementById('specialization').value
             let formData = new FormData()
             formData.append('name', clientName)
@@ -744,18 +763,20 @@ function edit(){
         })
 
         // обработчик кнопки "изменить специализацию"
-        let editSpecializationButton = document.getElementById('editSpecializationButton')
+        let editSpecializationButton = document.getElementById('showEditSpecializationModalButton')
         editSpecializationButton.addEventListener('click', function (){
             let selectedSpecializationName = document.getElementById('specialization').options[document.getElementById('specialization').selectedIndex].text
             console.log('меняем специализацию: ',selectedSpecializationName)
-            document.getElementById('editSpecializationNameInput').value = selectedSpecializationName
-            document.getElementById('editSpecializationDiv').style.display = 'block'
+            document.getElementById('editSpecializationInput').value = selectedSpecializationName
+            let modal = new bootstrap.Modal(document.getElementById('editSpecializationModal'))
+            modal.show()
         })
 
         // обработчик кнопки "изменить клиента"
-        let editClientButton = document.getElementById('editClientButton')
+        let editClientButton = document.getElementById('showEditClientModalButton')
         editClientButton.addEventListener('click', function (){
-            document.getElementById('editClientDiv').style.display = 'block'
+            let modal = new bootstrap.Modal(document.getElementById('editClientModal'))
+            modal.show()
             let clientSelect = document.getElementById('client')
             let selectedClientId = clientSelect.value
             let selectClientName = ''
@@ -772,8 +793,10 @@ function edit(){
             } else {
                 console.log('тут ничего нет')
             }
-            document.getElementById('editClientNameInput').value = selectClientName
-            document.getElementById('editClientPhoneInput').value = selectClientPhone
+            console.log(selectClientName)
+            console.log(selectClientPhone)
+            document.getElementById('newNameClientInput').value = selectClientName
+            document.getElementById('newPhoneClientInput').value = selectClientPhone
         })
 
         // обработчик для кнопки "изменить услугу"
@@ -807,20 +830,21 @@ function edit(){
         })
 
         // обработчик для кнопки "изменить категорию"
-        let editCategoryButton = document.getElementById('editCategoryButton')
+        let editCategoryButton = document.getElementById('showEditCategoryModalButton')
         editCategoryButton.addEventListener('click', function (){
             let selectedCategoryId = document.getElementById('category').value
             let selectedCategoryName = document.getElementById('category').options[document.getElementById('category').selectedIndex].text
             document.getElementById('editCategoryNameInput').value = selectedCategoryName
             console.log('меняем категорию: ',selectedCategoryName, selectedCategoryId)
-            document.getElementById('editCategoryDiv').style.display = 'block'
+            let modal = new bootstrap.Modal(document.getElementById('editCategoryModal'))
+            modal.show()
         })
 
         // обработчик формы редактирования специализации
-        document.getElementById('editSpecializationForm').addEventListener('submit', function (e){
+        document.getElementById('saveNewNameSpecializationButton').addEventListener('click', function (e){
             e.preventDefault()
             let selectedSpecializationId = document.getElementById('specialization').value
-            let newSpecializationName = document.getElementById('editSpecializationNameInput').value
+            let newSpecializationName = document.getElementById('editSpecializationInput').value
             let formData = new FormData()
             formData.append('id', selectedSpecializationId)
             formData.append('specializationName', newSpecializationName)
@@ -843,12 +867,11 @@ function edit(){
         })
 
         // обработчик формы редактирования клиента
-        document.getElementById('editClientDiv').addEventListener('submit', function (e){
-            e.preventDefault()
+        document.getElementById('saveNewNameClientButton').addEventListener('click', function (){
             let selectedSpecializationId = document.getElementById('specialization').value
             let selectedClientId = document.getElementById('client').value
-            let newClientName = document.getElementById('editClientNameInput').value
-            let newClientPhone = document.getElementById('editClientPhoneInput').value
+            let newClientName = document.getElementById('newNameClientInput').value
+            let newClientPhone = document.getElementById('newPhoneClientInput').value
             let formData = new FormData()
             formData.append('id', selectedClientId)
             formData.append('name', newClientName)
@@ -872,9 +895,12 @@ function edit(){
         })
 
         // обработчик формы редактирования категории
-        document.getElementById('editCategoryModalForm').addEventListener('click', function (){
+        document.getElementById('saveNewNameCategoryButton').addEventListener('click', function (){
+            let currentSpecializationId = document.getElementById('specialization').value
             let selectedCategoryId = document.getElementById('category').value
+            let editCategoryId = selectedCategoryId
             let newCategoryName = document.getElementById('editCategoryNameInput').value
+            console.log('новое имя категории: ', newCategoryName)
             let formData = new FormData()
             formData.append('id', selectedCategoryId)
             formData.append('category_name', newCategoryName)
@@ -884,7 +910,8 @@ function edit(){
             xhr.onload = function (){
                 if (xhr.status === 200) {
                     console.log('Категория успешно изменена')
-                    location.reload()
+                    loadCategoryBySpecialization(currentSpecializationId)
+                    //location.reload()
                 } else {
                     console.log(xhr.statusText)
                 }
@@ -894,6 +921,11 @@ function edit(){
             }
             xhr.send(formData)
         })
+
+        function setCategory(categoryId){
+            let categorySelect = document.getElementById('category')
+            categorySelect.value = categoryId
+        }
 
         // обработчик модального окна изменения услуги
         let saveButton = document.getElementById('saveEditServiceButton')
@@ -945,29 +977,38 @@ function history(){
     console.log('history script')
     //обработчик клика по заказ-нарядам
     document.addEventListener('DOMContentLoaded', function (){
-        let orderList = document.querySelector('#order-list')
-        orderList.addEventListener('click', function (event){
-            let clickedItem = event.target.closest('.order-item')
-            if (clickedItem){
-                clickedItem.classList.toggle('active')
-                let orderId = clickedItem.dataset.orderId
-                console.log('Выбарн заказ с Id: ', orderId)
-                window.location.href = '/order/' + orderId
-            }
+        let orderItems = document.querySelectorAll('.card.mb-3')
+        orderItems.forEach(function (orderItem){
+            orderItem.addEventListener('mouseover', function (){
+                orderItem.style.background = 'blue'
+            })
+
+            orderItem.addEventListener('mouseout', function (){
+                orderItem.style.background = ''
+            })
+
+            orderItem.addEventListener('click', function (){
+                orderItem.style.backgroundColor = 'red'
+            })
         })
     })
 }
 
-function oldOrder(){
-    console.log('oldOrder script')
-    let editOrderButton = document.getElementById('editOrderButton')
-    editOrderButton.addEventListener('click', function (){
-        let orderId = document.getElementById('orderId').textContent
-        console.log('редактируем ордер id: ', orderId)
-        let editUrl = `/edit_order/${orderId}`
-        window.location.href = editUrl
-    })
+function deleteOrder(orderId){
+    window.location.href = '/delete_order' + orderId
 }
+
+// function oldOrder(){
+//     //console.log('oldOrder script')
+//
+//     //let editOrderButton = document.getElementById('editOrderButton')
+//     //editOrderButton.addEventListener('click', function (){
+//         //let orderId = document.getElementById('orderId').textContent
+//         //console.log('редактируем ордер id: ', orderId)
+//         //let editUrl = `/edit_order/${orderId}`
+//         //window.location.href = editUrl
+//     //})
+// }
 
 function editOldOrder(){
     //храним добавленые в заказ наряд id
@@ -1017,93 +1058,157 @@ function editOldOrder(){
     })
 
     //отображаем сервис лист
-    function displayAddedServices(addedServiceList){
-        //див с выполненными услугами
-        let serviceDoneDiv = document.getElementById('serviceDoneDiv')
+    function displayAddedServices(addedServiceList) {
+        // Див с выполненными услугами
+        let serviceDoneDiv = document.getElementById('serviceDoneDiv');
 
-        //очищаем
-        serviceDoneDiv.innerHTML = ''
+        // Очищаем
+        serviceDoneDiv.innerHTML = '';
+
+        console.log('addedServiceList: ', addedServiceList);
+
         if (addedServiceList.length > 0) {
-            addedServiceList.forEach(function (serviceId){
+            addedServiceList.forEach(function (serviceId) {
+                // Ищем в массиве услуг serviceId
+                let serviceCh = services.find(service => service.id === parseInt(serviceId, 10));
 
-                //ищем в блейде переменные содержащие этот id
-                let serviceCh = services.find(service => service.id === parseInt(serviceId, 10))
-
-                //если содержит
+                // Если услуга найдена
                 if (serviceCh) {
+                    // Создаем новый элемент списка для услуги
+                    let newServiceItem = document.createElement('li');
+                    newServiceItem.classList.add('list-group-item');
 
-                    //создаем новый див
-                    let newServiceDiv = document.createElement('div')
+                    // Создаем новую строку Bootstrap
+                    let newRow = document.createElement('div');
+                    newRow.classList.add('row', 'mb-2');
 
-                    //вставляем данные
-                    newServiceDiv.dataset.serviceId = serviceId
-                    newServiceDiv.classList.add('serviceItem')
-                    newServiceDiv.textContent = `${serviceCh.service} - ${serviceCh.price}`
+                    // Создаем новый элемент для названия услуги
+                    let serviceNameCol = document.createElement('div');
+                    serviceNameCol.classList.add('col-md-9');
+                    serviceNameCol.textContent = serviceCh.service;
 
-                    let removeButton = document.createElement('button')
-                    removeButton.classList.add('removeServiceButton')
-                    removeButton.textContent = 'удалить'
-                    removeButton.addEventListener('click', function (){
-                        console.log('Удаляем услугу с Id: ', serviceCh.id)
+                    // Создаем новый элемент для цены услуги
+                    let servicePriceCol = document.createElement('div');
+                    servicePriceCol.classList.add('col-md-2');
+                    servicePriceCol.textContent = serviceCh.price;
 
-                        //тут логика для удаления
-                        let indexToRemove = addedServiceList.indexOf(serviceId)
-                        if (indexToRemove !== -1){
-                            addedServiceList.splice(indexToRemove, 1)
-                            newServiceDiv.remove()
-                            console.log('список добавденных услуг', addedServiceList)
+                    // Создаем новый элемент для кнопки удаления
+                    let removeButtonCol = document.createElement('div');
+                    removeButtonCol.classList.add('col-md-1');
+
+                    let removeButton = document.createElement('button');
+                    removeButton.classList.add('removeServiceButton', 'btn', 'btn-danger', 'bi', 'bi-trash');
+                    removeButton.type = 'button';
+
+                    // Добавляем обработчик события для кнопки удаления
+                    removeButton.addEventListener('click', function () {
+                        console.log('Удаляем услугу с Id: ', serviceCh.id);
+
+                        // Тут логика для удаления
+                        let indexToRemove = addedServiceList.indexOf(serviceId);
+                        if (indexToRemove !== -1) {
+                            addedServiceList.splice(indexToRemove, 1);
+                            newRow.remove();
+                            console.log('Список добавленных услуг', addedServiceList);
                         }
-                    })
+                    });
 
-                    newServiceDiv.appendChild(removeButton)
-                    serviceDoneDiv.appendChild(newServiceDiv)
+                    // Добавляем элементы в строку
+                    removeButtonCol.appendChild(removeButton);
+                    newRow.appendChild(serviceNameCol);
+                    newRow.appendChild(servicePriceCol);
+                    newRow.appendChild(removeButtonCol);
+
+                    // Добавляем новую строку в элемент списка
+                    newServiceItem.appendChild(newRow);
+
+                    // Добавляем новый элемент списка в блок с услугами
+                    serviceDoneDiv.appendChild(newServiceItem);
                 }
-            })
-        }else {
-            serviceDoneDiv.textContent = 'нет выполненных услуг'
+            });
+        } else {
+            // Если нет услуг, выводим сообщение
+            let noServicesItem = document.createElement('li');
+            noServicesItem.classList.add('list-group-item');
+            noServicesItem.textContent = 'Нет выполненных услуг';
+            serviceDoneDiv.appendChild(noServicesItem);
         }
     }
-    function displayNewAddedServices(){
+    function displayNewAddedServices() {
+        console.log('addedServiceList', addedServiceList);
 
-        //let totalAmount = 0
-        let serviceDoneDiv = document.getElementById('serviceDoneDiv')
-        serviceDoneDiv.innerHTML = ''
-
+        let serviceDoneDiv = document.getElementById('serviceDoneDiv');
+        serviceDoneDiv.innerHTML = '';
 
         if (addedServiceList.length > 0) {
-            addedServiceList.forEach(function (serviceId){
+            addedServiceList.forEach(function (serviceId) {
+                let loadedService = loadedServices.find(service => service.id === parseInt(serviceId, 10));
 
-                let loadedService = loadedServices.find(service => service.id === parseInt(serviceId, 10))
+                if (loadedService) {
+                    // Создаем новый элемент списка
+                    let newServiceItem = document.createElement('li');
+                    newServiceItem.classList.add('list-group-item');
 
-                let newServiceDiv = document.createElement('div')
-                newServiceDiv.dataset.serviceId = serviceId
-                newServiceDiv.classList.add('serviceItem')
-                newServiceDiv.textContent = `${loadedService.service} - ${loadedService.price}`
-                //totalAmount += loadedService.price
-                //console.log('totalAmount',totalAmount)
+                    // Создаем новую строку Bootstrap
+                    let newRow = document.createElement('div');
+                    newRow.classList.add('row', 'mb-2');
 
-                let removeButton = document.createElement('button')
-                removeButton.classList.add('removeServiceButton')
-                removeButton.textContent = 'удалить'
-                removeButton.addEventListener('click', function (){
-                    //тут логика для удаления
-                    let indexToRemove = addedServiceList.indexOf(serviceId)
-                    if (indexToRemove !== -1){
-                        addedServiceList.splice(indexToRemove, 1)
-                        newServiceDiv.remove()
-                        console.log('список добавденных услуг', addedServiceList)
-                    }
-                    updateTotalAmount()
-                })
+                    // Создаем новый элемент для названия услуги
+                    let serviceNameCol = document.createElement('div');
+                    serviceNameCol.classList.add('col-md-9');
+                    serviceNameCol.textContent = loadedService.service;
 
-                newServiceDiv.appendChild(removeButton)
-                serviceDoneDiv.appendChild(newServiceDiv)
-            })
-        }else {
-            serviceDoneDiv.textContent = 'нет выполненных услуг'
+                    // Создаем новый элемент для цены услуги
+                    let servicePriceCol = document.createElement('div');
+                    servicePriceCol.classList.add('col-md-2');
+                    servicePriceCol.textContent = loadedService.price;
+
+                    // Создаем новый элемент для кнопки удаления
+                    let removeButtonCol = document.createElement('div');
+                    removeButtonCol.classList.add('col-md-1');
+
+                    let removeButton = document.createElement('button');
+                    removeButton.classList.add('removeServiceButton', 'btn', 'btn-danger', 'bi', 'bi-trash');
+                    removeButton.type = 'button';
+
+                    // Добавляем обработчик события для кнопки удаления
+                    removeButton.addEventListener('click', function () {
+                        console.log('Удаляем услугу с Id: ', loadedService.id);
+
+                        // Логика для удаления
+                        let indexToRemove = addedServiceList.indexOf(serviceId);
+                        if (indexToRemove !== -1) {
+                            addedServiceList.splice(indexToRemove, 1);
+                            newServiceItem.remove();
+                            console.log('Список добавленных услуг', addedServiceList);
+                        }
+                        updateTotalAmount();
+                    });
+
+                    // Добавляем элементы в строку
+                    removeButtonCol.appendChild(removeButton);
+                    newRow.appendChild(serviceNameCol);
+                    newRow.appendChild(servicePriceCol);
+                    newRow.appendChild(removeButtonCol);
+
+                    // Добавляем новую строку в элемент списка
+                    newServiceItem.appendChild(newRow);
+
+                    // Добавляем новый элемент списка в блок с услугами
+                    serviceDoneDiv.appendChild(newServiceItem);
+                }
+            });
+        } else {
+            // Если нет услуг, выводим сообщение
+            let noServicesItem = document.createElement('li');
+            noServicesItem.classList.add('list-group-item');
+            noServicesItem.textContent = 'Нет добавленных услуг';
+            serviceDoneDiv.appendChild(noServicesItem);
         }
-        updateTotalAmount()
+
+        updateTotalAmount();
     }
+
 
     //обработчик кнопки добавления "добавить в заказ наряд"
     addToServiceListButton.addEventListener('click', function (){
@@ -1151,11 +1256,8 @@ function editOldOrder(){
         console.log('общая сумма: ', totalAmount)
 
         let servicesData = []
-        let serviceItems = document.querySelectorAll('.serviceItem')
-        serviceItems.forEach(function (serviceItem){
-            let serviceId = serviceItem.dataset.serviceId
-            servicesData.push({ service_id: serviceId})
-        })
+        servicesData = addedServiceList
+
         let orderData = {
             id: orderId,
             client_id: clientId,

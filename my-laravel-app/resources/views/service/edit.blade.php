@@ -13,11 +13,11 @@
             </div>
 
             <div class="col-md-2">
-                <button class="btn btn-primary" id="editSpecializationButton">Изменить</button>
+                <button class="btn btn-primary" id="showEditSpecializationModalButton">Изменить</button>
             </div>
 
             <div class="col-md-2">
-                <button class="btn btn-primary" id="addNewSpecializationButton">Добавить</button>
+                <button class="btn btn-primary" id="showAddNewSpecializationModalButton">Добавить</button>
             </div>
 
             <div class="col-md-2">
@@ -37,11 +37,11 @@
             </div>
 
             <div class="col-md-2">
-                <button class="btn btn-primary" id="editClientButton">Изменить</button>
+                <button class="btn btn-primary" id="showEditClientModalButton">Изменить</button>
             </div>
 
             <div class="col-md-2">
-                <button class="btn btn-primary" id="showAddClientForm">Добавить</button>
+                <button class="btn btn-primary" id="showAddClientModalForm">Добавить</button>
             </div>
 
             <div class="col-md-2">
@@ -60,7 +60,7 @@
             </div>
 
             <div class="col-md-2">
-                <button class="btn btn-primary" id="editCategoryButton">Изменить</button>
+                <button class="btn btn-primary" id="showEditCategoryModalButton">Изменить</button>
             </div>
 
             <div class="col-md-2">
@@ -88,13 +88,13 @@
 
     <br><br>
 
-    <div id="addSpecializationDiv" style="display: none">
-        <form id="addSpecializationForm">
-            <br>
-            <input type="text" name="specializationName" placeholder="название специализации">
-            <button type="submit" name="saveSpecializationButton">сохранить</button>
-        </form>
-    </div>
+{{--    <div id="addSpecializationDiv" style="display: none">--}}
+{{--        <form id="addSpecializationForm">--}}
+{{--            <br>--}}
+{{--            <input type="text" name="specializationName" placeholder="название специализации">--}}
+{{--            <button type="submit" name="saveSpecializationButton">сохранить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
 
     <div class="modal fade" id="addSpecializationModal" tabindex="-1" aria-labelledby="addSpecializationModal" aria-hidden="true">
         <div class="modal-dialog">
@@ -106,27 +106,27 @@
                 <div class="modal-body">
                     <form id="addSpecializationModalForm">
                         <div class="mb-3">
-                            <input type="text" class="form-control" id="addSpecializationInput">
+                            <input type="text" class="form-control" id="addSpecializationInput" placeholder="Введите название специализации">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">закрыть</button>
-                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">сохранить</button>
+                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal" id="saveNewSpecialization">сохранить</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="editSpecializationDiv" style="display: none">
-        <form id="editSpecializationForm">
-            <br>
-            <input type="text" id="editSpecializationNameInput" name="name">
-            <button type="submit" name="saveNewNameCategoryButton">Сохранить</button>
-        </form>
-    </div>
+{{--    <div id="editSpecializationDiv" style="display: none">--}}
+{{--        <form id="editSpecializationForm">--}}
+{{--            <br>--}}
+{{--            <input type="text" id="editSpecializationNameInput" name="name">--}}
+{{--            <button type="submit" name="saveNewNameCategoryButton">Сохранить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
 
-    <div class="model fade" id="editSpecializationModal" tabindex="-1" aria-labelledby="addSpecializationModal" aria-hidden="true">
+    <div class="modal fade" id="editSpecializationModal" tabindex="-1" aria-labelledby="addSpecializationModal" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -148,14 +148,14 @@
         </div>
     </div>
 
-    <div id="addClientDiv" style="display: none">
-        <form id="addClientForm">
-            <br>
-            <input type="text" name="clientName" placeholder="Имя клиента">
-            <input type="text" name="clientPhone" placeholder="Телефон">
-            <button type="submit" name="saveClient">Сохранить</button>
-        </form>
-    </div>
+{{--    <div id="addClientDiv" style="display: none">--}}
+{{--        <form id="addClientForm">--}}
+{{--            <br>--}}
+{{--            <input type="text" name="clientName" placeholder="Имя клиента">--}}
+{{--            <input type="text" name="clientPhone" placeholder="Телефон">--}}
+{{--            <button type="submit" name="saveClient">Сохранить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
 
     <div class="modal fade" id="addClientModal" tabindex="-1" aria-labelledby="addClientModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -167,10 +167,10 @@
                 <div class="modal-body">
                     <form id="addCategoryModalForm">
                         <div class="mb-3">
-                            <input type="text" class="form-control" id="nameClientInput">
+                            <input type="text" class="form-control" id="nameClientInput" placeholder="Введите имя клиента">
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control" id="phoneClientInput">
+                            <input type="text" class="form-control" id="phoneClientInput" placeholder="Введите телефон клиента">
                         </div>
                     </form>
                 </div>
@@ -182,14 +182,14 @@
         </div>
     </div>
 
-    <div id="editClientDiv" style="display: none">
-        <form id="editClientForm">
-            <br>
-            <input type="text" id="editClientNameInput" name="name">
-            <input type="text" id="editClientPhoneInput" name="phone">
-            <button type="submit" name="saveNewClientButton">Сохранить</button>
-        </form>
-    </div>
+{{--    <div id="editClientDiv" style="display: none">--}}
+{{--        <form id="editClientForm">--}}
+{{--            <br>--}}
+{{--            <input type="text" id="editClientNameInput" name="name">--}}
+{{--            <input type="text" id="editClientPhoneInput" name="phone">--}}
+{{--            <button type="submit" name="saveNewClientButton">Сохранить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
 
     <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -210,20 +210,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">закрыть</button>
-                    <button type="button" class="btn ntb-primary" data-bs-dismiss="modal" id="saveNewNameSpecializationButton">сохранить</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveNewNameClientButton">сохранить</button>
                 </div>
             </div>
         </div>
     </div>
-
-{{--    <div id="addCategoryDiv" style="display: none">--}}
-{{--        <form id="addCategoryForm>">--}}
-{{--            <br>--}}
-{{--            <input type="text" name="categoryName" placeholder="название категории">--}}
-{{--            <button type="submit" name="saveCategoryButton">Сохранить</button>--}}
-{{--        </form>--}}
-{{--        <br>--}}
-{{--    </div>--}}
 
     <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -247,14 +238,6 @@
         </div>
     </div>
 
-{{--    <div id="editCategoryDiv" style="display: none">--}}
-{{--        <form id="editCategoryForm" style="display: block">--}}
-{{--            <br>--}}
-{{--            <input type="text" id="editCategoryNameInput" name="name">--}}
-{{--            <button type="submit" name="saveNewNameCategoryButton">Сохранить</button>--}}
-{{--        </form>--}}
-{{--    </div>--}}
-
     <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -277,13 +260,13 @@
         </div>
     </div>
 
-    <div id="serviceForm" style="display: none">
-        <form id="addServiceForm">
-            <input type="text" name="name" placeholder="Название услуги">
-            <input type="text" name="price" placeholder="цена">
-            <button type="submit" name="addButton">Добавить</button>
-        </form>
-    </div>
+{{--    <div id="serviceForm" style="display: none">--}}
+{{--        <form id="addServiceForm">--}}
+{{--            <input type="text" name="name" placeholder="Название услуги">--}}
+{{--            <input type="text" name="price" placeholder="цена">--}}
+{{--            <button type="submit" name="addButton">Добавить</button>--}}
+{{--        </form>--}}
+{{--    </div>--}}
 
     <div class="modal fade" id="newServiceModal" tabindex="-1" aria-labelledby="newServiceModalLabel" aria-hidden="true">
         <div class="modal-dialog">

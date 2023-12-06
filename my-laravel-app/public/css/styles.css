@@ -67,3 +67,8 @@ textarea {
 .h1 {
 
 }
+
+.order-item:hover {
+    background-color: black;
+    color: white;
+}

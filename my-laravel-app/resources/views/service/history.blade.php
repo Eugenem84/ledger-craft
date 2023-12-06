@@ -1,19 +1,42 @@
 <x-layout>
     <x-slot name="title">История Заказов</x-slot>
 
-    <div id="orders">
-        <h3>список заказ нарядов</h3>
+    <div id="orders" class="text-center">
+        <h3>Список заказ-нарядов</h3>
         @if(count($orders) > 0)
-            <div id ="order-list" class="order-list">
+            <div id="order-list">
                 @foreach($orders as $order)
-                    <div class="order-item" id="order-item" data-order-id=" {{$order->id}} ">
-                        <p>{{$order->created_at}} - {{ $order->specialization->specializationName}} - {{ $order->client->name}} - {{ $order->total_amount }}</p>
-                    </div>
+                    <a href="/order/{{ $order->id }}" class="card mb-3 order-item" data-order-id="{{ $order->id }}">
+                        <div class="card mb-3 order-item" data-order-id="{{ $order->id }}">
+                            <div class="card-body bg-light">
+                                <div class="order-detail">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            {{ $order->id }}
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            {{ $order->created_at }}
+                                        </div>
+                                        <div class="col-md-3">
+                                            {{ $order->specialization->specializationName }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            {{ $order->client->name }}
+                                        </div>
+                                        <div class="col-md-1">
+                                            {{ $order->total_amount }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <a/>
                 @endforeach
             </div>
         @else
-            <p>нет заказов</p>
-       @endif
+            <p> нет заказов </p>
+        @endif
     </div>
 
 
