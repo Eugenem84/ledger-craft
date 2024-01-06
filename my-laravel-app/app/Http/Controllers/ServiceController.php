@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Client;
 use App\Models\Order;
+use App\Models\OrderService;
 use App\Models\Service;
 use App\Http\Controllers\Controller;
 use App\Models\Specialization;
@@ -16,18 +17,44 @@ use PHPUnit\Exception;
 
 class ServiceController extends Controller
 {
+    public function getSpecializations()
+    {
+        $specializations = Specialization::all();
+        if ($specializations) {
+            return response()->json($specializations);
+        } else {
+            return response()->json(['error' => 'специализаций не найдено']);
+        }
+    }
+    //удаление ордера
+    public function deleteOrder($orderId)
+    {
+        $order = Order::find($orderId);
+        if (!$order){
+            return response()->json(['error' => 'ордер не найден'], 404);
+        }
+
+        OrderService::where('order_id', $orderId)->delete();
+
+        $order->delete();
+        return response()->json(['message' => 'Ордер успешно удален'], 200);
+    }
 
     //обновление ордера
     public function updateOrder(Request $request){
         $orderId = $request->input('id');
         $clientId = $request->input('client_id');
         $specializationId = $request->input('specialization_id');
+        $materials = $request->input('materials');
+        $comments = $request->input('comments');
         $serviceData = $request->input('services');
         $totalAmount = $request->input('total_amount');
 
         $order = Order::find($orderId);
         $order->client_id = $clientId;
         $order->total_amount = $totalAmount;
+        $order->materials = $materials;
+        $order->comments = $comments;
         $order->services()->sync($serviceData);
         $order->save();
         return response()->json(['message'=> 'Ордер успешно обновился', $totalAmount]);
@@ -68,6 +95,7 @@ class ServiceController extends Controller
         } else {
             return response()->json(['message' => 'ошибка записи']);
         }
+        return response()->json(['message' => 'ордер сохранен']);
     }
     public function show()
     {

@@ -70,12 +70,12 @@
         </div>
         <br>
         <div class="form-group">
-            <label for="materials">маиериалы: </label>
+            <label for="materials">материалы: </label>
             <textarea id="materials" class="form-control" rows="3" style="resize: none; overflow-y: hidden "> </textarea>
         </div>
         <br>
         <div class="form-group">
-            <label for="comments">комьентарии: </label>
+            <label for="comments">комментарии: </label>
             <textarea id="comments" class="form-control" rows="2" style="resize: none; overflow-y: hidden" ></textarea>
         </div>
         <br>

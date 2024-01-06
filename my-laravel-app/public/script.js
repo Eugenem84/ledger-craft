@@ -28,6 +28,12 @@ if (document.querySelector('#editOldOrder')){
     editOldOrder()
 }
 
+function showSuccessMessage(){
+    document.getElementById('successMessage').style.display = 'block'
+    setTimeout(function (){
+        document.getElementById('successMessage').style.display = 'none'
+    }, 3000)
+}
 
 function loadCategoryBySpecialization(specializationId){
     console.log('Выбрана специализация: ', specializationId)
@@ -271,7 +277,7 @@ function order(){
         saveOrderButton.addEventListener('click', function (){
            console.log('сохраняем заказ наряд')
             saveOrder()
-            //location.reload()настроил подгрузку клиентов с установкой по умолчанию текущего
+            showSuccessMessage()
             })
 
         //функция сохранения заказа
@@ -994,9 +1000,6 @@ function history(){
     })
 }
 
-function deleteOrder(orderId){
-    window.location.href = '/delete_order' + orderId
-}
 
 // function oldOrder(){
 //     //console.log('oldOrder script')
@@ -1255,6 +1258,8 @@ function editOldOrder(){
         console.log('специализация id: ', specializationId)
         let totalAmount = document.getElementById('totalAmount').textContent
         console.log('общая сумма: ', totalAmount)
+        let materials = document.getElementById('materials').value
+        let comments = document.getElementById('comments').value
 
         let servicesData = []
         servicesData = addedServiceList
@@ -1265,9 +1270,37 @@ function editOldOrder(){
             specialization_id: specializationId,
             services: servicesData,
             total_amount: totalAmount,
+            materials: materials,
+            comments: comments,
         }
         console.log(orderData)
         saveOrder(orderData)
+        //alert('Сохранено')
+        showSuccessMessage()
     })
 
+}
+
+
+function deleteOrder(orderId){
+    console.log('Удаляем ордер с id: ', orderId)
+    let xhr = new XMLHttpRequest()
+    xhr.open('DELETE', `/delete_order/${orderId}`, true)
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.setRequestHeader('X-CSRF-TOKEN',csrfToken)
+    xhr.send()
+    xhr.onload = function (){
+        if(xhr.status === 200){
+            console.log('Ордер успешно удален')
+        } else {
+            console.error('Ошибка удаления ордера', xhr.statusText)
+        }
+    }
+    window.location.href = '/service/history'
+}
+
+function openConfirmDeleteModal(){
+    console.log('Запуск модального окна')
+    let modal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'))
+    modal.show()
 }

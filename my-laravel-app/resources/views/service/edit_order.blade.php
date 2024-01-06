@@ -4,7 +4,7 @@
     <div id="editOldOrder" class="container">
 
         <h3>Редактирование заказ-наряда: {{ $order->id }} </h3>
-        <div id="orderId">{{ $order->id }}</div>
+        <div id="orderId" style="display: none">{{ $order->id }}</div>
 
         <div class="row">
             <div class="col-md-7">
@@ -38,24 +38,6 @@
 
         @if($order)
 
-{{--                <span id="specializationSpan" data-specialization-id="{{ $order->specialization->id }}"> специализация: {{$order->specialization->specializationName}} | </span>--}}
-
-
-{{--            <lable for="clients">Клиент</lable>--}}
-{{--            <select name="clients" id="clients">--}}
-{{--                @foreach($clients as $client)--}}
-{{--                    <option value="{{ $client->id }}" {{ $order->client_id === $client->id ? 'selected' : '' }}>--}}
-{{--                        {{ $client->name }} - {{ $client->phone }}--}}
-{{--                    </option>--}}
-{{--                @endforeach--}}
-{{--            </select>--}}
-            <br>
-{{--            <lable for="category">категория</lable>--}}
-{{--            <select name="category" id="category">--}}
-{{--                @foreach($categories as $category)--}}
-{{--                    <option value="{{ $category->id }}">{{ $category->category_name }}</option>--}}
-{{--                @endforeach--}}
-{{--            </select>--}}
             <h3>Выберите вид работ: </h3>
 
             <div id="services">
@@ -123,18 +105,37 @@
 {{--            </div>--}}
 
             <br>
+            <div class="row">
+                <div class="col-md-9">
+                    <h4>Общая Сумма: </h4>
+                </div>
+                <div class="col-md-3">
+                    <span style="display: block" id="totalAmount"> {{ $order->total_amount }} </span>
+                </div>
+            </div>
             <div id="totalDiv">
-                <span id="totalText">Общая сумма: </span> <span id="totalAmount"> {{ $order->total_amount }} </span>
+{{--                <span style="display: block" id="totalAmount"> {{ $order->total_amount }} </span>--}}
             </div>
 
-            <p>Материалы:
-                @if($order->materials) {{ $order->materials }}
-                @else нет материалов
-                @endif
-            </p>
-            <p>Коментарии:
-                @if( ! $order->comments ) нет коментариев
-                @endif{{ $order->comments }}</p>
+        <div class="mb-3">
+            <label for="materials" class="form-label">Материалы: </label>
+            <textarea class="form-control" id="materials" name="materials" rows="4"> {{ $order->materials }} </textarea>
+        </div>
+
+        <div class="mb-4">
+            <label for="comments" class="form-label">Комментарии: </label>
+            <textarea class="form-control" id="comments" name="comments" row="3"> {{$order->comments}} </textarea>
+        </div>
+
+
+{{--            <p>Материалы:--}}
+{{--                @if($order->materials) {{ $order->materials }}--}}
+{{--                @else нет материалов--}}
+{{--                @endif--}}
+{{--            </p>--}}
+{{--            <p>Коментарии:--}}
+{{--                @if( ! $order->comments ) нет коментариев--}}
+{{--                @endif{{ $order->comments }}</p>--}}
 
         @else
             <p>нет заказ нарядов</p>
@@ -142,7 +143,7 @@
 
     </div>
 
-    <button id="saveOrderButton">Сохранить</button>
+    <button id="saveOrderButton" class="btn btn-primary">Сохранить</button>
 
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>

@@ -78,14 +78,32 @@
                     <a href="/edit_order/ {{ $order->id }}" class="btn btn-primary bi-pencil"> Редактировать</a>
                 </div>
                 <div class="col-md-2">
-                    <a href="/delete_order/ {{ $order->id }}" class="btn btn-danger bi-trash"> Удалить</a>
+                    <button type="button" class="btn btn-danger bi-trash" onclick="openConfirmDeleteModal()"> Удалить</button>
                 </div>
             </div>
 
         @else
             <p>нет заказ нарядов</p>
         @endif
+
+
+            <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Подтверждение удаления</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteOrder({{ $order->id }})">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     </div>
+
 
     <script src="{{ asset('script.js') }}"></script>
 </x-layout>

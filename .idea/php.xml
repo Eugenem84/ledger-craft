@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="LaravelPint">
+    <laravel_pint_settings>
+      <LaravelPintConfiguration tool_path="$PROJECT_DIR$/my-laravel-app/vendor/bin/pint" />
+    </laravel_pint_settings>
+  </component>
   <component name="MessDetectorOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
@@ -131,6 +136,7 @@
       <path value="$PROJECT_DIR$/my-laravel-app/vendor/doctrine/dbal" />
       <path value="$PROJECT_DIR$/my-laravel-app/vendor/doctrine/deprecations" />
       <path value="$PROJECT_DIR$/my-laravel-app/vendor/twbs/bootstrap-icons" />
+      <path value="$PROJECT_DIR$/my-laravel-app/vendor/carbonphp/carbon-doctrine-types" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
