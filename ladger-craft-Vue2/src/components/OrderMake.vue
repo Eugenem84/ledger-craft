@@ -1,6 +1,7 @@
 <script>
 import axios from "axios"
 import {BIconTrash} from 'bootstrap-vue'
+//import {error} from "@babel/eslint-parser/lib/convert";
 export default {
    components: {
      BIconTrash
@@ -16,13 +17,20 @@ export default {
       selectedSpecialization: null,
       selectedClient: null,
       selectedCategory: null,
+      materials: null,
+      comments: null,
     }
   },
 
   computed: {
     tabTitleCounter() {
       return `добавлено услуг: ${this.addedServices.length}`
-    }
+    },
+
+    totalAddedServicesPrice(){
+      return this.addedServices.reduce((total, service) => total + service.price, 0)
+    },
+
   },
 
   methods: {
@@ -31,6 +39,10 @@ export default {
       this.loadClients()
       this.loadCategories()
       console.log('выбрана специализация: ', this.selectedSpecialization)
+    },
+
+    handleClientChange(){
+      //
     },
 
     handleCategoriesChange(){
@@ -84,14 +96,41 @@ export default {
     //добавление сервиса в ордер
     addServiceToOrder(service) {
       console.log('Добавление сервиса в ордер: ', service)
-
       const isServiceAlreadyAdded = this.addedServices.some(addedService => addedService.id === service.id)
-
       if (!isServiceAlreadyAdded) {
         this.addedServices.push(service)
         console.log('Добавленные сервисы: ', this.addedServices)
       } else {alert('Такой сервис уже есть в ордере!')}
     },
+
+    //сохранение ордера
+    saveOrder() {
+      console.log('создаем ордер')
+      const totalAmount = this.totalAddedServicesPrice
+      const orderData = {
+        clientId: this.selectedClient,
+        specializationId: this.selectedSpecialization,
+        totalAmount: totalAmount,
+        materials: this.materials,
+        comments: this.comments,
+        servicesId: this.addedServices.map(service => service.id)
+      }
+      console.log('данные для сохранения: ', orderData)
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      console.log('сsrfToken: ', csrfToken)
+      axios.post('http://localhost:8000/save_order', orderData,{
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          }
+      })
+          .then(response => {
+            console.log(response.data.message)
+          })
+          .catch(error => {
+            console.error('Ошибка сохранения ордера: ', error)
+          })
+    }
   },
 
   mounted() {
@@ -119,7 +158,7 @@ export default {
           </b-form-select-option>
         </b-form-select>
 
-        <b-form-select v-model="selectedClient" class="w-auto"  >
+        <b-form-select v-model="selectedClient" class="w-auto" @change="handleClientChange" >
           <b-form-select-option v-for="client in clients"
                                 :key="client.id" :value="client.id">
             {{client.name}} - {{client.phone}}
@@ -127,15 +166,29 @@ export default {
         </b-form-select>
       </div>
 
-      <b-form-select v-model="selectedCategory" @change="handleCategoriesChange" class="w-auto" >
-        <b-form-select-option v-for="category in categories"
-                              :key="category.id" :value="category.id">
-            {{category.category_name}}
-        </b-form-select-option>
-      </b-form-select>
-
+      <div>
+        <b-container>
+          <b-row>
+            <b-col md="6">
+              <b-form-select v-model="selectedCategory" @change="handleCategoriesChange" class="w-auto" >
+                <b-form-select-option v-for="category in categories"
+                                      :key="category.id" :value="category.id">
+                  {{category.category_name}}
+                </b-form-select-option>
+              </b-form-select>
+            </b-col>
+            <b-col md="6">
+              <div>
+                Сумма: {{ totalAddedServicesPrice }}
+              </div>
+            </b-col>
+          </b-row>
+        </b-container>
+      </div>
     </div>
-    <div>
+
+
+    <div id="orderDiv" class="d-flex flex-column" style="min-height: 75vh">
       <b-tabs order switch>
         <b-tab title="Выбор услуг" href="#serviceChoice">
           <br>
@@ -150,6 +203,7 @@ export default {
             </b-list-group>
           </div>
         </b-tab>
+
         <b-tab :title="tabTitleCounter" href="#addedServices">
           <br>
           <div id="addedServices">
@@ -162,11 +216,42 @@ export default {
                 </b-button>
               </div>
             </b-list-group-item>
+
+            <br>
+
+            <b-form-textarea id="materialsTextArea"
+                             v-model="materials"
+                             placeholder="нет материалов"
+                             rows="1"
+                             max-rows="6"
+            ></b-form-textarea>
+
+            <br>
+
+            <b-form-textarea id="commentsTextArea"
+                             v-model="comments"
+                             placeholder="комментарии"
+                             rows="1"
+                             max-rows="6"
+            ></b-form-textarea>
+
           </div>
         </b-tab>
       </b-tabs>
+
     </div>
-  </div>
+
+    <b-container class="fixed-bottom">
+      <b-row class="justify-content-end">
+        <b-col md="auto">
+          <b-button @click="saveOrder()" variant="primary" class="m-3" >
+            сохранить ордер
+          </b-button>
+        </b-col>
+      </b-row>
+    </b-container>
+
+</div>
 </template>
 
 <style scoped>

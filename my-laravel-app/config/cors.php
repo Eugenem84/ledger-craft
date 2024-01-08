@@ -22,6 +22,7 @@ return [
         'get_clients/*',
         'get_categories/*',
         'get_service/*',
+        'save_order',
     ],
 
     'allowed_methods' => ['*'],
