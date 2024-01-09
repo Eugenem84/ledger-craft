@@ -44,4 +44,4 @@ Route::post('/save_order', [ServiceController::class, 'saveOrder']);
 Route::get('/edit_order/{orderId}', [ServiceController::class, 'editOrder']);
 Route::post('/update_order', [ServiceController::class, 'updateOrder']);
 Route::delete('/delete_order/{orderId}', [ServiceController::class, 'deleteOrder']);
-Route::get('/getSpecialization', [ServiceController::class, 'getSpecializations']);
+//Route::get('/getSpecialization', [ServiceController::class, 'getSpecializations']);

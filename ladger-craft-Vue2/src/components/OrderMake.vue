@@ -1,10 +1,14 @@
 <script>
 import axios from "axios"
 import {BIconTrash} from 'bootstrap-vue'
+import {BAlert} from "bootstrap-vue";
+import alert from "bootstrap/js/src/alert";
 //import {error} from "@babel/eslint-parser/lib/convert";
 export default {
    components: {
-     BIconTrash
+     BIconTrash,
+     BAlert,
+
    },
 
   data(){
@@ -19,10 +23,15 @@ export default {
       selectedCategory: null,
       materials: null,
       comments: null,
-    }
+
+      alertVisible: false,
+      alertVariant: 'success',
+      alertMessage: '',
+      }
   },
 
   computed: {
+
     tabTitleCounter() {
       return `добавлено услуг: ${this.addedServices.length}`
     },
@@ -36,17 +45,29 @@ export default {
   methods: {
 
     handleSpecializationChange(){
-      this.loadClients()
-      this.loadCategories()
+      if (this.selectedSpecialization === 'create_new_specialization'){
+        // тут будет открываться модальное окно создание специализации
+      } else {
+        this.loadClients()
+        this.loadCategories()
+      }
       console.log('выбрана специализация: ', this.selectedSpecialization)
     },
 
     handleClientChange(){
-      //
+      if (this.selectedClient === 'create_new_client'){
+        // тут будет открываться модальное окно создания нового клиента
+      } else {
+        // тут логика при выборе клиента
+      }
     },
 
     handleCategoriesChange(){
-      this.loadServicesByCategory()
+      if (this.selectedCategory === 'create_new_category'){
+        // тут будет открываться модальное окно создание новой категории
+      } else {
+        this.loadServicesByCategory()
+      }
       console.log('выбрана категория: ', this.selectedCategory)
     },
 
@@ -103,6 +124,24 @@ export default {
       } else {alert('Такой сервис уже есть в ордере!')}
     },
 
+    //Алерт
+    showAlert(variant, message) {
+      this.alertVariant = variant
+      this.alertMessage = message
+      this.alertVisible = true
+      setTimeout(() => {
+        this.alertVisible = false
+      }, 2000)
+    },
+
+    openNewCategoryModal(){
+      //
+    },
+
+    openNewServiceModal(){
+      //
+    },
+
     //сохранение ордера
     saveOrder() {
       console.log('создаем ордер')
@@ -118,23 +157,38 @@ export default {
       console.log('данные для сохранения: ', orderData)
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       console.log('сsrfToken: ', csrfToken)
-      axios.post('http://localhost:8000/save_order', orderData,{
+
+      // проверка на пустое поле сервисов
+      if (this.addedServices.length === 0) {
+        this.showAlert('danger', 'Сначала добавьте сервисы')
+      } else if (!this.selectedClient) {
+        // проверка на пустое поле выбора клиента
+        this.showAlert('danger', 'Сначала выберите клиента')
+      } else {
+        axios.post('http://localhost:8000/save_order', orderData, {
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
           }
-      })
-          .then(response => {
-            console.log(response.data.message)
-          })
-          .catch(error => {
-            console.error('Ошибка сохранения ордера: ', error)
-          })
+        })
+            .then(response => {
+              console.log(response.data.message)
+
+              this.addedServices = []
+              this.materials = ''
+              this.comments = ''
+              this.showAlert('success', 'Ордер успешно сохранен')
+            })
+            .catch(error => {
+              console.error('Ошибка сохранения ордера: ', error)
+              this.showAlert('danger', 'Ошибка сохроанения ордера')
+            })
+      }
     }
   },
 
   mounted() {
-    axios.get('http://localhost:8000/getSpecialization')
+    axios.get('http://localhost:8000/api/getSpecialization')
         .then(response => {
           this.specializations = response.data
           console.log('список специализаций: ', this.specializations )
@@ -156,6 +210,10 @@ export default {
                                 :key="specialization.id" :value="specialization.id" >
             {{ specialization.specializationName }}
           </b-form-select-option>
+
+          <b-form-select-option value="create_new_specialization">
+            создать новую специализацию
+          </b-form-select-option>
         </b-form-select>
 
         <b-form-select v-model="selectedClient" class="w-auto" @change="handleClientChange" >
@@ -163,6 +221,11 @@ export default {
                                 :key="client.id" :value="client.id">
             {{client.name}} - {{client.phone}}
           </b-form-select-option>
+
+          <b-form-select-option v-if="selectedSpecialization" value="create_new_client">
+            создать нового клиента
+          </b-form-select-option>
+
         </b-form-select>
       </div>
 
@@ -174,6 +237,10 @@ export default {
                 <b-form-select-option v-for="category in categories"
                                       :key="category.id" :value="category.id">
                   {{category.category_name}}
+                </b-form-select-option>
+
+                <b-form-select-option v-if="selectedSpecialization" value="create_new_category">
+                  создать новую категорию
                 </b-form-select-option>
               </b-form-select>
             </b-col>
@@ -188,6 +255,10 @@ export default {
     </div>
 
 
+    <BAlert v-model="alertVisible" :variant="alertVariant" dismissible fade class="fixed-top"  >
+      {{ alertMessage }}
+    </BAlert>
+
     <div id="orderDiv" class="d-flex flex-column" style="min-height: 75vh">
       <b-tabs order switch>
         <b-tab title="Выбор услуг" href="#serviceChoice">
@@ -200,6 +271,13 @@ export default {
                   <div>{{service.price}}</div>
                 </div>
               </b-list-group-item>
+
+              <b-list-group-item v-if="selectedCategory" id="serviceItem" @click="openNewServiceModal">
+                <div class="d-flex justify-content-center align-items-center">
+                  добавить новую услугу
+                </div>
+              </b-list-group-item>
+
             </b-list-group>
           </div>
         </b-tab>
