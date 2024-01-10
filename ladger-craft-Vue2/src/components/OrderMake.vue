@@ -3,12 +3,13 @@ import axios from "axios"
 import {BIconTrash} from 'bootstrap-vue'
 import {BAlert} from "bootstrap-vue";
 import alert from "bootstrap/js/src/alert";
+import NewServiceModal from "@/components/NewServiceModal.vue";
 //import {error} from "@babel/eslint-parser/lib/convert";
 export default {
    components: {
+     NewServiceModal,
      BIconTrash,
      BAlert,
-
    },
 
   data(){
@@ -27,6 +28,8 @@ export default {
       alertVisible: false,
       alertVariant: 'success',
       alertMessage: '',
+
+      isNewServiceModalOpen: false,
       }
   },
 
@@ -72,7 +75,7 @@ export default {
     },
 
     loadCategories(){
-      axios.get(`http://localhost:8000/get_categories/${this.selectedSpecialization}`)
+      axios.get(`http://localhost:8000/api/get_categories/${this.selectedSpecialization}`)
           .then(response => {
             this.categories = response.data
             console.log('список категорий: ',this.categories)
@@ -83,7 +86,7 @@ export default {
     },
 
     loadClients(){
-      axios.get(`http://localhost:8000/get_clients/${this.selectedSpecialization}`)
+      axios.get(`http://localhost:8000/api/get_clients/${this.selectedSpecialization}`)
           .then(response => {
             this.clients = response.data
             console.log('список клиентов: ', this.clients)
@@ -94,7 +97,7 @@ export default {
     },
 
     loadServicesByCategory(){
-      axios.get(`http://localhost:8000/get_service/${this.selectedCategory}`)
+      axios.get(`http://localhost:8000/api/get_service/${this.selectedCategory}`)
           .then(response => {
             this.services = response.data
             console.log('Список услуг: ', this.services)
@@ -138,8 +141,15 @@ export default {
       //
     },
 
+    // открытие модального окна для добавления новой услуги
     openNewServiceModal(){
-      //
+      this.$refs.newServiceModal.selectedCategory = this.selectedCategory
+      this.$refs.newServiceModal.open()
+    },
+
+    // закрытие модального окна
+    closeNewServiceModal(){
+      this.isNewServiceModalOpen = false
     },
 
     //сохранение ордера
@@ -165,7 +175,7 @@ export default {
         // проверка на пустое поле выбора клиента
         this.showAlert('danger', 'Сначала выберите клиента')
       } else {
-        axios.post('http://localhost:8000/save_order', orderData, {
+        axios.post('http://localhost:8000/api/save_order', orderData, {
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
@@ -281,6 +291,10 @@ export default {
             </b-list-group>
           </div>
         </b-tab>
+
+        <NewServiceModal :selectedCategory="selectedCategory"
+            ref="newServiceModal"
+        />
 
         <b-tab :title="tabTitleCounter" href="#addedServices">
           <br>

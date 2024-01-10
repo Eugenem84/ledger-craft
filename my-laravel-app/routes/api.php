@@ -20,3 +20,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/getSpecialization', [ServiceController::class, 'getSpecializations']);
+Route::get('/get_service/{categoryId}', [ServiceController::class, 'getServicesByCategory']);
+Route::get('/get_categories/{specializationId}', [ServiceController::class, 'getCategoriesBySpecialization']);
+Route::get('/get_clients/{specializationId}', [ServiceController::class, 'getClientsBySpecialization']);
+Route::post('/save_order', [ServiceController::class, 'saveOrder']);
+Route::post('/add_service', [ServiceController::class, 'addNewService']);
