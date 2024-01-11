@@ -16,28 +16,18 @@ export default {
     },
 
     createNewService(){
-
-      console.log('selectedCategory: ', this.selectedCategory)
-
       const requestData = {
         service: this.newServiceNameInput,
         price: this.newServicePriceInput,
         category_id: this.selectedCategory,
       }
-      console.log(requestData)
-
       axios.post('http://localhost:8000/api/add_service', requestData)
           .then(response => {
             console.log(response.data.message)
+            this.$emit('service-added')
           })
-          // .catch(error => {
-          //   console.log('Ошибка при создании услуги')
-          // })
-
-      console.log('создание новой услуги')
       this.isVisible = false
     },
-
     closeModal(){
       this.isVisible = false
     }

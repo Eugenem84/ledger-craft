@@ -23,7 +23,7 @@ Route::get('/statistics', [\App\Http\Controllers\StatisticsController::class, 'i
 Route::get('service/edit',[ServiceController::class,'editServices']);
 Route::get('service/history', [ServiceController::class, 'showHistoryOrders']);
 Route::get('service/statistic',[ServiceController::class, 'showStatistics']);
-Route::post('/add_service', [ServiceController::class, 'addNewService']);
+//Route::post('/add_service', [ServiceController::class, 'addNewService']);
 Route::post('/delete_service', [ServiceController::class, 'deleteService']);
 Route::post('/edit_service', [ServiceController::class, 'editService']);
 Route::post('/add_specialization', [ServiceController::class, 'addNewSpecialization']);
@@ -36,7 +36,7 @@ Route::post('/edit_specialization', [ServiceController::class, 'editSpecializati
 //Route::get('/get_categories/{specializationId}', [ServiceController::class, 'getCategoriesBySpecialization']);
 //Route::get('/get_all_clients', [ClientController::class, 'getAllClients']);
 //Route::get('/get_clients/{specializationId}', [ServiceController::class, 'getClientsBySpecialization']);
-Route::post('/add_client', [ServiceController::class, 'addNewClient']);
+//Route::post('/add_client', [ServiceController::class, 'addNewClient']);
 Route::post('/delete_client', [ServiceController::class, 'deleteClient']);
 Route::post('/edit_client', [ServiceController::class, 'editClient']);
 Route::get('/order/{orderId}', [ServiceController::class, 'showOrderDetails']);

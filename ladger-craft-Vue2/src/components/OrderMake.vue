@@ -4,9 +4,13 @@ import {BIconTrash} from 'bootstrap-vue'
 import {BAlert} from "bootstrap-vue";
 import alert from "bootstrap/js/src/alert";
 import NewServiceModal from "@/components/NewServiceModal.vue";
+import NewSpecializationModal from "@/components/NewSpecializationModal.vue";
+import NewClientModal from "@/components/NewClientModal.vue";
 //import {error} from "@babel/eslint-parser/lib/convert";
 export default {
    components: {
+     NewClientModal,
+     NewSpecializationModal,
      NewServiceModal,
      BIconTrash,
      BAlert,
@@ -19,6 +23,7 @@ export default {
       categories: [],
       services: [],
       addedServices: [],
+
       selectedSpecialization: null,
       selectedClient: null,
       selectedCategory: null,
@@ -49,6 +54,7 @@ export default {
 
     handleSpecializationChange(){
       if (this.selectedSpecialization === 'create_new_specialization'){
+        this.openNewSpecializationModal()
         // тут будет открываться модальное окно создание специализации
       } else {
         this.loadClients()
@@ -58,10 +64,13 @@ export default {
     },
 
     handleClientChange(){
-      if (this.selectedClient === 'create_new_client'){
-        // тут будет открываться модальное окно создания нового клиента
+      console.log('выбор клиента')
+      if (this.selectedClient === 'create-new-client'){
+        console.log('открываем модальное окно нового клиента')
+        this.openNewClientModal()
       } else {
-        // тут логика при выборе клиента
+        console.log('загружаем клиентов')
+        this.loadClients()
       }
     },
 
@@ -107,6 +116,17 @@ export default {
           })
     },
 
+    loadSpecializations (){
+      axios.get('http://localhost:8000/api/getSpecialization')
+          .then(response => {
+            this.specializations = response.data
+            console.log('список специализаций: ', this.specializations )
+          })
+          .catch(eError => {
+            console.error(eError.message)
+          })
+    },
+
     //удаление сервиса из ордера
     deleteFromAdded(serviceId) {
       console.log('удаляем сервис')
@@ -135,6 +155,16 @@ export default {
       setTimeout(() => {
         this.alertVisible = false
       }, 2000)
+    },
+
+    openNewSpecializationModal(){
+      console.log('создаем новую специализацию')
+      this.$refs.newSpecializationModal.open()
+    },
+
+    openNewClientModal(){
+      this.$refs.newClientModal.selectedClient = this.selectedClient
+      this.$refs.newClientModal.open()
     },
 
     openNewCategoryModal(){
@@ -226,13 +256,13 @@ export default {
           </b-form-select-option>
         </b-form-select>
 
-        <b-form-select v-model="selectedClient" class="w-auto" @change="handleClientChange" >
+        <b-form-select v-model="selectedClient" class="w-auto" @change="handleClientChange"  >
           <b-form-select-option v-for="client in clients"
                                 :key="client.id" :value="client.id">
             {{client.name}} - {{client.phone}}
           </b-form-select-option>
 
-          <b-form-select-option v-if="selectedSpecialization" value="create_new_client">
+          <b-form-select-option value="create-new-client" v-if="selectedSpecialization">
             создать нового клиента
           </b-form-select-option>
 
@@ -264,7 +294,6 @@ export default {
       </div>
     </div>
 
-
     <BAlert v-model="alertVisible" :variant="alertVariant" dismissible fade class="fixed-top"  >
       {{ alertMessage }}
     </BAlert>
@@ -293,7 +322,17 @@ export default {
         </b-tab>
 
         <NewServiceModal :selectedCategory="selectedCategory"
-            ref="newServiceModal"
+                         ref="newServiceModal"
+                         @service-added="loadServicesByCategory"
+        />
+
+        <NewSpecializationModal ref="newSpecializationModal"
+                                @specialization-added="loadSpecializations"
+        />
+
+        <NewClientModal :selected-specialization="selectedSpecialization"
+                        ref="newClientModal"
+                        @client-added="loadClients"
         />
 
         <b-tab :title="tabTitleCounter" href="#addedServices">
