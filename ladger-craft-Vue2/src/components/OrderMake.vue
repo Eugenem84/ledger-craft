@@ -6,12 +6,14 @@ import alert from "bootstrap/js/src/alert";
 import NewServiceModal from "@/components/NewServiceModal.vue";
 import NewSpecializationModal from "@/components/NewSpecializationModal.vue";
 import NewClientModal from "@/components/NewClientModal.vue";
+import NewCategoryModal from "@/components/NewCategoryModal.vue";
 //import {error} from "@babel/eslint-parser/lib/convert";
 export default {
    components: {
      NewClientModal,
      NewSpecializationModal,
      NewServiceModal,
+     NewCategoryModal,
      BIconTrash,
      BAlert,
    },
@@ -35,6 +37,7 @@ export default {
       alertMessage: '',
 
       isNewServiceModalOpen: false,
+      //isNewCategoryModalOpenL: false,
       }
   },
 
@@ -55,7 +58,6 @@ export default {
     handleSpecializationChange(){
       if (this.selectedSpecialization === 'create_new_specialization'){
         this.openNewSpecializationModal()
-        // тут будет открываться модальное окно создание специализации
       } else {
         this.loadClients()
         this.loadCategories()
@@ -75,8 +77,10 @@ export default {
     },
 
     handleCategoriesChange(){
+      console.log('выбираем категорию')
       if (this.selectedCategory === 'create_new_category'){
-        // тут будет открываться модальное окно создание новой категории
+        console.log('создаем новую категорию')
+        this.openNewCategoryModal()
       } else {
         this.loadServicesByCategory()
       }
@@ -168,7 +172,9 @@ export default {
     },
 
     openNewCategoryModal(){
-      //
+      console.log('открываем модальное окно создания категории')
+      this.$refs.newCategoryModal.selectesSpecialization = this.selectedSpecialization
+      this.$refs.newCategoryModal.open()
     },
 
     // открытие модального окна для добавления новой услуги
@@ -282,6 +288,7 @@ export default {
                 <b-form-select-option v-if="selectedSpecialization" value="create_new_category">
                   создать новую категорию
                 </b-form-select-option>
+
               </b-form-select>
             </b-col>
             <b-col md="6">
@@ -334,6 +341,12 @@ export default {
                         ref="newClientModal"
                         @client-added="loadClients"
         />
+
+        <NewCategoryModal :selected-specialization="selectedSpecialization"
+                          ref="newCategoryModal"
+                          @category-added="loadCategories"
+        />
+
 
         <b-tab :title="tabTitleCounter" href="#addedServices">
           <br>
