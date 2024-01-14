@@ -32,7 +32,7 @@ export default {
 
 <template>
 <div>
-  <b-modal title="создание новой специализации" :visible="isVisible" hide-footer>
+  <b-modal title="создание новой специализации" :visible="isVisible" @hidden="closeModal" hide-footer>
     <b-form @submit.stop.prevent="createNewSpecialization">
       <b-input id="newSpecializationNameInput"
                v-model="newSpecializationNameInput"

@@ -26,7 +26,10 @@ Route::get('/get_clients/{specializationId}', [ServiceController::class, 'getCli
 Route::post('/save_order', [ServiceController::class, 'saveOrder']);
 Route::post('/add_service', [ServiceController::class, 'addNewService']);
 Route::post('/add_specialization', [ServiceController::class, 'addNewSpecialization']);
+
 Route::post('/add_client', [ServiceController::class, 'addNewClient']);
+Route::post('/delete_client', [ServiceController::class, 'deleteClient']);
+
 Route::post('/add_category', [ServiceController::class, 'addNewCategory']);
 
 

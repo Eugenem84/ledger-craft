@@ -181,9 +181,9 @@ class ServiceController extends Controller
         $client = Client::find($clientId);
         if ($client) {
             $client->delete();
-            return response()->json(['message' => 'Категория удалена']);
+            return response()->json(['message' => 'Клиент удален']);
         } else {
-            return response()->json(['message' => 'Категория не найдена']);
+            return response()->json(['message' => 'Клиент не найден']);
         }
     }
 

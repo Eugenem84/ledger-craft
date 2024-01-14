@@ -23,6 +23,7 @@ return [
         'get_categories/*',
         'get_service/*',
         'save_order',
+        'delete_client',
     ],
 
     'allowed_methods' => ['*'],

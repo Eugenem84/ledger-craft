@@ -35,7 +35,7 @@ export default {
 
 <template>
   <div>
-    <b-modal title="создание новой категории" :visible="isVisible" @close="closeModal"  hide-footer>
+    <b-modal title="создание новой категории" :visible="isVisible" @hidden="closeModal"  hide-footer>
       <b-form @submit.stop.prevent="createNewCategory">
         <b-input id="newCategoryNameInput"
                  v-model="newCategoryNameInput"

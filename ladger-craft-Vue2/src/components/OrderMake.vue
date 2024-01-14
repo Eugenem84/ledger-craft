@@ -37,7 +37,6 @@ export default {
       alertMessage: '',
 
       isNewServiceModalOpen: false,
-      //isNewCategoryModalOpenL: false,
       }
   },
 
@@ -71,8 +70,7 @@ export default {
         console.log('открываем модальное окно нового клиента')
         this.openNewClientModal()
       } else {
-        console.log('загружаем клиентов')
-        this.loadClients()
+        //
       }
     },
 
@@ -181,11 +179,6 @@ export default {
     openNewServiceModal(){
       this.$refs.newServiceModal.selectedCategory = this.selectedCategory
       this.$refs.newServiceModal.open()
-    },
-
-    // закрытие модального окна
-    closeNewServiceModal(){
-      this.isNewServiceModalOpen = false
     },
 
     //сохранение ордера
@@ -327,6 +320,7 @@ export default {
             </b-list-group>
           </div>
         </b-tab>
+
 
         <NewServiceModal :selectedCategory="selectedCategory"
                          ref="newServiceModal"

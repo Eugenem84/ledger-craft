@@ -37,7 +37,7 @@ export default {
 
 <template>
   <div>
-    <b-modal title="создание нового клиента" :visible="isVisible" hide-footer>
+    <b-modal title="создание нового клиента" :visible="isVisible" @hidden="closeModal" hide-footer>
       <b-form @submit.stop.prevent="createNewClient">
         <b-input id="newClientNameInput"
                  v-model="newClientNameInput"

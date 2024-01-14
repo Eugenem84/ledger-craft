@@ -9,6 +9,9 @@
         <b-tab title="История" active>
           <HistoryOrders />
         </b-tab>
+        <b-tab title="Каталог" active>
+          <EditBase />
+        </b-tab>
         <b-tab title="Статистика" active>
           <StatisticOrders />
         </b-tab>
@@ -29,12 +32,14 @@
 import OrderMake from "@/components/OrderMake.vue";
 import HistoryOrders from "@/components/HistoryOrders.vue";
 import StatisticOrders from "@/components/StatisticOrders.vue";
+import EditBase from "@/components/EditBase.vue";
 export default {
   name: 'App',
   components: {
     StatisticOrders,
     HistoryOrders,
     OrderMake,
+    EditBase
     //TestBootstrap
   },
   data(){
