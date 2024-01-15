@@ -25,6 +25,8 @@ export default {
           .then(response => {
             console.log(response.data.message)
             this.$emit('client_added')
+            this.newClientNameInput = ''
+            this.newClientPhoneInput = ''
           })
       this.isVisible = false
     },

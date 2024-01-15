@@ -38,7 +38,7 @@ Route::post('/edit_specialization', [ServiceController::class, 'editSpecializati
 //Route::get('/get_clients/{specializationId}', [ServiceController::class, 'getClientsBySpecialization']);
 //Route::post('/add_client', [ServiceController::class, 'addNewClient']);
 //Route::post('/delete_client', [ServiceController::class, 'deleteClient']);
-Route::post('/edit_client', [ServiceController::class, 'editClient']);
+//Route::post('/edit_client', [ServiceController::class, 'editClient']);
 Route::get('/order/{orderId}', [ServiceController::class, 'showOrderDetails']);
 //Route::post('/save_order', [ServiceController::class, 'saveOrder']);
 Route::get('/edit_order/{orderId}', [ServiceController::class, 'editOrder']);

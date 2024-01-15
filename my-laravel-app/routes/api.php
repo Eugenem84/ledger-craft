@@ -28,6 +28,7 @@ Route::post('/add_service', [ServiceController::class, 'addNewService']);
 Route::post('/add_specialization', [ServiceController::class, 'addNewSpecialization']);
 
 Route::post('/add_client', [ServiceController::class, 'addNewClient']);
+Route::post('/edit_client', [ServiceController::class, 'editClient']);
 Route::post('/delete_client', [ServiceController::class, 'deleteClient']);
 
 Route::post('/add_category', [ServiceController::class, 'addNewCategory']);

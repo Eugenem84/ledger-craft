@@ -221,7 +221,7 @@ class ServiceController extends Controller
             $client->name = $newClientName;
             $client->phone = $newClientPhone;
             $client->save();
-            return response()->json(['message' => 'Клиент успешно сохранен'], 200);
+            return response()->json(['message' => 'Клиент успешно изменен'], 200);
         } else {
             return response()->json(['message' => 'Клиент не найден']);
         }

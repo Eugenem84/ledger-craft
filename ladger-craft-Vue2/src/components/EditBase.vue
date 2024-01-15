@@ -1,6 +1,9 @@
 <script>
 import axios from "axios"
+import NewServiceModal from "@/components/NewServiceModal.vue";
+import NewClientModal from "@/components/NewClientModal.vue";
 import DeleteClientModal from "@/components/DeleteClientModal.vue";
+import EditClientModal from "@/components/EditClientModal.vue";
 import {BIconTrash} from "bootstrap-vue"
 import {BIconPencilSquare} from "bootstrap-vue";
 import {BAlert} from "bootstrap-vue";
@@ -10,7 +13,10 @@ export default {
     BAlert,
     BIconTrash,
     BIconPencilSquare,
+    NewServiceModal,
+    NewClientModal,
     DeleteClientModal,
+    EditClientModal,
   },
 
   data() {
@@ -43,16 +49,28 @@ export default {
       this.loadServicesByCategory()
     },
 
+    handleClientAdded(){
+      console.log('клиент добавлен')
+      this.loadClients()
+      this.showAlert('success', 'клиент добавлен')
+    },
+
     handleClientDeleted(){
       this.loadClients()
       this.showAlert('success', 'клиент удален')
     },
 
-    openNewSpecializationModal() {
-      //
+    handleClientEdited(){
+      this.loadClients()
+      this.showAlert('success', 'клиент изменен')
     },
 
-    openNewClientModal() {
+    handleServiceAdded(){
+      this.loadServicesByCategory()
+      this.showAlert('success', 'сервис добавлен')
+    },
+
+    openNewSpecializationModal() {
       //
     },
 
@@ -61,6 +79,20 @@ export default {
     },
 
     openNewServiceModal() {
+      //console.log(this.selectedCategory)
+      if (this.$refs.newServiceModal) {
+        this.$refs.newServiceModal.selectedCategory = this.selectedCategory
+        this.$refs.newServiceModal.open()
+      } else {
+        console.log('модальное окно еще не доступно')
+      }
+    },
+
+    openDeleteServiceModal(){
+      //this.$refs.deleteServiceModal.open(serviceId)
+    },
+
+    openEditServiceModal(){
       //
     },
 
@@ -92,8 +124,17 @@ export default {
             console.log('ошибка загрузки сервисов', error.message)
           })
     },
+
+    openNewClientModal(specializationId){
+      this.$refs.newClientModal.open(specializationId)
+    },
+
     openDeleteClientModal(clientId){
       this.$refs.deleteClientModal.open(clientId)
+    },
+
+    openEditClientModal(clientId, currentClientName, currentClientPhone){
+      this.$refs.editClientModal.open(clientId, currentClientName, currentClientPhone)
     },
 
     closeDeleteClientModal(){
@@ -107,9 +148,14 @@ export default {
     showEditClientsButtons(){
       //
     },
-    toggleButtons(client){
+    toggleClientsButtons(client){
       this.clients.forEach((elem) => this.$set(elem, 'isClicked', false))
       client.isClicked = !client.isClicked
+    },
+
+    toggleServiceButtons(service){
+      this.services.forEach((elem) => this.$set(elem, 'isClicked', false))
+      service.isClicked = !service.isClicked
     },
 
     showAlert(variant, message){
@@ -162,11 +208,33 @@ export default {
           <br>
           <div id="serviceChoice">
             <b-list-group>
-              <b-list-group-item id="serviceItem" v-for="service in services"
-                                 :key="service.id">
+              <b-list-group-item v-if="selectedCategory" id="serviceItem"
+                                 @click="openNewServiceModal"
+              >
+                <div class="d-flex justify-content-between align-items-center">
+                  добавить новую услугу
+                </div>
+              </b-list-group-item>
+
+              <b-list-group-item id="serviceItem"
+                                 v-for="service in services"
+                                 :key="service.id"
+                                 @click="toggleServiceButtons(service)"
+                                 :style="{border: service.isClicked ? '2px solid black' : 'white'}"
+              >
                 <div class="d-flex justify-content-between align-items-center">
                   <div>{{ service.service }}</div>
                   <div>{{ service.price }}</div>
+                </div>
+                <div id="servicesEditButtons" v-if="service.isClicked">
+                  <b-button @click="openDeleteServiceModal(service.id)" variant="danger">
+                    удалить
+                    <BIconTrash icon="trash"></BIconTrash>
+                  </b-button>
+                  <b-button @click="openEditServiceModal(service.id)" variant="primary">
+                    редактировать
+                    <BIconPencilSquare icon="pencil-square"></BIconPencilSquare>
+                  </b-button>
                 </div>
               </b-list-group-item>
             </b-list-group>
@@ -177,9 +245,13 @@ export default {
           <div id="clientChoice">
             <b-list-group>
               <b-list-group-item id="clientItem"
+                                 @click="openNewClientModal"
+              >новый клиент</b-list-group-item>
+
+              <b-list-group-item id="clientItem"
                                  v-for="client in clients"
                                  :key="client.id"
-                                 @click="toggleButtons(client)"
+                                 @click="toggleClientsButtons(client)"
                                  :style="{border: client.isClicked ? '2px solid black' : 'white'}"
               >
                 <div>
@@ -191,7 +263,7 @@ export default {
                     удалить
                     <BIconTrash icon="trash"></BIconTrash>
                   </b-button>
-                  <b-button @click="editClient(client.id)" variant="primary">
+                  <b-button @click="openEditClientModal(client.id, client.name, client.phone)" variant="primary">
                     редактировать
                     <BIconPencilSquare icon="pencil-square"></BIconPencilSquare>
                   </b-button>
@@ -204,7 +276,23 @@ export default {
       </b-tabs>
     </div>
 
-    <DeleteClientModal ref="deleteClientModal" @client-deleted="handleClientDeleted"/>
+    <NewClientModal :selected-specialization="selectedSpecializations"
+                    ref="newClientModal"
+                    @client_added="handleClientAdded"
+    />
+
+    <DeleteClientModal ref="deleteClientModal"
+                       @client-deleted="handleClientDeleted"
+    />
+
+    <EditClientModal ref="editClientModal"
+                     @client-edited="handleClientEdited"
+    />
+
+    <NewServiceModal :selectedCategory="selectedCategory"
+                     ref="newServiceModal"
+                     @service-added="handleServiceAdded"
+    ></NewServiceModal>
 
     <BAlert v-model="alertVisible" :variant="alertVariant" dismissible fade class="fixed-top">
       {{alertMessage}}
@@ -215,6 +303,18 @@ export default {
 </template>
 
 <style scoped>
+
+#serviceItem:hover {
+  background-color: gray;
+  color: white;
+  cursor: pointer;
+}
+
+#serviceItem:active {
+  background-color: red;
+  color: white;
+}
+
 #clientItem:hover {
   background-color: #6c757d;
   color: white;
