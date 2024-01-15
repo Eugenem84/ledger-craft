@@ -3,9 +3,11 @@ import axios from "axios"
 import DeleteClientModal from "@/components/DeleteClientModal.vue";
 import {BIconTrash} from "bootstrap-vue"
 import {BIconPencilSquare} from "bootstrap-vue";
+import {BAlert} from "bootstrap-vue";
 
 export default {
   components: {
+    BAlert,
     BIconTrash,
     BIconPencilSquare,
     DeleteClientModal,
@@ -24,6 +26,10 @@ export default {
 
       isDeleteClientModalOpen: true,
       currentClientId: null,
+
+      alertVisible: false,
+      alertVariant: 'success',
+      alertMessage: '',
     }
   },
 
@@ -35,6 +41,11 @@ export default {
 
     handleCategoryChange(){
       this.loadServicesByCategory()
+    },
+
+    handleClientDeleted(){
+      this.loadClients()
+      this.showAlert('success', 'клиент удален')
     },
 
     openNewSpecializationModal() {
@@ -99,6 +110,15 @@ export default {
     toggleButtons(client){
       this.clients.forEach((elem) => this.$set(elem, 'isClicked', false))
       client.isClicked = !client.isClicked
+    },
+
+    showAlert(variant, message){
+      this.alertVariant = variant
+      this.alertMessage = message
+      this.alertVisible = true
+      setTimeout(() => {
+        this.alertVisible = false
+      }, 2000)
     },
 
   },
@@ -184,7 +204,11 @@ export default {
       </b-tabs>
     </div>
 
-    <DeleteClientModal ref="deleteClientModal" />
+    <DeleteClientModal ref="deleteClientModal" @client-deleted="handleClientDeleted"/>
+
+    <BAlert v-model="alertVisible" :variant="alertVariant" dismissible fade class="fixed-top">
+      {{alertMessage}}
+    </BAlert>
 
   </div>
 
