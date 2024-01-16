@@ -25,7 +25,7 @@ Route::get('service/history', [ServiceController::class, 'showHistoryOrders']);
 Route::get('service/statistic',[ServiceController::class, 'showStatistics']);
 //Route::post('/add_service', [ServiceController::class, 'addNewService']);
 //Route::post('/delete_service', [ServiceController::class, 'deleteService']);
-Route::post('/edit_service', [ServiceController::class, 'editService']);
+//Route::post('/edit_service', [ServiceController::class, 'editService']);
 Route::post('/add_specialization', [ServiceController::class, 'addNewSpecialization']);
 Route::post('/delete_specialization', [ServiceController::class, 'deleteSpecialization']);
 //Route::post('/add_category', [ServiceController::class, 'addNewCategory']);

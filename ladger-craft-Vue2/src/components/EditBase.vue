@@ -2,6 +2,7 @@
 import axios from "axios"
 import NewServiceModal from "@/components/NewServiceModal.vue";
 import DeleteServiceModal from "@/components/DeleteServiceModal.vue";
+import EditServiceModal from "@/components/EditServiceModal.vue";
 import NewClientModal from "@/components/NewClientModal.vue";
 import DeleteClientModal from "@/components/DeleteClientModal.vue";
 import EditClientModal from "@/components/EditClientModal.vue";
@@ -16,6 +17,7 @@ export default {
     BIconPencilSquare,
     NewServiceModal,
     DeleteServiceModal,
+    EditServiceModal,
     NewClientModal,
     DeleteClientModal,
     EditClientModal,
@@ -77,6 +79,11 @@ export default {
       this.showAlert('success', 'сервис удален')
     },
 
+    handleServiceEdited(){
+      this.loadServicesByCategory()
+      this.showAlert('success', 'сервис изменен')
+    },
+
     openNewSpecializationModal() {
       //
     },
@@ -100,8 +107,9 @@ export default {
       this.$refs.deleteServiceModal.open(serviceId)
     },
 
-    openEditServiceModal(){
+    openEditServiceModal(serviceId, currentServiceName, currentServicePrice){
       console.log('редактирование сервиса')
+      this.$refs.editServiceModal.open(serviceId, currentServiceName, currentServicePrice)
     },
 
     loadClients() {
@@ -123,6 +131,7 @@ export default {
             console.error('Ошибка загрузки категорий: ', error.message)
           })
     },
+
     loadServicesByCategory() {
       axios.get(`http://localhost:8000/api/get_service/${this.selectedCategory}`)
           .then(response => {
@@ -153,9 +162,11 @@ export default {
     editClient(){
       //
     },
+
     showEditClientsButtons(){
       //
     },
+
     toggleClientsButtons(client){
       this.clients.forEach((elem) => this.$set(elem, 'isClicked', false))
       client.isClicked = !client.isClicked
@@ -239,7 +250,7 @@ export default {
                     удалить
                     <BIconTrash icon="trash"></BIconTrash>
                   </b-button>
-                  <b-button @click="openEditServiceModal(service.id)" variant="primary">
+                  <b-button @click="openEditServiceModal(service.id, service.service, service.price)" variant="primary">
                     редактировать
                     <BIconPencilSquare icon="pencil-square"></BIconPencilSquare>
                   </b-button>
@@ -305,6 +316,11 @@ export default {
     <DeleteServiceModal ref="deleteServiceModal"
                         @service-deleted="handleServiceDeleted"
     />
+
+    <EditServiceModal ref="editServiceModal"
+                      @service-edited="handleServiceEdited"
+    />
+
 
     <BAlert v-model="alertVisible" :variant="alertVariant" dismissible fade class="fixed-top">
       {{alertMessage}}

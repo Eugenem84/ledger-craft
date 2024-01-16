@@ -51,7 +51,7 @@ export default {
                v-model="currentClientPhone"
       ></b-input>
       <b-button @click="closeModal">отмена</b-button>
-      <b-button type="submit" variant="primary">изменить</b-button>
+      <b-button type="submit" variant="primary">сохранить</b-button>
 
     </b-form>
   </b-modal>
