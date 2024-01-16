@@ -24,7 +24,10 @@ Route::get('/get_service/{categoryId}', [ServiceController::class, 'getServicesB
 Route::get('/get_categories/{specializationId}', [ServiceController::class, 'getCategoriesBySpecialization']);
 Route::get('/get_clients/{specializationId}', [ServiceController::class, 'getClientsBySpecialization']);
 Route::post('/save_order', [ServiceController::class, 'saveOrder']);
+
 Route::post('/add_service', [ServiceController::class, 'addNewService']);
+Route::post('/delete_service', [ServiceController::class, 'deleteService']);
+
 Route::post('/add_specialization', [ServiceController::class, 'addNewSpecialization']);
 
 Route::post('/add_client', [ServiceController::class, 'addNewClient']);

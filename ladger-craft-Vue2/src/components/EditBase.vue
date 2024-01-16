@@ -1,6 +1,7 @@
 <script>
 import axios from "axios"
 import NewServiceModal from "@/components/NewServiceModal.vue";
+import DeleteServiceModal from "@/components/DeleteServiceModal.vue";
 import NewClientModal from "@/components/NewClientModal.vue";
 import DeleteClientModal from "@/components/DeleteClientModal.vue";
 import EditClientModal from "@/components/EditClientModal.vue";
@@ -14,6 +15,7 @@ export default {
     BIconTrash,
     BIconPencilSquare,
     NewServiceModal,
+    DeleteServiceModal,
     NewClientModal,
     DeleteClientModal,
     EditClientModal,
@@ -70,6 +72,11 @@ export default {
       this.showAlert('success', 'сервис добавлен')
     },
 
+    handleServiceDeleted(){
+      this.loadServicesByCategory()
+      this.showAlert('success', 'сервис удален')
+    },
+
     openNewSpecializationModal() {
       //
     },
@@ -88,12 +95,13 @@ export default {
       }
     },
 
-    openDeleteServiceModal(){
-      //this.$refs.deleteServiceModal.open(serviceId)
+    openDeleteServiceModal(serviceId){
+      console.log(serviceId)
+      this.$refs.deleteServiceModal.open(serviceId)
     },
 
     openEditServiceModal(){
-      //
+      console.log('редактирование сервиса')
     },
 
     loadClients() {
@@ -293,6 +301,10 @@ export default {
                      ref="newServiceModal"
                      @service-added="handleServiceAdded"
     ></NewServiceModal>
+
+    <DeleteServiceModal ref="deleteServiceModal"
+                        @service-deleted="handleServiceDeleted"
+    />
 
     <BAlert v-model="alertVisible" :variant="alertVariant" dismissible fade class="fixed-top">
       {{alertMessage}}
