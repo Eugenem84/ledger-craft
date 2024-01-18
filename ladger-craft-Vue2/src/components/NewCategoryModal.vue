@@ -7,22 +7,26 @@ export default {
     return {
       isVisible: false,
       newCategoryNameInput: '',
+      specializationId: ''
     }
   },
   methods: {
-    open(){
+    open(selectedSpecialization){
       this.isVisible = true
+      this.specializationId = selectedSpecialization
     },
 
     createNewCategory(){
       const requestData = {
         category_name: this.newCategoryNameInput,
-        specialization_id: this.selectedSpecialization,
+        specialization_id: this.specializationId,
       }
+      console.log(this.selectedSpecialization)
       axios.post('http://localhost:8000/api/add_category', requestData)
           .then(response => {
             console.log(response.data.message)
             this.$emit('category-added')
+            this.newCategoryNameInput= ''
           })
       this.isVisible = false
     },

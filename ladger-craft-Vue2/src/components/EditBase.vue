@@ -6,21 +6,38 @@ import EditServiceModal from "@/components/EditServiceModal.vue";
 import NewClientModal from "@/components/NewClientModal.vue";
 import DeleteClientModal from "@/components/DeleteClientModal.vue";
 import EditClientModal from "@/components/EditClientModal.vue";
+import NewCategoryModal from "@/components/NewCategoryModal.vue";
+import EditCategoryModal from "@/components/EditCategoryModal.vue";
+import DeleteCategoryModal from "@/components/DeleteCategoryModal.vue";
+import NewSpecializationModal from "@/components/NewSpecializationModal.vue";
+import EditSpecializationModal from "@/components/EditSpecializationModal.vue";
+import DeleteSpecializationModal from "@/components/DeleteSpecializationModal.vue";
 import {BIconTrash} from "bootstrap-vue"
 import {BIconPencilSquare} from "bootstrap-vue";
 import {BAlert} from "bootstrap-vue";
+//import {getComponentProps} from "eslint-plugin-vue/lib/utils";
 
 export default {
   components: {
     BAlert,
     BIconTrash,
     BIconPencilSquare,
+
     NewServiceModal,
     DeleteServiceModal,
     EditServiceModal,
+
     NewClientModal,
     DeleteClientModal,
     EditClientModal,
+
+    NewCategoryModal,
+    EditCategoryModal,
+    DeleteCategoryModal,
+
+    NewSpecializationModal,
+    EditSpecializationModal,
+    DeleteSpecializationModal,
   },
 
   data() {
@@ -31,6 +48,7 @@ export default {
       services: [],
 
       selectedSpecializations: '',
+      selectedSpecializationName: '',
       selectedClients: '',
       selectedCategory: '',
 
@@ -45,12 +63,20 @@ export default {
 
   methods: {
     handleSpecializationChange() {
-      this.loadClients()
-      this.loadCategories()
+      if (this.selectedSpecializations === 'create_new_specialization'){
+        this.openNewSpecializationModal()
+      } else {
+        this.loadClients()
+        this.loadCategories()
+      }
     },
 
     handleCategoryChange(){
-      this.loadServicesByCategory()
+      if (this.selectedCategory === 'create_new_category') {
+        this.openNewCategoryModal()
+      } else {
+        this.loadServicesByCategory()
+      }
     },
 
     handleClientAdded(){
@@ -84,12 +110,31 @@ export default {
       this.showAlert('success', 'сервис изменен')
     },
 
-    openNewSpecializationModal() {
-      //
+    handleCategoryAdded(){
+      this.loadCategories()
+      this.showAlert('success', 'категория добавлена')
     },
 
-    openNewCategoryModal() {
-      //
+    handleCategoryEdited(){
+      this.loadCategories()
+      this.showAlert('success', 'категория изменена')
+    },
+
+    handleCategoryDeleted(){
+      this.loadCategories()
+      this.showAlert('success', 'категория удалена')
+    },
+
+    handleSpecializationAdded(){
+      //тут нужна перезагрузка страницы
+    },
+
+    handleSpecializationEdited(){
+      //тут перезагрузка страницы
+    },
+
+    handleSpecializationDeleted(){
+      //перезагрузка страницы
     },
 
     openNewServiceModal() {
@@ -154,17 +199,32 @@ export default {
       this.$refs.editClientModal.open(clientId, currentClientName, currentClientPhone)
     },
 
-    closeDeleteClientModal(){
-      this.currentClientId = null
-      this.isDeleteClientModalOpen = false
+    openNewSpecializationModal(){
+      this.$refs.newSpecializationModal.open()
     },
 
-    editClient(){
-      //
+    openEditSpecializationModal(){
+      const currentSpecialization = this.specializations.find(spec => spec.id === this.selectedSpecializations)
+      this.$refs.editSpecializationModal.open(this.selectedSpecializations, currentSpecialization.specializationName)
     },
 
-    showEditClientsButtons(){
-      //
+    openDeleteSpecializationModal(){
+      console.log(this.selectedSpecializations)
+      this.$refs.deleteSpecializationModal.open(this.selectedSpecializations)
+    },
+
+    openNewCategoryModal() {
+      this.$refs.newCategoryModal.open(this.selectedSpecializations)
+    },
+
+    openEditCategoryModal(){
+      const currentCategory = this.categories.find(cat => cat.id === this.selectedCategory)
+      this.$refs.editCategoryModal.open(this.selectedCategory, currentCategory.category_name)
+    },
+
+    openDeleteCategoryModal(){
+      console.log(this.selectedCategory)
+      this.$refs.deleteCategoryModal.open(this.selectedCategory)
     },
 
     toggleClientsButtons(client){
@@ -206,20 +266,44 @@ export default {
   <div>
     <div class="d-flex">
       <b-form-select v-model="selectedSpecializations" @change="handleSpecializationChange" class="w-auto">
+
         <b-form-select-option v-for="specialization in specializations"
                               :key="specialization.id" :value="specialization.id">
           {{ specialization.specializationName }}
         </b-form-select-option>
+
+        <b-form-select-option value="create_new_specialization">
+          создать новую специализацию
+        </b-form-select-option>
+
       </b-form-select>
+      <b-button variant="primary" @click="openEditSpecializationModal()">
+        <BIconPencilSquare icon="pencil-square"></BIconPencilSquare>
+      </b-button>
+      <b-button variant="danger" @click="openDeleteSpecializationModal()">
+        <BIconTrash icon="trash"></BIconTrash>
+      </b-button>
     </div>
     <br>
     <div class="d-flex">
       <b-form-select v-model="selectedCategory" class="w-auto" @change="handleCategoryChange">
+
         <b-form-select-option v-for="category in categories"
                               :key="category.id" :value="category.id">
           {{ category.category_name }}
         </b-form-select-option>
+
+        <b-form-select-option v-if="selectedSpecializations" value="create_new_category">
+          создать новую категорию
+        </b-form-select-option>
+
       </b-form-select>
+      <b-button variant="primary" @click="openEditCategoryModal(selectedCategory.id, selectedCategory.category_name)">
+        <BIconPencilSquare icon="pencil-square"></BIconPencilSquare>
+      </b-button>
+      <b-button variant="danger" @click="openDeleteCategoryModal()">
+        <BIconTrash icon="trash"></BIconTrash>
+      </b-button>
     </div>
     <div id="editServiceDiv" class="d-flex flex-column" style="min-height: 75vh">
       <b-tabs>
@@ -321,6 +405,29 @@ export default {
                       @service-edited="handleServiceEdited"
     />
 
+    <NewSpecializationModal ref="newSpecializationModal"
+                            @specialization-added="handleSpecializationAdded"
+    />
+
+    <EditSpecializationModal ref="editSpecializationModal"
+                             @specialization-edited="handleSpecializationEdited"
+    />
+
+    <DeleteSpecializationModal ref="deleteSpecializationModal"
+                               @specialization-deleted="handleSpecializationDeleted"
+    />
+
+    <NewCategoryModal ref="newCategoryModal"
+                      @category-added="handleCategoryAdded"
+    />
+
+    <EditCategoryModal ref="editCategoryModal"
+                       @category-edited="handleCategoryEdited"
+    />
+
+    <DeleteCategoryModal ref="deleteCategoryModal"
+                         @category-deleted="handleCategoryDeleted"
+    />
 
     <BAlert v-model="alertVisible" :variant="alertVariant" dismissible fade class="fixed-top">
       {{alertMessage}}
