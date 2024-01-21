@@ -18,4 +18,14 @@ class OrderController extends Controller
             return response()->json(['error' => 'ордеров нет']);
         }
     }
+
+    public function getOrderDetails($orderId){
+        $order = Order::find($orderId);
+        if (!$order){
+            return response()->json(['message' => 'ордер'. $orderId . ' не найден']);
+        } else {
+            return response()->json($order);
+        }
+    }
+
 }

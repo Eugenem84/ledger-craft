@@ -106,6 +106,7 @@ class ServiceController extends Controller
         return view('service.show', compact('categories', 'services', 'specializations', 'clients'));
     }
 
+    //работатет только с блейд версией сайта
     public function showOrderDetails($orderId){
         $order = Order::find($orderId);
         if (!$order){

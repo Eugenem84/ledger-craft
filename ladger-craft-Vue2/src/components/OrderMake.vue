@@ -7,7 +7,6 @@ import NewServiceModal from "@/components/NewServiceModal.vue";
 import NewSpecializationModal from "@/components/NewSpecializationModal.vue";
 import NewClientModal from "@/components/NewClientModal.vue";
 import NewCategoryModal from "@/components/NewCategoryModal.vue";
-//import {error} from "@babel/eslint-parser/lib/convert";
 export default {
    components: {
      NewClientModal,

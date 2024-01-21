@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\SpecializationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,11 @@ Route::post('/edit_service', [ServiceController::class, 'editService']);
 Route::post('/add_specialization', [ServiceController::class, 'addNewSpecialization']);
 Route::post('/delete_specialization', [ServiceController::class, 'deleteSpecialization']);
 Route::post('/edit_specialization', [ServiceController::class, 'editSpecialization']);
+
+
+Route::get('/get_all_specializations', [SpecializationController::class, 'getAll']);
+
+
 Route::get('/get_all_clients', [ClientController::class, 'getAllClients']);
 
 Route::post('/add_client', [ServiceController::class, 'addNewClient']);
@@ -46,3 +52,4 @@ Route::post('/delete_category', [ServiceController::class, 'deleteCategory']);
 Route::post('/edit_category', [ServiceController::class, 'editCategory']);
 
 Route::get('/get_all_orders', [OrderController::class, 'getAllOrders']);
+Route::get('/order/{orderId}', [OrderController::class, 'getOrderDetails']);

@@ -15,7 +15,6 @@ import DeleteSpecializationModal from "@/components/DeleteSpecializationModal.vu
 import {BIconTrash} from "bootstrap-vue"
 import {BIconPencilSquare} from "bootstrap-vue";
 import {BAlert} from "bootstrap-vue";
-//import {getComponentProps} from "eslint-plugin-vue/lib/utils";
 
 export default {
   components: {
