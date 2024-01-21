@@ -199,18 +199,18 @@ class ServiceController extends Controller
         }
     }
 
-    public function editSpecialization(Request $request){
-        $specializationId = $request->input('id');
-        $newSpecializationName = $request->input('specializationName');
-        $specialization = Specialization::find($specializationId);
-        if ($specialization){
-            $specialization->specializationName = $newSpecializationName;
-            $specialization->save();
-            return response()->json(['message' => 'Специализация успешно изменена'], 200);
-        } else {
-            return response()->json(['message' => 'Специализация не найдена'], 404);
-        }
-    }
+//    public function editSpecialization(Request $request){
+//        $specializationId = $request->input('id');
+//        $newSpecializationName = $request->input('specializationName');
+//        $specialization = Specialization::find($specializationId);
+//        if ($specialization){
+//            $specialization->specializationName = $newSpecializationName;
+//            $specialization->save();
+//            return response()->json(['message' => 'Специализация успешно изменена'], 200);
+//        } else {
+//            return response()->json(['message' => 'Специализация не найдена'], 404);
+//        }
+//    }
 
     public function editClient(Request $request){
         $clientId = $request->input('id');

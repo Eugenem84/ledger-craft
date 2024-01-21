@@ -38,7 +38,7 @@ export default {
           })
     },
     loadSpecializations() {
-      axios.get('http://localhost:8000/api/getSpecialization')
+      axios.get('http://localhost:8000/api/get_all_specializations')
           .then(response => {
             this.specializations = response.data
           })
