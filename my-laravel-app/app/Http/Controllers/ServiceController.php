@@ -160,20 +160,20 @@ class ServiceController extends Controller
         return view('service.statistic');
     }
 
-    public function deleteSpecialization(Request $request){
-        $specializationId = $request->input('specializationId');
-        $specialization = Specialization::find($specializationId);
-        if ($specialization){
-            $specialization->categories()->each(function ($category){
-                $category->services()->delete();
-                $category->delete();
-            });
-            $specialization->delete();
-            return Response()->json(['message' => 'Специализация удалена']);
-        } else {
-            return response()->json(['message' => 'Специализация не найдена']);
-        }
-    }
+//    public function deleteSpecialization(Request $request){
+//        $specializationId = $request->input('specializationId');
+//        $specialization = Specialization::find($specializationId);
+//        if ($specialization){
+//            $specialization->categories()->each(function ($category){
+//                $category->services()->delete();
+//                $category->delete();
+//            });
+//            $specialization->delete();
+//            return Response()->json(['message' => 'Специализация удалена']);
+//        } else {
+//            return response()->json(['message' => 'Специализация не найдена']);
+//        }
+//    }
 
     public function deleteClient(Request $request)
     {
@@ -241,18 +241,18 @@ class ServiceController extends Controller
         }
     }
 
-    public function addNewSpecialization(Request $request)
-    {
-        try {
-            $specializations = new Specialization();
-            $specializations->specializationName = $request->input('specializationName');
-            $specializations->popularCounter = 1;
-            $specializations->save();
-            return response()->json(['message' => 'Специализация успешно добавлена'], 200);
-        } catch (\Exception $e){
-            return \response()->json(['error' => 'Internal Server Error'], 500);
-        }
-    }
+//    public function addNewSpecialization(Request $request)
+//    {
+//        try {
+//            $specializations = new Specialization();
+//            $specializations->specializationName = $request->input('specializationName');
+//            $specializations->popularCounter = 1;
+//            $specializations->save();
+//            return response()->json(['message' => 'Специализация успешно добавлена'], 200);
+//        } catch (\Exception $e){
+//            return \response()->json(['error' => 'Internal Server Error'], 500);
+//        }
+//    }
 
     public function addNewClient(Request $request){
         $clients = new Client();

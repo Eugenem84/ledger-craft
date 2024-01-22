@@ -11,12 +11,35 @@ class SpecializationRepository
         return Specialization::all();
     }
 
-    public function editSpecialization($id, $newSpecializationName)
+    public function edit($id, $newSpecializationName)
     {
         $specialization = Specialization::find($id);
         if ($specialization){
             $specialization->specializationName = $newSpecializationName;
             $specialization->save();
+            return true;
+        }
+        return false;
+    }
+
+    public function addNew($specializationName)
+    {
+        $specialization = new Specialization();
+        $specialization->specializationName = $specializationName;
+        $specialization->popularCounter = 1;
+        $specialization->save();
+    }
+
+    public function delete($id)
+    {
+        $specialization = Specialization::find($id);
+        if ($specialization){
+            $specialization->clients()->delete();
+            $specialization->categories()->each(function ($category){
+                $category->services()->delete();
+                $category->delete();
+            });
+            $specialization->delete();
             return true;
         }
         return false;

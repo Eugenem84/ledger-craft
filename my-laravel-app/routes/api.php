@@ -33,11 +33,9 @@ Route::post('/add_service', [ServiceController::class, 'addNewService']);
 Route::post('/delete_service', [ServiceController::class, 'deleteService']);
 Route::post('/edit_service', [ServiceController::class, 'editService']);
 
-Route::post('/add_specialization', [ServiceController::class, 'addNewSpecialization']);
-Route::post('/delete_specialization', [ServiceController::class, 'deleteSpecialization']);
-Route::post('/edit_specialization', [SpecializationController::class, 'editSpecialization']);
-
-
+Route::post('/add_specialization', [SpecializationController::class, 'addNew']);
+Route::post('/delete_specialization', [SpecializationController::class, 'delete']);
+Route::post('/edit_specialization', [SpecializationController::class, 'edit']);
 Route::get('/get_all_specializations', [SpecializationController::class, 'getAll']);
 
 
