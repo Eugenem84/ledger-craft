@@ -1,14 +1,33 @@
 <?php
 
 namespace App\Repositories;
+use App\Http\Controllers\Controller;
 use App\Models\Specialization;
 use Illuminate\Http\Request;
+use App\Http\Controllers\OrderController;
 
-class SpecializationRepository
+class SpecializationRepository extends Controller
 {
     public function getAll()
     {
         return Specialization::all();
+    }
+
+    public function getTest()
+    {
+        return 'test';
+    }
+
+    public function getName($id)
+    {
+        $specialization = Specialization::find($id);
+        if ($specialization){
+            $specializationName = $specialization->specializationName;
+            if ($specializationName){
+                return $specializationName;
+            }
+        }
+        return 'специализация неизвестна';
     }
 
     public function edit($id, $newSpecializationName)

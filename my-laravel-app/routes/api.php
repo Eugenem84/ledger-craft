@@ -6,6 +6,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\SpecializationController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,15 +24,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/getSpecialization', [ServiceController::class, 'getSpecializations']);
-Route::get('/get_service/{categoryId}', [ServiceController::class, 'getServicesByCategory']);
-Route::get('/get_categories/{specializationId}', [ServiceController::class, 'getCategoriesBySpecialization']);
-Route::get('/get_clients/{specializationId}', [ServiceController::class, 'getClientsBySpecialization']);
 
 Route::post('/save_order', [ServiceController::class, 'saveOrder']);
 
-Route::post('/add_service', [ServiceController::class, 'addNewService']);
-Route::post('/delete_service', [ServiceController::class, 'deleteService']);
-Route::post('/edit_service', [ServiceController::class, 'editService']);
+
+Route::get('/get_service/{categoryId}', [ServiceController::class, 'getByCategory']);
+Route::post('/add_service', [ServiceController::class, 'addNew']);
+Route::post('/delete_service', [ServiceController::class, 'delete']);
+Route::post('/edit_service', [ServiceController::class, 'edit']);
+
 
 Route::post('/add_specialization', [SpecializationController::class, 'addNew']);
 Route::post('/delete_specialization', [SpecializationController::class, 'delete']);
@@ -39,15 +40,18 @@ Route::post('/edit_specialization', [SpecializationController::class, 'edit']);
 Route::get('/get_all_specializations', [SpecializationController::class, 'getAll']);
 
 
-Route::get('/get_all_clients', [ClientController::class, 'getAllClients']);
+Route::get('/get_all_clients', [ClientController::class, 'getAll']);
+Route::get('/get_clients/{specializationId}', [ClientController::class, 'getBySpecialization']);
+Route::post('/add_client', [ClientController::class, 'addNew']);
+Route::post('/edit_client', [ClientController::class, 'edit']);
+Route::post('/delete_client', [ClientController::class, 'delete']);
 
-Route::post('/add_client', [ServiceController::class, 'addNewClient']);
-Route::post('/edit_client', [ServiceController::class, 'editClient']);
-Route::post('/delete_client', [ServiceController::class, 'deleteClient']);
 
-Route::post('/add_category', [ServiceController::class, 'addNewCategory']);
-Route::post('/delete_category', [ServiceController::class, 'deleteCategory']);
-Route::post('/edit_category', [ServiceController::class, 'editCategory']);
+Route::get('/get_categories/{specializationId}', [CategoryController::class, 'getBySpecialization']);
+Route::post('/add_category', [CategoryController::class, 'addNew']);
+Route::post('/delete_category', [CategoryController::class, 'delete']);
+Route::post('/edit_category', [CategoryController::class, 'edit']);
 
-Route::get('/get_all_orders', [OrderController::class, 'getAllOrders']);
-Route::get('/order/{orderId}', [OrderController::class, 'getOrderDetails']);
+
+Route::get('/get_all_orders', [OrderController::class, 'getAll']);
+Route::get('/order/{orderId}', [OrderController::class, 'getDetails']);

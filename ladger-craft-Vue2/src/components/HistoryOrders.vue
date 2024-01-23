@@ -43,6 +43,7 @@ export default {
             this.specializations = response.data
           })
     },
+
     showOrder(orderId){
       console.log('открытие ордера с id: ', orderId)
       this.isOrderOpened = true
@@ -68,11 +69,16 @@ export default {
     getOrderDetails(){
       //
     },
-
   },
+
+  filters: {
+    formatData(datetime){
+      const options = { year: 'numeric', month: 'long', day: 'numeric',}
+      return new Date(datetime).toLocaleString('en-US', options)
+    }
+  },
+
   mounted() {
-    this.loadSpecializations()
-    this.loadAllClients()
     this.loadAllOrders()
   }
 }
@@ -117,7 +123,8 @@ export default {
     <b-list-group>
       <b-list-group-item id="orderItem" v-for="order in orders" :key="order.id" @click="showOrder(order.id)">
         <div class="d-flex justify-content-between align-items-center">
-          <div> {{getSpecializationName(order.specialization_id)}} | "{{ getClientName(order.client_id) }}" </div>
+          <div> {{ order.created_at | formatData }}</div>
+          <div> {{ order.specialization_name }} | "{{ order.client_name }}" </div>
           <div>{{ order.total_amount }}</div>
         </div>
       </b-list-group-item>
