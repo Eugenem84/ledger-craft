@@ -13,6 +13,11 @@ class ServiceRepository extends Controller
         return Service::where('category_id', $categoryId)->get();
     }
 
+    public function getService($id)
+    {
+        return Service::find($id);
+    }
+
     public function addNew($name, $price, $categoryId)
     {
 

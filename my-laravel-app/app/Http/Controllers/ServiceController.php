@@ -97,10 +97,10 @@ class ServiceController extends Controller
         $order->materials = $request->input('materials');
         $order->comments = $request->input('comments');
         $order->save();
-        if ($request->has('services') && is_array($request->input('services'))) {
-            $order->services()->attach($request->input('services'));
+        if ($request->has('servicesId') && is_array($request->input('servicesId'))) {
+            $order->services()->attach($request->input('servicesId'));
         } else {
-            return response()->json(['message' => 'ошибка записи']);
+            return response()->json(['error' => 'ошибка записи']);
         }
         return response()->json(['message' => 'ордер сохранен']);
     }
@@ -121,7 +121,7 @@ class ServiceController extends Controller
             return response()->json('нет сервисов в данной категории');
         }
     }
-//
+
     public function getClientsBySpecialization($specializationId){
         $clients = Client::where('specialization_id', $specializationId)->get();
         if ($clients->isEmpty()){

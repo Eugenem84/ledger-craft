@@ -1,8 +1,12 @@
 <script>
 import axios from "axios";
+//import OrderMake from "@/components/OrderMake.vue";
+import EditOrder from "@/components/EditOrder.vue";
 
 export default {
   components: {
+    EditOrder,
+    //OrderMake
     //
   },
   data(){
@@ -10,11 +14,15 @@ export default {
       orders: [],
       clients: [],
       specializations: [],
+      services:[],
+
+      selectedOrder: '',
 
       orderDetails: '',
 
       isOrderOpened: false,
       isOrdersListVisible: true,
+      isEditOrderDivVisible: false,
     }
   },
   methods: {
@@ -45,19 +53,30 @@ export default {
     },
 
     showOrder(orderId){
+      this.selectedOrder = this.orders.find(order => order.id === orderId)
       console.log('открытие ордера с id: ', orderId)
       this.isOrderOpened = true
       this.isOrdersListVisible = false
-      axios.get(`http://localhost:8000/api/order/${orderId}`)
+      axios.get(`http://localhost:8000/api/get_services/${orderId}`)
           .then(response => {
-          this.orderDetails = response.data
-          })
-      console.log('детали ордера', this.orderDetails)
+            this.services = response.data
+          }).catch(err => {
+            console.error(err.message)
+      })
     },
     closeOrderDetailsDiv(){
       this.isOrderOpened = false
       this.isOrdersListVisible = true
     },
+    openEditOrder(){
+      this.isOrderOpened = false
+      this.isEditOrderDivVisible = true
+    },
+    closeEditOrderDiv(){
+      this.isOrderOpened = true
+      this.isEditOrderDivVisible = false
+    },
+
     getSpecializationName(specializationId){
       const specialization = this.specializations.find((specialization) => specialization.id === specializationId)
       return specialization ? specialization.specializationName : 'неизвестная специализация'
@@ -89,31 +108,63 @@ export default {
   <div id="openOrderDiv" v-if="isOrderOpened">
     <b-container >
       <b-row>
-        <div class="col-md-6">
-          номер ордера: {{ this.orderDetails.id }}
+        <div class="col-md-4">
+          номер ордера: <br>
+          {{ this.selectedOrder.id }}
         </div>
-        <div class="col-md-6">
-          клиент: {{ this.orderDetails.client_id }}
+        <div class="col-md-4">
+          клиент: <br>
+          {{ this.selectedOrder.client_name }}
         </div>
-        <b-col md="12">
-          какая то хрень
-        </b-col>
-        <b-col>
-          еще хрень
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-row>
-          и еще
-        </b-row>
+        <div class="col-md-4">
+          специализация: <br>
+          {{ this.selectedOrder.specialization_name }}
+        </div>
+        <div class="col-md-4">
+          дата: <br>
+          {{ this.selectedOrder.created_at | formatData }}
+        </div>
+
       </b-row>
 
+    </b-container>
+
+    <b-container>
+      <b-list-group>
+        <b-list-group-item id="serviceItem" v-for="service in services" :key="service.id">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>{{ service.service }}</div>
+            <div>{{ service.price }}</div>
+          </div>
+        </b-list-group-item>
+      </b-list-group>
+    </b-container>
+    <br>
+    <b-container>
+      <b-form-textarea id="materialsTextArea"
+                       v-model="this.selectedOrder.materials"
+                       placeholder="нет материалов"
+                       rows="1"
+                       max-rows="6"
+                       readonly
+      ></b-form-textarea>
+
+      <br>
+
+      <b-form-textarea id="commentsTextArea"
+                       v-model="this.selectedOrder.comments"
+                       placeholder="нет комментарии"
+                       rows="1"
+                       max-rows="6"
+                       readonly
+      ></b-form-textarea>
     </b-container>
 
     <b-container class="fixed-bottom">
       <b-row class="justify-content-end">
         <b-col md="auto">
           <b-button @click="closeOrderDetailsDiv">закрыть</b-button>
+          <b-button @click="openEditOrder">редактировать</b-button>
         </b-col>
       </b-row>
     </b-container>
@@ -130,6 +181,15 @@ export default {
       </b-list-group-item>
     </b-list-group>
   </div>
+
+  <div id="editOrderDiv" v-if="isEditOrderDivVisible">
+    редактор ордера
+
+    <EditOrder :orderToEdit="selectedOrder"/>
+
+    <b-button @click="closeEditOrderDiv">отмена</b-button>
+  </div>
+
 </div>
 </template>
 

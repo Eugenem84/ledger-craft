@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/getSpecialization', [ServiceController::class, 'getSpecializations']);
 
-Route::post('/save_order', [ServiceController::class, 'saveOrder']);
+Route::post('/save_order', [OrderController::class, 'saveOrder']);
 
 
 Route::get('/get_service/{categoryId}', [ServiceController::class, 'getByCategory']);
@@ -55,3 +55,6 @@ Route::post('/edit_category', [CategoryController::class, 'edit']);
 
 Route::get('/get_all_orders', [OrderController::class, 'getAll']);
 Route::get('/order/{orderId}', [OrderController::class, 'getDetails']);
+
+
+Route::get('/get_services/{orderId}', [OrderController::class, 'getServices']);

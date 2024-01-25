@@ -3,26 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderService;
+use App\Models\Service;
 use App\Models\Specialization;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Repositories\OrderRepository;
 use function Laravel\Prompts\error;
 use App\Repositories\SpecializationRepository;
 use App\Repositories\ClientRepository;
+use App\Repositories\ServiceRepository;
 
 class OrderController extends Controller
 {
     protected $orderRepository;
     protected $specializationRepository;
     protected $clientReposutory;
+    protected $serviceRepository;
 
     public function __construct(OrderRepository $orderRepository,
                                 SpecializationRepository $specializationRepository,
-                                ClientRepository $clientRepository)
+                                ClientRepository $clientRepository,
+                                ServiceRepository $serviceRepository)
     {
         $this->orderRepository = $orderRepository;
         $this->specializationRepository = $specializationRepository;
         $this->clientReposutory = $clientRepository;
+        $this->serviceRepository = $serviceRepository;
     }
 
     public function getAll()
@@ -61,6 +68,30 @@ class OrderController extends Controller
             return response()->json(['message' => 'ордер'. $id . ' не найден']);
         } else {
             return response()->json($order);
+        }
+    }
+
+    public function getServices($orderId)
+    {
+        $services = [];
+        $servicesId = $this->orderRepository->getServicesId($orderId);
+        foreach ($servicesId as $serviceId){
+            $service = $this->serviceRepository->getService($serviceId);
+            $services[] = $service;
+        }
+        return $services;
+
+    }
+
+    public function saveOrder(Request $request)
+    {
+        $data = $request->only(['clientId', 'specializationId', 'totalAmount', 'materials', 'comments']);
+        $data['servicesId'] = $request->input('servicesId');
+        $order = $this->orderRepository->saveOrder($data);
+        if ($order){
+            return response()->json(['message' => 'ордер сохранен']);
+        } else {
+            return response()->json(['error' => 'ошибка записи ордера']);
         }
     }
 

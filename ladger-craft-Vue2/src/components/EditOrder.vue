@@ -8,14 +8,15 @@ import NewSpecializationModal from "@/components/NewSpecializationModal.vue";
 import NewClientModal from "@/components/NewClientModal.vue";
 import NewCategoryModal from "@/components/NewCategoryModal.vue";
 export default {
-   components: {
-     NewClientModal,
-     NewSpecializationModal,
-     NewServiceModal,
-     NewCategoryModal,
-     BIconTrash,
-     BAlert,
-   },
+  props: ['orderToEdit'],
+  components: {
+    NewClientModal,
+    NewSpecializationModal,
+    NewServiceModal,
+    NewCategoryModal,
+    BIconTrash,
+    BAlert,
+  },
 
   data(){
     return {
@@ -36,7 +37,7 @@ export default {
       alertMessage: '',
 
       isNewServiceModalOpen: false,
-      }
+    }
   },
 
   computed: {
@@ -225,6 +226,9 @@ export default {
   },
 
   mounted() {
+    this.selectedSpecialization = this.orderToEdit.specialization_id
+    this.selectedClient = this.orderToEdit.client_id
+    //this.selectedClient = this.orderToEdit.client_id
     axios.get('http://localhost:8000/api/getSpecialization')
         .then(response => {
           this.specializations = response.data
@@ -233,6 +237,13 @@ export default {
         .catch(eError => {
           console.error(eError.message)
         })
+    console.log('orderToEdit: ', this.orderToEdit)
+    this.loadClients()
+    this.loadCategories()
+    //loadClientsBySpecialization(this.selectedSpecialization)
+    //this.selectedSpecialization = this.orderToEdit.specialization_id
+    this.selectedClient = this.orderToEdit.client_id
+    console.log('selectedClient: ' , this.selectedClient)
   }
 }
 
@@ -387,7 +398,7 @@ export default {
       </b-row>
     </b-container>
 
-</div>
+  </div>
 </template>
 
 <style scoped>
