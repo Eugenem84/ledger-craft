@@ -185,7 +185,7 @@ export default {
   <div id="editOrderDiv" v-if="isEditOrderDivVisible">
     редактор ордера
 
-    <EditOrder :orderToEdit="selectedOrder"/>
+    <EditOrder :orderToEdit="selectedOrder" :already-added-services="services"/>
 
     <b-button @click="closeEditOrderDiv">отмена</b-button>
   </div>

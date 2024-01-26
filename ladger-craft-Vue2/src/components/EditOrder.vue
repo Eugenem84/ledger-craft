@@ -8,7 +8,7 @@ import NewSpecializationModal from "@/components/NewSpecializationModal.vue";
 import NewClientModal from "@/components/NewClientModal.vue";
 import NewCategoryModal from "@/components/NewCategoryModal.vue";
 export default {
-  props: ['orderToEdit'],
+  props: ['orderToEdit' , 'alreadyAddedServices'],
   components: {
     NewClientModal,
     NewSpecializationModal,
@@ -55,6 +55,7 @@ export default {
   methods: {
 
     handleSpecializationChange(){
+      console.log('handleSpecializationChange')
       if (this.selectedSpecialization === 'create_new_specialization'){
         this.openNewSpecializationModal()
       } else {
@@ -65,12 +66,14 @@ export default {
     },
 
     handleClientChange(){
-      console.log('выбор клиента')
+      //this.selectedClient = this.orderToEdit.
+      console.log('selectedClient!!!', this.selectedClient)
+      console.log('handleClientChange')
       if (this.selectedClient === 'create-new-client'){
         console.log('открываем модальное окно нового клиента')
         this.openNewClientModal()
       } else {
-        //
+        console.log('selectedClient!!!!', this.selectedClient)
       }
     },
 
@@ -97,6 +100,7 @@ export default {
     },
 
     loadClients(){
+      console.log('loadClients')
       axios.get(`http://localhost:8000/api/get_clients/${this.selectedSpecialization}`)
           .then(response => {
             this.clients = response.data
@@ -127,6 +131,15 @@ export default {
           .catch(eError => {
             console.error(eError.message)
           })
+    },
+
+    loadServicesByOrder(){
+      axios.get(`http://localhost:8000/api/get_services/${this.orderToEdit.id}`)
+          .then(response => {
+            this.addedServices = response.data
+          }).catch(err => {
+        console.error(err.message)
+      })
     },
 
     //удаление сервиса из ордера
@@ -225,11 +238,12 @@ export default {
     }
   },
 
-  mounted() {
+   async mounted() {
+    this.addedServices = this.alreadyAddedServices
     this.selectedSpecialization = this.orderToEdit.specialization_id
     this.selectedClient = this.orderToEdit.client_id
     //this.selectedClient = this.orderToEdit.client_id
-    axios.get('http://localhost:8000/api/getSpecialization')
+     await axios.get('http://localhost:8000/api/getSpecialization')
         .then(response => {
           this.specializations = response.data
           console.log('список специализаций: ', this.specializations )
@@ -237,13 +251,10 @@ export default {
         .catch(eError => {
           console.error(eError.message)
         })
-    console.log('orderToEdit: ', this.orderToEdit)
-    this.loadClients()
-    this.loadCategories()
-    //loadClientsBySpecialization(this.selectedSpecialization)
-    //this.selectedSpecialization = this.orderToEdit.specialization_id
     this.selectedClient = this.orderToEdit.client_id
-    console.log('selectedClient: ' , this.selectedClient)
+    console.log('orderToEdit: ', this.orderToEdit)
+    await this.loadClients()
+    this.loadCategories()
   }
 }
 
@@ -391,9 +402,9 @@ export default {
     <b-container class="fixed-bottom">
       <b-row class="justify-content-end">
         <b-col md="auto">
-          <b-button @click="saveOrder()" variant="primary" class="m-3" >
-            сохранить ордер
-          </b-button>
+<!--          <b-button @click="saveOrder()" variant="primary" class="m-3" >-->
+<!--            сохранить ордер-->
+<!--          </b-button>-->
         </b-col>
       </b-row>
     </b-container>
