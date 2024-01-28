@@ -95,4 +95,25 @@ class OrderController extends Controller
         }
     }
 
+    public function updateOrder(Request $request)
+    {
+        $data = $request->only([ 'id','clientId', 'specializationId', 'materials', 'comments', 'totalAmount',]);
+        $data['servicesId'] = $request->input('servicesId');
+        $order = $this->orderRepository->updateOrder($data);
+        if ($order){
+            return response()->json(['message' => 'ордер обновлен']);
+        } else {
+            return response()->json(['error' => 'ошибка обновления ордера']);
+        }
+    }
+
+    public function deleteOrder($id)
+    {
+        $order = $this->orderRepository->deleteOrder($id);
+        if ($order){
+            return response()->json(['message' => 'Ордер успешно удален'], 200);
+        } else {
+            return response()->json(['error' => 'ордер не найден'], 404);
+        }
+    }
 }

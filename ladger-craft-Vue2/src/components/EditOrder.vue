@@ -196,9 +196,10 @@ export default {
 
     //сохранение ордера
     saveOrder() {
-      console.log('создаем ордер')
+      console.log('обновляем ордер')
       const totalAmount = this.totalAddedServicesPrice
       const orderData = {
+        id: this.orderToEdit.id,
         clientId: this.selectedClient,
         specializationId: this.selectedSpecialization,
         totalAmount: totalAmount,
@@ -216,7 +217,7 @@ export default {
         // проверка на пустое поле выбора клиента
         this.showAlert('danger', 'Сначала выберите клиента')
       } else {
-        axios.post('http://localhost:8000/api/save_order', orderData, {
+        axios.post('http://localhost:8000/api/update_order', orderData, {
           headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrfToken
@@ -224,15 +225,14 @@ export default {
         })
             .then(response => {
               console.log(response.data.message)
-
               this.addedServices = []
               this.materials = ''
               this.comments = ''
               this.showAlert('success', 'Ордер успешно сохранен')
             })
             .catch(error => {
-              console.error('Ошибка сохранения ордера: ', error)
-              this.showAlert('danger', 'Ошибка сохроанения ордера')
+              console.error('Ошибка обновления ордера: ', error)
+              this.showAlert('danger', 'Ошибка обновлениея ордера')
             })
       }
     }
@@ -402,9 +402,9 @@ export default {
     <b-container class="fixed-bottom">
       <b-row class="justify-content-end">
         <b-col md="auto">
-<!--          <b-button @click="saveOrder()" variant="primary" class="m-3" >-->
-<!--            сохранить ордер-->
-<!--          </b-button>-->
+          <b-button @click="saveOrder()" variant="primary" class="m-3" >
+            сохранить ордер
+          </b-button>
         </b-col>
       </b-row>
     </b-container>

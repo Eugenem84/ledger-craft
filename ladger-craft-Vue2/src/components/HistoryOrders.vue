@@ -6,8 +6,6 @@ import EditOrder from "@/components/EditOrder.vue";
 export default {
   components: {
     EditOrder,
-    //OrderMake
-    //
   },
   data(){
     return {
@@ -75,6 +73,19 @@ export default {
     closeEditOrderDiv(){
       this.isOrderOpened = true
       this.isEditOrderDivVisible = false
+    },
+
+
+    deleteOrder(){
+      console.log('удаление ордера: ', this.selectedOrder.id)
+      axios.delete(`http://localhost:8000/api/delete_order/${this.selectedOrder.id}`)
+          .then(response => {
+            console.log(response.data)
+          })
+          .catch(err => {
+            console.error(err.message)
+          })
+      window.location.reload()
     },
 
     getSpecializationName(specializationId){
@@ -165,6 +176,7 @@ export default {
         <b-col md="auto">
           <b-button @click="closeOrderDetailsDiv">закрыть</b-button>
           <b-button @click="openEditOrder">редактировать</b-button>
+          <b-button @click="deleteOrder()">удалить оредер</b-button>
         </b-col>
       </b-row>
     </b-container>

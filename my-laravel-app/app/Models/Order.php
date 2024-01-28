@@ -28,5 +28,4 @@ class Order extends Model
     {
         return $this->belongsToMany(Service::class, 'order_service', 'order_id', 'service_id');
     }
-
 }
