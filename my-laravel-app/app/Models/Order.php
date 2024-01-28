@@ -20,6 +20,7 @@ class Order extends Model
     //связь с таблицей клиентов (один ко многим)
     public function client()
     {
+        //
         return $this->belongsTo(Client::class);
     }
 
