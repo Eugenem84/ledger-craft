@@ -44,34 +44,22 @@ class OrderRepository extends Controller
         }
     }
 
-    public function updateOrder(array $data)
-    {
-        $oderId = $data['id'];
-        $order = Order::find($oderId);
-        $order->client_id = $data['clientId'];
-        $order->specialization_id = $data['specializationId'];
-        $order->total_amount = (int)$data['totalAmount'];
-        $order->materials = $data['materials'];
-        $order->comments = $data['comments'];
-        $order->save();
-
-        if (isset($data['servicesId']) && is_array($data['servicesId'])) {
-            $order->services()->sync($data['servicesId']);
-            return $order;
-        } else {
-            return null;
-        }
-    }
-
     public function deleteOrder($id)
     {
         $order = Order::find($id);
-        if ($order){
-            OrderService::where('order_id', $id)->delete();
-            $order->delete();
-            return true;
-        } else {
-            return false;
-        }
+        OrderService::where('order_id', $id)->delete();
+        $order->delete();
+    }
+
+    public function updateOrder($orderId, $clientId, $specializationId, $materials, $comments, $servicesData, $totalAmount)
+    {
+        $order = Order::find($orderId);
+        $order->client_id = $clientId;
+        $order->specialization_id = $specializationId;
+        $order->total_amount = $totalAmount;
+        $order->materials = $materials;
+        $order->comments = $comments;
+        $order->services()->sync($servicesData);
+        $order->save();
     }
 }

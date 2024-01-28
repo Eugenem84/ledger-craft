@@ -196,16 +196,16 @@ export default {
 
     //сохранение ордера
     saveOrder() {
-      console.log('обновляем ордер')
+      console.log('создаем ордер')
       const totalAmount = this.totalAddedServicesPrice
       const orderData = {
         id: this.orderToEdit.id,
-        clientId: this.selectedClient,
-        specializationId: this.selectedSpecialization,
-        totalAmount: totalAmount,
+        client_id: this.selectedClient,
+        specialization_id: this.selectedSpecialization,
+        total_amount: totalAmount,
         materials: this.materials,
         comments: this.comments,
-        servicesId: this.addedServices.map(service => service.id)
+        services: this.addedServices.map(service => service.id)
       }
       console.log('данные для сохранения: ', orderData)
       const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -225,16 +225,18 @@ export default {
         })
             .then(response => {
               console.log(response.data.message)
+
               this.addedServices = []
               this.materials = ''
               this.comments = ''
               this.showAlert('success', 'Ордер успешно сохранен')
             })
             .catch(error => {
-              console.error('Ошибка обновления ордера: ', error)
-              this.showAlert('danger', 'Ошибка обновлениея ордера')
+              console.error('Ошибка сохранения ордера: ', error)
+              this.showAlert('danger', 'Ошибка сохроанения ордера')
             })
       }
+      location.reload()
     }
   },
 
